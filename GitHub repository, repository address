@@ -1,0 +1,15 @@
+깃허브 저장소, 레포지토리 주소 
+
+https://github.com/2026104274yoonhyukjin/MyCampusLinks1.git
+
+echo "# MyCampusLinks1" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/2026104274yoonhyukjin/MyCampusLinks1.git
+git push -u origin main
+
+git remote add origin https://github.com/2026104274yoonhyukjin/MyCampusLinks1.git
+git branch -M main
+git push -u origin main
