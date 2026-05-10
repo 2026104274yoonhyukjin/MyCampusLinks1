@@ -41,8 +41,8 @@
 * **리뷰 룰:** `main` 브랜치 병합 전 최소 1명 이상 승인 필요
 
 ### 👥 팀원 역할
-* **PM (Product Manager):** [이름]
-* **Tech Lead:** [이름]
+* **PM (Product Manager):** [윤혁진]
+* **Tech Lead:** [윤혁진]
 * **UI/UX Designer:** [이름]
 * **QA Engineer:** [이름]
 * **Scrum Master:** [이름]
