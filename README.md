@@ -41,8 +41,8 @@
 ### 👥 팀원 역할
 * **PM (Product Manager):** [윤혁진]
 * **Tech Lead:** [윤혁진]
-* **UI/UX Designer:** [이상균]
-* **QA Engineer:** [이종인]
-* **Scrum Master:** [이상균]
-* **Tech Writer:** [윤혁진]
-* **DevRel (Presenter):** [이름]
+* **UI/UX Designer:** [ad]
+* **QA Engineer:** [asd]
+* **Scrum Master:** [adf]
+* **Tech Writer:** [dkdk]
+* **DevRel (Presenter):** [윤혁진]
