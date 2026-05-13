@@ -16,25 +16,6 @@
 
 <div id="vanta-bg" style="width: 100%; min-height: 100vh; position: fixed; top: 0; left: 0; z-index: -1;"></div>
 
-<script>
-VANTA.GLOBE({
-  el: "#vanta-bg",
-  mouseControls: true,
-  touchControls: true,
-  gyroControls: false,
-  minHeight: 200.00,
-  minWidth: 200.00,
-  scale: 1.00,
-  scaleMobile: 1.00,
-  color: 0x3fd6ff,       
-  color2: 0xfff5f5,      
-  backgroundColor: 0x23151c,
-  size: 1.20,
-  spacing: 15.00,
-  showDots: true
-})
-</script>
-
 <style>
     
     .loader-wrapper {
@@ -476,22 +457,65 @@ VANTA.GLOBE({
 nav { display: flex; justify-content: center; padding: 15px 0; }
 
 :root {
-  --text-color: #1a1a1a;    
-  --card-bg: #ffffff;       
-  --app-bg: #ffffff;      
+  /* 라이트 모드: 해(Sun)의 그라데이션 색상 */
+  --loader-color1: #ff8c00; 
+  --loader-color2: #ff0080;
+  --loader-color3: #ffffff;
 }
 
 body.dark-mode {
-  --text-color: #ffffff;
-  --card-bg: #161b22;
-  --app-bg: #161b22;
+  /* 다크 모드: 달(Moon)의 그라데이션 색상 */
+  --loader-color1: #8983f7;
+  --loader-color2: #a3dafb;
+  --loader-color3: #ffffff;
 }
 
-.loader-letter {
-  color: var(--text-color);
-  font-weight: 900;        
-  opacity: 1 !important;    
-  text-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+/* CampusLinks 뒤의 움직이는 원 설정 */
+.loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background-color: transparent;
+  animation: loader-rotate 2s linear infinite;
+  z-index: 0;
+  color: #000000;
+   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+body.dark-mode .loader-letter {
+    /* 배경이 어두우니까 흰색(#ffffff)이나 
+       스위치 달 색상과 비슷한 연한 하늘색(#a3dafb)을 추천해요! */
+    color: #ffffff; 
+    
+    /* 글자가 더 잘 보이게 은은한 광채 효과를 줄 수도 있습니다 (선택사항) */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+/* 애니메이션 안의 색상들을 변수로 교체 */
+@keyframes loader-rotate {
+  0% {
+    transform: rotate(90deg);
+    box-shadow:
+      0 10px 20px 0 var(--loader-color3) inset,
+      0 20px 30px 0 var(--loader-color2) inset,
+      0 60px 60px 0 var(--loader-color1) inset;
+  }
+  50% {
+    transform: rotate(270deg);
+    box-shadow:
+      0 10px 20px 0 var(--loader-color3) inset,
+      0 20px 10px 0 var(--loader-color2) inset,
+      0 40px 60px 0 var(--loader-color1) inset;
+  }
+  100% {
+    transform: rotate(450deg);
+    box-shadow:
+      0 10px 20px 0 var(--loader-color3) inset,
+      0 20px 30px 0 var(--loader-color2) inset,
+      0 60px 60px 0 var(--loader-color1) inset;
+  }
 }
 
 
@@ -897,7 +921,7 @@ body.dark-mode {
   <p class="text">클래스 기본 (Chapter 05)</p>
 </a>
 
-<a href="pdf/ch05.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+<a href="pdf/ch06.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
   <span class="folderContainer">
     <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
@@ -909,7 +933,7 @@ body.dark-mode {
       <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
     </svg>
   </span>
-  <p class="text">함수와 참조, 복사 생성자 (Chap 05)</p>
+  <p class="text">메서드 (Chap 06)</p>
 </a>
 
 <div class="flex flex-wrap gap-4 justify-center items-center mt-10 mb-10">
@@ -959,11 +983,11 @@ body.dark-mode {
     </a>
 
       <a href="https://youtu.be/IEzmA-YC7bs?si=AUfPz_gkkBLHrNdx" target="_blank" class="maxvideo">
-        <span>▶ 10주차 1차시-인체구조와 특징 과 캐릭터모델링 유의사항</span>
+        <span>▶ 10주차 1차시-인체 캐릭터 특징분석</span>
     </a>
 
     <a href="https://youtu.be/m-Mxw36Ybjk?si=adOxKKQ5pC4pPPmL" target="_blank" class="maxvideo">
-        <span>▶ 10주차 2차시-인체(상의)</span>
+        <span>▶ 10주차 2차시-인체(몸통)</span>
     </a>
 
     <a href="https://youtu.be/TgfCel9AQlI?si=LfxVTI1xvs_B8Gcc" target="_blank" class="maxvideo">
@@ -1043,7 +1067,7 @@ body.dark-mode {
       <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
     </svg>
   </span>
-  <p class="text">5장 참조자료형</p>
+  <p class="text">5장-참조자료형</p>
 </a>
 
 <a href="pdf/6장_클래스(class)의_기본_문법.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
@@ -1058,16 +1082,152 @@ body.dark-mode {
       <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
     </svg>
   </span>
-  <p class="text">클래스(class)의 기본 문법</p>
+  <p class="text">6장-클래스(class)의_기본_문법</p>
 </a>
+
+<br>
+
+<a href="https://dayoung-univ.github.io/Frontend2026-01/OT" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+  <span class="folderContainer">
+    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
+    </svg>
+    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="88" height="99" fill="white"></rect>
+    </svg>
+    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
+    </svg>
+  </span>
+  <p class="text">OT 자료 </p>
+</a>
+
+<a href="pdf/마크다운_보충자료.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+  <span class="folderContainer">
+    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
+    </svg>
+    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="88" height="99" fill="white"></rect>
+    </svg>
+    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
+    </svg>
+  </span>
+  <p class="text">마크다운 작성방법 참고자료</p>
+</a>
+
+<a href="https://dayoung-univ.github.io/Frontend2026-01/week3" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+  <span class="folderContainer">
+    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
+    </svg>
+    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="88" height="99" fill="white"></rect>
+    </svg>
+    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
+    </svg>
+  </span>
+  <p class="text">3주차 수업 자료-HTML Form & UI 기획 </p>
+</a>
+
+<a href="https://dayoung-univ.github.io/Frontend2026-01/week4" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+  <span class="folderContainer">
+    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
+    </svg>
+    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="88" height="99" fill="white"></rect>
+    </svg>
+    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
+    </svg>
+  </span>
+  <p class="text">4주차 수업 자료-CSS 스타일링 & GitHub 배포</p>
+</a>
+
+<a href="https://dayoung-univ.github.io/Frontend2026-01/week5" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+  <span class="folderContainer">
+    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
+    </svg>
+    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="88" height="99" fill="white"></rect>
+    </svg>
+    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
+    </svg>
+  </span>
+  <p class="text"> 5주차 수업 자료-CSS Layout & 팀 협업</p>
+</a>
+
+<a href="https://dayoung-univ.github.io/Frontend2026-01/week6" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+  <span class="folderContainer">
+    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
+    </svg>
+    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="88" height="99" fill="white"></rect>
+    </svg>
+    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
+    </svg>
+  </span>
+  <p class="text">6주차 수업 자료-Flexbox & 반응형 웹</p>
+</a>
+
+<a href="https://dayoung-univ.github.io/Frontend2026-01/week7" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+  <span class="folderContainer">
+    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
+    </svg>
+    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="88" height="99" fill="white"></rect>
+    </svg>
+    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
+    </svg>
+  </span>
+  <p class="text">7주차 수업 자료-웹 디자인의 완성 </p>
+</a>
+
+<a href="https://dayoung-univ.github.io/Frontend2026-01/week10" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+  <span class="folderContainer">
+    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
+    </svg>
+    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="88" height="99" fill="white"></rect>
+    </svg>
+    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
+    </svg>
+  </span>
+  <p class="text"> 10주차 수업 자료-실전 팀 빌딩 & README 기반 Git 협</p>
+</a>
+
+<a href="pdf/프론트엔드 기말 프로젝트 (103).pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+  <span class="folderContainer">
+    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
+    </svg>
+    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="88" height="99" fill="white"></rect>
+    </svg>
+    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
+    </svg>
+  </span>
+  <p class="text">프론트엔드 기말 프로젝트</p>
+</a>s
 
 <script>
 
 let myVantaBackground;
 
-
-window.onload = function() {
-   
+window.onload = () => {
+    // 1. 초기 배경 설정 (라이트 모드 기준)
     myVantaBackground = VANTA.GLOBE({
         el: "#vanta-bg",
         mouseControls: true,
@@ -1077,22 +1237,13 @@ window.onload = function() {
         minWidth: 200.00,
         scale: 1.00,
         scaleMobile: 1.00,
-        backgroundColor: 0xe3f2fd, 
-        color: 0x64b5f6,
-        color2: 0xbbdefb,
-        size: 1.20,
-        spacing: 15.00,
+        backgroundColor: 0xe3f2fd, // 라이트 배경
+        color: 0x64b5f6,           // 선 색상 (연하늘 - 이 부분이 노랑색이면 다 노랗게 보임)
+        color2: 0xfff176,          // 점 색상 (노란 별)
+        size: 1.50,
+        spacing: 20.00,
         showDots: true
     });
-
-    const isDarkMode = document.body.classList.contains('dark-mode');
-    if (!isDarkMode) {
-        
-        document.documentElement.style.setProperty('--text-color', '#1a237e');
-    }
-    
-    updateTime(); 
-    setInterval(updateTime, 1000); 
 };
 
 function toggleDarkMode() {
@@ -1102,13 +1253,26 @@ function toggleDarkMode() {
 
     if (myVantaBackground) {
         myVantaBackground.setOptions({
-          
-            backgroundColor: isDark ? 0x0d1117 : 0xe3f2fd, 
-            color: isDark ? 0x2f81f7 : 0x64b5f6,  
-            color2: isDark ? 0x161b22 : 0xbbdefb  
+            // 다크모드일 때 배경색
+            backgroundColor: isDark ? 0x0d1117 : 0xe3f2fd,
+            
+            // 선 색상: 다크모드면 보라색(#8983f7), 라이트모드면 연하늘색
+            color: isDark ? 0x8983f7 :0x8983f7, 
+            
+            // 점 색상: 항상 노란색 별빛 유지
+            color2:  0xffd700,
+            
+         
         });
     }
 }
+
+
+{    
+    updateTime(); 
+    setInterval(updateTime, 1000); 
+};
+
 
 
 function updateTime() {
