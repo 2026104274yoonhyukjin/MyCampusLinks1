@@ -1,1234 +1,1719 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyCampusLinks</title>
-    <script src="https://cdn.tailwindcss.com"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyCampusLinks</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
 
 </head>
+
 <body>
-    <script src="three.r134.min.js"></script>
-<script src="vanta.globe.min.js"></script>
 
-<div id="vanta-bg" style="width: 100%; min-height: 100vh; position: fixed; top: 0; left: 0; z-index: -1;"></div>
+  <script src="three.r134.min.js"></script>
+  <script src="vanta.globe.min.js"></script>
 
-<style>
-    
+  <div id="vanta-bg" style="width: 100%; min-height: 100vh; position: fixed; top: 0; left: 0; z-index: -1;"></div>
+
+  <style>
+   
+   body {
+      zoom: 0.76;
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+    }
+
+    #vanta-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-size: cover;
+    }
+
     .loader-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 250px;
-  height: 250px;
-  font-family: "Inter", sans-serif;
-  font-size: 1.5em;
-  font-weight: 300;
-  color: rgb(0, 0, 0);
-  border-radius: 50%;
-  background-color: transparent;
-  user-select: none;
-}
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 250px;
+      height: 250px;
+      font-family: "Inter", sans-serif;
+      font-size: 1.5em;
+      font-weight: 300;
+      color: rgb(0, 0, 0);
+      border-radius: 50%;
+      background-color: transparent;
+      user-select: none;
+    }
 
-.loader {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  background-color: transparent;
-  animation: loader-rotate 2s linear infinite;
-  z-index: 0;
-}
+    .loader {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background-color: transparent;
+      animation: loader-rotate 2s linear infinite;
+      z-index: 0;
+    }
 
-@keyframes loader-rotate {
-  0% {
-    transform: rotate(90deg);
-    box-shadow:
-      0 10px 20px 0 #fff inset,
-      0 20px 30px 0 #ad5fff inset,
-      0 60px 60px 0 #471eec inset;
-  }
-  50% {
-    transform: rotate(270deg);
-    box-shadow:
-      0 10px 20px 0 #fff inset,
-      0 20px 10px 0 #d60a47 inset,
-      0 40px 60px 0 #311e80 inset;
-  }
-  100% {
-    transform: rotate(450deg);
-    box-shadow:
-      0 10px 20px 0 #fff inset,
-      0 20px 30px 0 #ad5fff inset,
-      0 60px 60px 0 #471eec inset;
-  }
-}
+    @keyframes loader-rotate {
+      0% {
+        transform: rotate(90deg);
+        box-shadow:
+          0 10px 20px 0 #fff inset,
+          0 20px 30px 0 #ad5fff inset,
+          0 60px 60px 0 #471eec inset;
+      }
 
-.loader-letter {
-  display: inline-block;
-  opacity: 0.4;
-  transform: translateY(0);
-  animation: loader-letter-anim 2s infinite;
-  z-index: 1;
-  border-radius: 50ch;
-  border: none;
-}
+      50% {
+        transform: rotate(270deg);
+        box-shadow:
+          0 10px 20px 0 #fff inset,
+          0 20px 10px 0 #d60a47 inset,
+          0 40px 60px 0 #311e80 inset;
+      }
 
-.loader-letter:nth-child(1) {
-  animation-delay: 0s;
-}
-.loader-letter:nth-child(2) {
-  animation-delay: 0.1s;
-}
-.loader-letter:nth-child(3) {
-  animation-delay: 0.2s;
-}
-.loader-letter:nth-child(4) {
-  animation-delay: 0.3s;
-}
-.loader-letter:nth-child(5) {
-  animation-delay: 0.4s;
-}
-.loader-letter:nth-child(6) {
-  animation-delay: 0.5s;
-}
-.loader-letter:nth-child(7) {
-  animation-delay: 0.6s;
-}
-.loader-letter:nth-child(8) {
-  animation-delay: 0.7s;
-}
-.loader-letter:nth-child(9) {
-  animation-delay: 0.8s;
-}
-.loader-letter:nth-child(10) {
-  animation-delay: 0.9s;
-}
-.loader-letter:nth-child(11) {
-  animation-delay: 1.0s;
-}
-.loader-letter:nth-child(12) {
-  animation-delay: 1.1s;
-}
-.loader-letter:nth-child(12) {
-  animation-delay: 1.2s;
-}
-.loader-letter:nth-child(13) {
-  animation-delay: 1.3s;
-}
-.loader-letter:nth-child(14) {
-  animation-delay: 1.4s;
-}
-.loader-letter:nth-child(15) {
-  animation-delay: 1.5s;
-}
+      100% {
+        transform: rotate(450deg);
+        box-shadow:
+          0 10px 20px 0 #fff inset,
+          0 20px 30px 0 #ad5fff inset,
+          0 60px 60px 0 #471eec inset;
+      }
+    }
 
-@keyframes loader-letter-anim {
-  0%,
-  100% {
-    opacity: 0.4;
-    transform: translateY(0);
-  }
-  20% {
-    opacity: 1;
-    transform: scale(1.15);
-  }
-  40% {
-    opacity: 0.7;
-    transform: translateY(0);
-  }
-}
+    .loader-letter {
+      display: inline-block;
+      opacity: 0.4;
+      transform: translateY(0);
+      animation: loader-letter-anim 2s infinite;
+      z-index: 1;
+      border-radius: 50ch;
+      border: none;
+      text-shadow: 0 0 10px rgba(10, 10, 10, 0.5);
+    }
+
+    .loader-letter:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .loader-letter:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+
+    .loader-letter:nth-child(3) {
+      animation-delay: 0.2s;
+    }
+
+    .loader-letter:nth-child(4) {
+      animation-delay: 0.3s;
+    }
+
+    .loader-letter:nth-child(5) {
+      animation-delay: 0.4s;
+    }
+
+    .loader-letter:nth-child(6) {
+      animation-delay: 0.5s;
+    }
+
+    .loader-letter:nth-child(7) {
+      animation-delay: 0.6s;
+    }
+
+    .loader-letter:nth-child(8) {
+      animation-delay: 0.7s;
+    }
+
+    .loader-letter:nth-child(9) {
+      animation-delay: 0.8s;
+    }
+
+    .loader-letter:nth-child(10) {
+      animation-delay: 0.9s;
+    }
+
+    .loader-letter:nth-child(11) {
+      animation-delay: 1.0s;
+    }
+
+    .loader-letter:nth-child(12) {
+      animation-delay: 1.1s;
+    }
+
+    .loader-letter:nth-child(12) {
+      animation-delay: 1.2s;
+    }
+
+    .loader-letter:nth-child(13) {
+      animation-delay: 1.3s;
+    }
+
+    .loader-letter:nth-child(14) {
+      animation-delay: 1.4s;
+    }
+
+    .loader-letter:nth-child(15) {
+      animation-delay: 1.5s;
+    }
+
+    @keyframes loader-letter-anim {
+
+      0%,
+      100% {
+        opacity: 0.4;
+        transform: translateY(0);
+      }
+
+      20% {
+        opacity: 1;
+        transform: scale(1.15);
+      }
+
+      40% {
+        opacity: 0.7;
+        transform: translateY(0);
+      }
+    }
 
     .vspdf-btn {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: fit-content;
-  height: 45px;
-  border: none;
-  padding: 0px 15px;
-  border-radius: 5px;
-  background-color: rgb(210, 49, 222);
-  gap: 10px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: fit-content;
+      height: 45px;
+      border: none;
+      padding: 0px 15px;
+      border-radius: 5px;
+      background-color: rgb(210, 49, 222);
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
 
-.folderContainer {
-  width: 40px;
-  height: fit-content;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  position: relative;
-}
-.fileBack {
-  z-index: 1;
-  width: 80%;
-  height: auto;
-}
-.filePage {
-  width: 50%;
-  height: auto;
-  position: absolute;
-  z-index: 2;
-  transition: all 0.3s ease-out;
-}
-.fileFront {
-  width: 85%;
-  height: auto;
-  position: absolute;
-  z-index: 3;
-  opacity: 0.95;
-  transform-origin: bottom;
-  transition: all 0.3s ease-out;
-}
-.text {
-  color: white;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-.vspdf-btn:hover .filePage {
-  transform: translateY(-5px);
-}
-.vspdf-btn:hover {
-  background-color: rgb(58, 58, 94);
-}
-.vspdf-btn:active {
-  transform: scale(0.95);
-}
-.vspdf-btn:hover .fileFront {
-  transform: rotateX(30deg);
-}
+    .folderContainer {
+      width: 40px;
+      height: fit-content;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      position: relative;
+    }
 
-.maxvideo {
-  background: transparent;
-  position: relative;
-  padding: 5px 15px;
-  display: flex;
-  align-items: center;
-  font-size: 17px;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  border: 1px solid rgb(255 0 0);
-  border-radius: 25px;
-  outline: none;
-  overflow: hidden;
-  color: rgb(255 0 0);
-  transition: color 0.3s 0.1s ease-out;
-  text-align: center;
-}
+    .fileBack {
+      z-index: 1;
+      width: 80%;
+      height: auto;
+    }
 
-.maxvideo span {
-  margin: 10px;
-}
+    .filePage {
+      width: 50%;
+      height: auto;
+      position: absolute;
+      z-index: 2;
+      transition: all 0.3s ease-out;
+    }
 
-.maxvideo::before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
-  content: "";
-  border-radius: 50%;
-  display: block;
-  width: 50em;
-  height: 20em;
-  left: -5em;
-  text-align: center;
-  transition: box-shadow 0.5s ease-out;
-  z-index: -1;
-}
+    .fileFront {
+      width: 85%;
+      height: auto;
+      position: absolute;
+      z-index: 3;
+      opacity: 0.95;
+      transform-origin: bottom;
+      transition: all 0.3s ease-out;
+    }
 
-.maxvideo:hover {
-  color: #fff;
-  border: 1px solid rgb(255 0 0);
-}
+    .text {
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
 
-.maxvideo:hover::before {
-  box-shadow: inset 0 0 0 10em rgb(255 0 0);
-}
+    .vspdf-btn:hover .filePage {
+      transform: translateY(-5px);
+    }
+
+    .vspdf-btn:hover {
+      background-color: rgb(58, 58, 94);
+    }
+
+    .vspdf-btn:active {
+      transform: scale(0.95);
+    }
+
+    .vspdf-btn:hover .fileFront {
+      transform: rotateX(30deg);
+    }
+
+    .maxvideo {
+      background: transparent;
+      position: relative;
+      padding: 5px 15px;
+      display: flex;
+      align-items: center;
+      font-size: 17px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid rgb(255 0 0);
+      border-radius: 25px;
+      outline: none;
+      overflow: hidden;
+      color: rgb(255 0 0);
+      transition: color 0.3s 0.1s ease-out;
+      text-align: center;
+    }
+
+    .maxvideo span {
+      margin: 10px;
+    }
+
+    .maxvideo::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      content: "";
+      border-radius: 50%;
+      display: block;
+      width: 50em;
+      height: 20em;
+      left: -5em;
+      text-align: center;
+      transition: box-shadow 0.5s ease-out;
+      z-index: -1;
+    }
+
+    .maxvideo:hover {
+      color: #fff;
+      border: 1px solid rgb(255 0 0);
+    }
+
+    .maxvideo:hover::before {
+      box-shadow: inset 0 0 0 10em rgb(255 0 0);
+    }
 
     .card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    padding: 40px;
-}
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 40px;
+    }
 
-.menu-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 220px; 
-    background-color: white;
-    border-radius: 20px;
-    text-decoration: none;
-    color: #333;
-    padding: 30px 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    transition: all 0.4s ease;
-    border: 1px solid #f0f0f0;
-    text-align: center;
-}
+    .menu-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 220px;
+      background-color: white;
+      border-radius: 20px;
+      text-decoration: none;
+      color: #333;
+      padding: 30px 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      transition: all 0.4s ease;
+      border: 1px solid #f0f0f0;
+      text-align: center;
+    }
 
-.card-icon {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+    .card-icon {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-.card-icon img {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-}
+    .card-icon img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
 
-.menu-card h3 {
-    margin: 0;
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    word-break: keep-all; 
-}
+    .menu-card h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+      word-break: keep-all;
+    }
 
-.menu-card p {
-    margin: 0;
-    font-size: 0.9rem;
-    color: #777;
-    line-height: 1.4;
-    word-break: keep-all;
-}
+    .menu-card p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #777;
+      line-height: 1.4;
+      word-break: keep-all;
+    }
 
-.menu-card:hover {
-    transform: translateY(-10px); 
-   
-    background: linear-gradient(135deg, #1e73be 0%, #0056a0 100%);
-    box-shadow: 0 15px 35px rgba(0, 86, 160, 0.3);
-}
+    .menu-card:hover {
+      transform: translateY(-10px);
 
-.menu-card:hover h3, 
-.menu-card:hover p {
-    color: white;
-}
+      background: linear-gradient(135deg, #1e73be 0%, #0056a0 100%);
+      box-shadow: 0 15px 35px rgba(0, 86, 160, 0.3);
+    }
 
-.app {
-  --light-col: #e8e8e8;
-  --dark-col: #26242e;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  z-index: 1;
-  width: 18rem;
-  height: 18rem;
-  background-color: var(--light-col);
-  border-radius: 30px;
-  overflow: hidden;
-  margin: 0 auto;
-  background-color: var(--app-bg) !important;
-  transition: 0.4s;
-}
+    .menu-card:hover h3,
+    .menu-card:hover p {
 
-.app::before {
-  content: "";
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: var(--dark-col);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: -1;
-  transition: 400ms ease-out;
-}
+      color: white;
+    }
 
-.time {
-  font-weight: bold;
-  font-size: 0.9rem;
-  color: var(--dark-col);
-  transition: 0.3s;
-}
+    .app {
+      position: absolute !important;
+      --light-col: #e8e8e8;
+      --dark-col: #26242e;
+      display: flex;
+      flex-direction: column;
+      z-index: 999;
+      width: 18rem;
+      height: 18rem;
+      border-radius: 30px;
+      overflow: hidden;
+      margin: 0 auto;
+      transform: scale(0.6);
+      transform-origin: right top;
+      top: 20px;
+      right: 20px;
+      backdrop-filter: blur(1px);
+      -webkit-backdrop-filter: blur(1px);
+      transition: background 0.4s, border 0.4s;
+    }
 
+    .app::before {
+      content: "";
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--dark-col);
+      position: absolute !important;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      transition: 400ms ease-out;
+      display: none !important;
+    }
 
-.circle::before {
-  content: "";
-  position: absolute;
-  border-radius: 50%;
-  top: 0; 
-  right: 0;
-  width: 90%;  
-  height: 90%;
-  z-index: 1;
-  background: var(--light-col); 
-  transform: scale(0);
-  transform-origin: top right;
-  transition: 450ms ease-in-out;
-}
+    .time {
+      font-weight: bold;
+      font-size: 0.9rem;
+      color: var(--dark-col);
+      transition: 0.3s;
+    }
 
-#darkmode-toggle:checked + .app .circle::before {
-  transform: scale(1);
-  background: var(--dark-col); 
-  
-  top: -8%;    
-  right: -8%; 
-}
+    .circle::before {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      top: 0;
+      right: 0;
+      width: 90%;
+      height: 90%;
+      z-index: 1;
+      background: var(--light-col);
+      transform: scale(0);
+      transform-origin: top right;
+      transition: 450ms ease-in-out;
+    }
 
-.circle {
-  position: relative;
-  border-radius: 50%;
-  width: 8rem;
-  height: 8rem;
-  background: linear-gradient(40deg, #ff0080, #ff8c00 70%);
-  margin: auto;
-  transition: background 0.5s ease;
-  overflow: hidden; 
-}
+    #darkmode-toggle:checked+.app .circle::before {
+      transform: scale(1);
+      background: var(--dark-col);
+      top: -8%;
+      right: -8%;
+    }
 
-.app label {
-  width: auto;
-  margin: 20px 30px;
-  padding: 15px 35px;
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 50px;
-  position: relative;
-  cursor: pointer;
+    .circle {
+      position: relative;
+      border-radius: 50%;
+      width: 8rem;
+      height: 8rem;
+      background: linear-gradient(40deg, #ff0080, #ff8c00 70%);
+      margin: auto;
+      transition: background 0.5s ease;
+      overflow: hidden;
+    }
 
-  font-size: 1.1rem;
-  font-weight: bolder;
-  color: var(--dark-col);
-  display: flex;
-  justify-content: space-between;
-  z-index: 1; /
-}
+    .app label {
+      width: auto;
+      margin: 20px 30px;
+      padding: 15px 35px;
+      background-color: rgba(0, 0, 0, 0.1);
+      border-radius: 50px;
+      position: relative;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: bolder;
+      color: var(--dark-col);
+      display: flex;
+      justify-content: space-between;
+      z-index: 1;/
+    }
 
-.app label::before {
-  content: "";
-  position: absolute;
-  width: 50%;
-  inset: 0;
-  border-radius: inherit;
-  display: block;
-  z-index: -1;
-  background-color: #fff;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
+    .app label::before {
+      content: "";
+      position: absolute;
+      width: 50%;
+      inset: 0;
+      border-radius: inherit;
+      display: block;
+      z-index: -1;
+      background-color: #fff;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
 
-#darkmode-toggle:checked + .app::before {
-  box-shadow: 0px 0px 0 200px var(--dark-col); 
-}
+    #darkmode-toggle:checked+.app::before {
+      box-shadow: 0px 0px 0 200px var(--dark-col);
+    }
 
-#darkmode-toggle:checked + .app .time {
-  color: var(--light-col);
-}
+    #darkmode-toggle:checked+.app .time {
+      color: var(--light-col);
+    }
 
-#darkmode-toggle:checked + .app label span.light {
-  color: var(--light-col);
-}
+    #darkmode-toggle:checked+.app label span.light {
+      color: var(--light-col);
+    }
 
-#darkmode-toggle:checked + .app label::before {
-  transform: translateX(100%);
-}
+    #darkmode-toggle:checked+.app label::before {
+      transform: translateX(100%);
+    }
 
-#darkmode-toggle:checked + .app .circle {
-  background: linear-gradient(40deg, #8983f7, #a3dafb 70%);
-}
+    #darkmode-toggle:checked+.app .circle {
+      background: linear-gradient(40deg, #8983f7, #a3dafb 70%);
+    }
 
-.circle {
-  width: 8rem; height: 8rem; border-radius: 50%;
-  background: linear-gradient(40deg, #ff0080, #ff8c00 70%);
-  margin: auto; transition: 0.5s;
-}
-nav { display: flex; justify-content: center; padding: 15px 0; }
+    .circle {
+      width: 8rem;
+      height: 8rem;
+      border-radius: 50%;
+      background: linear-gradient(40deg, #ff0080, #ff8c00 70%);
+      margin: auto;
+      transition: 0.5s;
+    }
 
-:root {
-  /* 라이트 모드: 해(Sun)의 그라데이션 색상 */
-  --loader-color1: #ff8c00; 
-  --loader-color2: #ff0080;
-  --loader-color3: #ffffff;
-}
+    nav {
+      display: flex;
+      justify-content: center;
+      padding: 15px 0;
 
-body.dark-mode {
-  /* 다크 모드: 달(Moon)의 그라데이션 색상 */
-  --loader-color1: #8983f7;
-  --loader-color2: #a3dafb;
-  --loader-color3: #ffffff;
-}
+    }
 
-/* CampusLinks 뒤의 움직이는 원 설정 */
-.loader {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  background-color: transparent;
-  animation: loader-rotate 2s linear infinite;
-  z-index: 0;
-  color: #000000;
-   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-}
+    :root {
+      --bg-color: #e3f2fd;
+      --card-bg: rgba(255, 255, 255, 0.4);
+      --text-color: #1a237e;
+      --accent: #64b5f6;
+      --loader-color1: #ff8c00;
+      --loader-color2: #ff0080;
+      --loader-color3: #ffffff;
+      --app-bg: rgba(255, 255, 255, 0.4);
+      --app-border: rgba(0, 0, 0, 0.4);
+    }
 
-body.dark-mode .loader-letter {
-    /* 배경이 어두우니까 흰색(#ffffff)이나 
-       스위치 달 색상과 비슷한 연한 하늘색(#a3dafb)을 추천해요! */
-    color: #ffffff; 
-    
-    /* 글자가 더 잘 보이게 은은한 광채 효과를 줄 수도 있습니다 (선택사항) */
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-}
-/* 애니메이션 안의 색상들을 변수로 교체 */
-@keyframes loader-rotate {
-  0% {
-    transform: rotate(90deg);
-    box-shadow:
-      0 10px 20px 0 var(--loader-color3) inset,
-      0 20px 30px 0 var(--loader-color2) inset,
-      0 60px 60px 0 var(--loader-color1) inset;
-  }
-  50% {
-    transform: rotate(270deg);
-    box-shadow:
-      0 10px 20px 0 var(--loader-color3) inset,
-      0 20px 10px 0 var(--loader-color2) inset,
-      0 40px 60px 0 var(--loader-color1) inset;
-  }
-  100% {
-    transform: rotate(450deg);
-    box-shadow:
-      0 10px 20px 0 var(--loader-color3) inset,
-      0 20px 30px 0 var(--loader-color2) inset,
-      0 60px 60px 0 var(--loader-color1) inset;
-  }
-}
+    .loader {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background-color: transparent;
+      animation: loader-rotate 2s linear infinite;
+      z-index: 0;
+      color: #000000;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
 
+    body.dark-mode .loader-letter {
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
 
-.menu-card {
-  background-color: var(--card-bg);
-  color: var(--text-color);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
-  border: 1px solid rgba(0,0,0,0.05);
-}
+    @keyframes loader-rotate {
+      0% {
+        transform: rotate(90deg);
+        box-shadow:
+          0 10px 20px 0 var(--loader-color3) inset,
+          0 20px 30px 0 var(--loader-color2) inset,
+          0 60px 60px 0 var(--loader-color1) inset;
+      }
 
+      50% {
+        transform: rotate(270deg);
+        box-shadow:
+          0 10px 20px 0 var(--loader-color3) inset,
+          0 20px 10px 0 var(--loader-color2) inset,
+          0 40px 60px 0 var(--loader-color1) inset;
+      }
 
-.app label span.light {
-  color: var(--text-color);
-}
+      100% {
+        transform: rotate(450deg);
+        box-shadow:
+          0 10px 20px 0 var(--loader-color3) inset,
+          0 20px 30px 0 var(--loader-color2) inset,
+          0 60px 60px 0 var(--loader-color1) inset;
+      }
+    }
 
-.menu-card, .vspdf-btn, .maxvideo {
-    background-color: var(--card-bg) !important; 
-    color: var(--text-color) !important;        
-    border: 1px solid rgba(0, 0, 0, 0.1);         
-    transition: all 0.4s ease;                   
-}
+    .menu-card {
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
 
+   .app label span.light {
+      color: var(--text-color);
+    }
 
-body.dark-mode .menu-card, 
-body.dark-mode .vspdf-btn, 
-body.dark-mode .maxvideo {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
+    .menu-card,
+    .vspdf-btn,
+    .maxvideo {
+      background-color: var(--card-bg) !important;
+      color: var(--text-color) !important;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      transition: all 0.4s ease;
+    }
 
+    body.dark-mode .menu-card,
+    body.dark-mode .vspdf-btn,
+    body.dark-mode .maxvideo {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
-.menu-card:hover, .vspdf-btn:hover{
-    background: var(--accent) !important; 
-    color: #ffffff !important;         
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-.maxvideo:hover {
+    .menu-card:hover,
+    .vspdf-btn:hover {
+      background: var(--accent) !important;
+      color: #ffffff !important;
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
 
-    color: #ffffff !important;         
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(255, 0, 0, 0);
+    .maxvideo:hover {
+      color: #ffffff !important;
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(255, 0, 0, 0);
+    }
 
-}
-.vspdf-btn .text {
-    color: var(--text-color);
-}
-.vspdf-btn:hover .text {
-    color: #ffffff;
-}
+    .vspdf-btn .text {
+      color: var(--text-color);
+    }
 
-.maxvideo {
-    border-color: var(--text-color) !important;
-}
+    .vspdf-btn:hover .text {
+      color: #ffffff;
+    }
 
+    .maxvideo {
+      border-color: var(--text-color) !important;
+    }
 
-.menu-card, 
-.vspdf-btn, 
-.maxvideo,
-[class*="-card"] { 
-    background-color: var(--card-bg) !important;
-    color: var(--text-color) !important;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    transition: all 0.4s ease;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-}
+    .menu-card,
+    .vspdf-btn,
+    .maxvideo,
+    [class*="-card"] {
+      background-color: var(--card-bg) !important;
+      color: var(--text-color) !important;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: all 0.4s ease;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
 
-.menu-card p, 
-.menu-card h3, 
-.menu-card span {
-    color: var(--text-color) !important;
-}
+    .menu-card p,
+    .menu-card h3,
+    .menu-card span {
+      color: var(--text-color) !important;
+    }
 
+    body.dark-mode {
+      --bg-color: #0d1117;
+      --card-bg: #161b22;
+      --text-color: #e6edf3;
+      --accent: #2f81f7;
+      --app-bg: rgba(0, 0, 0, 0.1);
+      --app-border: rgba(255, 255, 255, 0.1);
+      --loader-color1: #8983f7;
+      --loader-color2: #a3dafb;
+      --loader-color3: #ffffff;
+    }
 
-:root {
-    --bg-color: #e3f2fd;      
-    --card-bg: rgba(255, 255, 255, 0.8); 
-    --text-color: #1a237e;   
-    --accent: #64b5f6;        
-}
+    .menu-card:hover {
+      background-color: var(--accent) !important;
+      transform: translateY(-8px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+    }
 
+    .menu-card:hover h3,
+    .menu-card:hover p {
+      color: #ffffff !important;
+    }
 
-body.dark-mode {
-    --bg-color: #0d1117;     
-    --card-bg: #161b22;     
-    --text-color: #e6edf3;   
-    --accent: #2f81f7;        
-}
+    .lecture-container {
+      display: grid;
 
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      width: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+    }
 
-.menu-card:hover {
-    background-color: var(--accent) !important;
-    transform: translateY(-8px);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
-}
+    .lecture-section {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      min-height: 150px;
+    }
 
-.menu-card:hover h3, 
-.menu-card:hover p {
-    color: #ffffff !important;
-}
+    .lecture-section h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: #fff176;
 
-</style>
+      padding-bottom: 10px;
+      text-align: center;
+    }
 
-<header class="flex flex-col justify-center items-center py-10 w-full relative">
-  <div class="loader-wrapper flex gap-1 mx-auto">
-    <span class="loader-letter">M</span>
-    <span class="loader-letter">Y</span>
-    <span class="loader-letter">C</span>
-    <span class="loader-letter">A</span>
-    <span class="loader-letter">M</span>
-    <span class="loader-letter">P</span>
-    <span class="loader-letter">U</span>
-    <span class="loader-letter">S</span>
-    <span class="loader-letter">L</span>
-    <span class="loader-letter">I</span>
-    <span class="loader-letter">N</span>
-    <span class="loader-letter">K</span>
-    <span class="loader-letter">S</span>
-    <div class="loader"></div>
-  </div>
-</header>
+    .file-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
 
-<div class="fixed top-6 right-6 z-50">
-  <input id="darkmode-toggle" type="checkbox" onclick="toggleDarkMode()" class="hidden" />
-  
-  <div class="app">
-    <nav><span id="current-time" class="time">00:00:00</span></nav>
-    <div class="circle"></div>
-    <label for="darkmode-toggle">
-      <span class="light">Light</span>
-      <span class="dark">Dark</span>
-    </label>
-  </div>
-</div>
+    .file-list span {
+      font-size: 0.9rem;
+      color: #ffffff;
+      white-space: normal;
+      word-break: break-all;
+      line-height: 1.4;
+      padding: 5px 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
 
-</script>
+    .file-list span:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
 
+    @media (max-width: 1024px) {
+      .lecture-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
 
-<div class="card-container">
-    
-    <a href="https://www.mjc.ac.kr/mjcIntro.do" class="menu-card" target="_blank">
-        <div class="card-icon">  
-        <img src="image/website.png" alt="Website" style="width: 50px; height: 50px;">
+    @media (max-width: 600px) {
+      .lecture-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    body:not(.dark-mode) .lecture-section h3 {
+      color: #1a237e !important;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+      padding-bottom: 10px;
+    }
+
+    body:not(.dark-mode) .lecture-section {
+      background: rgba(255, 255, 255, 0.5) !important;
+      border: 1px solid rgba(0, 0, 0, 0.3) !important;
+      backdrop-filter: blur(1px);
+      -webkit-backdrop-filter: blur(1px);
+      border-radius: 12px;
+    }
+
+    body:not(.dark-mode) .vspdf-btn .text {
+      color: #333333 !important;
+      font-weight: 600;
+    }
+
+    body:not(.dark-mode) .vspdf-btn {
+      background: #ffffff;
+
+    }
+
+    body:not(.dark-mode) .maxvideo {
+      background: #ffffff !important;
+      color: #000000 !important;
+      opacity: 1 !important;
+    }
+
+    body:not(.dark-mode) .maxvideo span {
+      color: #000000 !important;
+    }
+
+    .dark-mode .lecture-container {
+      background: rgba(30, 34, 51, 0.8) !important;
+    }
+
+    body:not(.dark-mode) .lecture-container {
+      backdrop-filter: blur(1px);
+      -webkit-backdrop-filter: blur(1px);
+      border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .app .time {
+      font-size: 20px !important;
+      font-weight: normal;
+    }
+
+    .app label[for="darkmode-toggle"] {
+      padding: 10px 10px;
+      font-size: 20px;
+      cursor: pointer;
+      gap: 20px
+    }
+
+    body:not(.dark-mode) .app {
+      background: rgba(255, 255, 255, 0.4) !important;
+      border: 1px solid rgba(0, 0, 0, 0.4) !important;
+    }
+
+    body.dark-mode .app {
+      background: rgba(0, 0, 0, 0.4) !important;
+      border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    }
+
+    body.dark-mode .app label {
+      color: #000000 !important;
+    }
+
+    body.dark-mode .app .time {
+      color: #ffffff !important;
+    }
+
+    #darkmode-toggle:checked+.app {
+      background: rgba(0, 0, 0, 0.4) !important;
+    }
+  </style>
+
+  <header class="flex flex-col justify-center items-center py-10 w-full relative">
+    <div class="loader-wrapper flex gap-1 mx-auto">
+      <span class="loader-letter">M</span>
+      <span class="loader-letter">Y</span>
+      <span class="loader-letter">C</span>
+      <span class="loader-letter">A</span>
+      <span class="loader-letter">M</span>
+      <span class="loader-letter">P</span>
+      <span class="loader-letter">U</span>
+      <span class="loader-letter">S</span>
+      <span class="loader-letter">L</span>
+      <span class="loader-letter">I</span>
+      <span class="loader-letter">N</span>
+      <span class="loader-letter">K</span>
+      <span class="loader-letter">S</span>
+      <div class="loader"></div>
     </div>
-    <h3>명지전문대학 공식 웹사이트</h3>
-    <p>명지전문대학 공식 웹사이트로 이동합니다.</p>
-</a>
+  </header>
+
+  <div class="absolute top-6 right-6 z-50">
+    <input id="darkmode-toggle" type="checkbox" onclick="toggleDarkMode()" class="hidden" />
+
+    <div class="app">
+      <nav><span id="current-time" class="time">00:00:00</span></nav>
+      <div class="circle"></div>
+      <label for="darkmode-toggle">
+        <span class="light">Light</span>
+        <span class="dark">Dark</span>
+      </label>
+    </div>
+  </div>
+
+  </script>
+
+  <div class="card-container">
+
+    <a href="https://www.mjc.ac.kr/mjcIntro.do" class="menu-card" target="_blank">
+      <div class="card-icon">
+        <img src="image/website.png" alt="Website" style="width: 50px; height: 50px;">
+      </div>
+      <h3>명지전문대학 공식 웹사이트</h3>
+      <p>명지전문대학 공식 웹사이트로 이동합니다.</p>
+    </a>
 
     <a href="https://youtube.com/@mjcollege1974?si=Nr4eqh-EzD1KBPoj" class="menu-card" target="_blank">
-        <div class="card-icon">  
+      <div class="card-icon">
         <img src="image/youtube.png" alt="YouTube" style="width: 50px; height: 50px;">
-    </div>
-    <h3>명지전문대학 유튜브</h3>
-    <p>명지전문대학 유튜브로 이동합니다.</p>
-</a>
-   
-    <a href="https://www.instagram.com/myongji_college?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" class="menu-card" target="_blank">
-     <div class="card-icon">  
+      </div>
+      <h3>명지전문대학 유튜브</h3>
+      <p>명지전문대학 유튜브로 이동합니다.</p>
+    </a>
+
+    <a href="https://www.instagram.com/myongji_college?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+      class="menu-card" target="_blank">
+      <div class="card-icon">
         <img src="image/instagram.png" alt="Instagram" style="width: 50px; height: 50px;">
-    </div>
-    <h3>명지전문대학 인스타그램</h3>
-    <p>명지전문대학 인스타그램으로 이동합니다.</p>
-</a>
+      </div>
+      <h3>명지전문대학 인스타그램</h3>
+      <p>명지전문대학 인스타그램으로 이동합니다.</p>
+    </a>
 
-<a href="https://cyber.mjc.ac.kr/home/mainHome/Form/myPage" class="menu-card" target="_blank">
-    <div class="card-icon">  
+    <a href="https://cyber.mjc.ac.kr/home/mainHome/Form/myPage" class="menu-card" target="_blank">
+      <div class="card-icon">
         <img src="image/eclass.png" alt="E-calss" style="width: 50px; height: 50px;">
-    </div>
-    <h3>원격강좌/E-Class</h3>
-    <p>원격강좌/재택수업 사이트로 이동합니다!</p>
-</a>
+      </div>
+      <h3>원격강좌/E-Class</h3>
+      <p>원격강좌/재택수업 사이트로 이동합니다!</p>
+    </a>
 
-<a href="https://mjc.factchat.bot/dashboard/chat/" class="menu-card" target="_blank">
-    <div class="card-icon">  
+    <a href="https://mjc.factchat.bot/dashboard/chat/" class="menu-card" target="_blank">
+      <div class="card-icon">
         <img src="image/factchat.png" alt="FactChat" style="width: 50px; height: 50px;">
-    </div>
-    <h3>AI검색(FactChat)</h3>
-    <p>멀티LLM 플랫폼(FactChat)으로 이동합니다.</p>
-</a>
+      </div>
+      <h3>AI검색(FactChat)</h3>
+      <p>멀티LLM 플랫폼(FactChat)으로 이동합니다.</p>
+    </a>
 
-<a href="https://icampus.mjc.ac.kr/mjc/main.do" class="menu-card" target="_blank">
-    <div class="card-icon">  
+    <a href="https://icampus.mjc.ac.kr/mjc/main.do" class="menu-card" target="_blank">
+      <div class="card-icon">
         <img src="image/campus.png" alt="ICampus" style="width: 50px; height: 50px;">
-    </div>
-    <h3>ICampus</h3>
-    <p>ICampus로 이동합니다.</p>
-</a>
+      </div>
+      <h3>ICampus</h3>
+      <p>ICampus로 이동합니다.</p>
+    </a>
 
-<a href="https://mail.mjc.ac.kr/mail/login" class="menu-card" target="_blank">
-     <div class="card-icon">  
+    <a href="https://mail.mjc.ac.kr/mail/login" class="menu-card" target="_blank">
+      <div class="card-icon">
         <img src="image/mail.png" alt="Mail" style="width: 50px; height: 50px;">
+      </div>
+      <h3>MJC Mail</h3>
+      <p>명지전문대학 웹 메일 시스템(MJC Mail)로 이동합니다.</p>
+
+      <a href="https://mpu.mjc.ac.kr/Career/Counsel/PAU.aspx" class="menu-card" target="_blank">
+        <div class="card-icon">
+          <img src="image/smartcare.png" alt="Instagram" style="width: 50px; height: 50px;">
+        </div>
+        <h3>SmartCare</h3>
+        <p>명지전문대학 학생 역량 이력 관리 시스템(SmartCare)로 이동합니다.</p>
+      </a>
+  </div>
+
+  <div class="flex flex-wrap gap-6 justify-center items-center mt-10 mb-2">
+
+    <label class="text-gray-400 cursor-pointer">
+      <input type="checkbox" class="hidden peer" onclick="window.location.href='vs2026://'; return false;" />
+      <div
+        class="group flex flex-col gap-4 w-36 h-48 bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl p-4 shadow-xl border-2 border-transparent transition-all duration-300 ease-in-out hover:border-purple-500 hover:shadow-purple-500/20 hover:translate-y-[-0.5rem]">
+        <div class="relative">
+          <div
+            class="w-16 h-16 mx-auto flex items-center justify-center bg-purple-500/10 rounded-xl border border-purple-500/30">
+            <img src="image/vs.png" class="w-10 h-10 object-contain">
+          </div>
+          <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-purple-500 animate-pulse"></div>
+        </div>
+        <div class="text-center">
+          <p class="font-bold text-white text-sm group-hover:text-purple-400">Visual Studio</p>
+          <p class="text-[10px] text-gray-400 mt-1">C# / IDE</p>
+        </div>
+        <div class="h-1 w-0 bg-purple-500 rounded-full mx-auto group-hover:w-full transition-all duration-300"></div>
+      </div>
+    </label>
+
+    <label class="text-gray-400 cursor-pointer">
+      <input type="checkbox" class="hidden peer" onclick="window.location.href='runmax://'; return false;" />
+      <div
+        class="group flex flex-col gap-4 w-36 h-48 bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl p-4 shadow-xl border-2 border-transparent transition-all duration-300 ease-in-out hover:border-cyan-400 hover:shadow-cyan-400/20 hover:translate-y-[-0.5rem]">
+        <div class="relative">
+          <div
+            class="w-16 h-16 mx-auto flex items-center justify-center bg-cyan-400/10 rounded-xl border border-cyan-400/30">
+            <img src="image/3dsmax.png" class="w-15 h-15 object-contain">
+          </div>
+          <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-cyan-400 animate-pulse"></div>
+        </div>
+        <div class="text-center">
+          <p class="font-bold text-white text-sm group-hover:text-cyan-400">3ds Max</p>
+          <p class="text-[10px] text-gray-400 mt-1">Graphic Tool</p>
+        </div>
+        <div class="h-1 w-0 bg-cyan-400 rounded-full mx-auto group-hover:w-full transition-all duration-300"></div>
+      </div>
+    </label>
+
+    <label class="text-gray-400 cursor-pointer">
+      <input type="checkbox" class="hidden peer" onclick="window.location.href='eclipse://'; return false;" />
+      <div
+        class="group flex flex-col gap-4 w-36 h-48 bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl p-4 shadow-xl border-2 border-transparent transition-all duration-300 ease-in-out hover:border-orange-400 hover:shadow-amber-400/20 hover:translate-y-[-0.5rem]">
+        <div class="relative">
+          <div
+            class="w-16 h-16 mx-auto flex items-center justify-center bg-amber-500/10 rounded-xl border border-amber-500/30">
+            <img src="image/eclipse.png" class="w-11 h-11 object-contain">
+          </div>
+          <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-orange-400 animate-pulse"></div>
+        </div>
+        <div class="text-center">
+          <p class="font-bold text-white text-sm group-hover:text-amber-400">Eclipse</p>
+          <p class="text-[10px] text-gray-400 mt-1">Java IDE</p>
+        </div>
+        <div class="h-1 w-0 bg-orange-400 rounded-full mx-auto group-hover:w-full transition-all duration-300"></div>
+      </div>
+    </label>
+
+    <label class="text-gray-400 cursor-pointer">
+      <input type="checkbox" class="hidden peer" onclick="window.location.href='vscode://'; return false;" />
+      <div
+        class="group flex flex-col gap-4 w-36 h-48 bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl p-4 shadow-xl border-2 border-transparent transition-all duration-300 ease-in-out hover:border-blue-500 hover:shadow-blue-500/20 hover:translate-y-[-0.5rem]">
+        <div class="relative">
+          <div
+            class="w-16 h-16 mx-auto flex items-center justify-center bg-blue-500/10 rounded-xl border border-blue-500/30">
+            <img src="image/vscode.png" class="w-15 h-15 object-contain">
+          </div>
+          <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-blue-500 animate-pulse"></div>
+        </div>
+        <div class="text-center">
+          <p class="font-bold text-white text-sm group-hover:text-blue-400">VS Code</p>
+          <p class="text-[10px] text-gray-400 mt-1">Web / Editor</p>
+        </div>
+        <div class="h-1 w-0 bg-blue-500 rounded-full mx-auto group-hover:w-full transition-all duration-300"></div>
+      </div>
+    </label>
+
+  </div>
+  </label>
+  </div>
+
+  <div class="flex flex-wrap gap-6 justify-center items-center mt-10 mb-2">
+    <input type="checkbox" class="hidden peer" onclick="window.location.href='marktext://'; return false;" />
+    <div
+      class="group flex flex-col gap-4 w-36 h-48 bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl p-4 shadow-xl border-2 border-transparent transition-all duration-300 hover:border-green-500 hover:translate-y-[-0.5rem]">
+      <div class="relative">
+        <div
+          class="w-16 h-16 mx-auto flex items-center justify-center bg-green-50 rounded-xl border border-green-500/30">
+          <img src="image/marktext.png" class="w-11 h-11 object-contain">
+        </div>
+        <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+      </div>
+      <div class="text-center">
+        <p class="font-bold text-white text-sm group-hover:text-green-400">MarkText</p>
+        <p class="text-[10px] text-gray-400 mt-1">Markdown</p>
+      </div>
+      <div class="h-1 w-0 bg-green-500 rounded-full mx-auto group-hover:w-full transition-all duration-300"></div>
     </div>
-    <h3>MJC Mail</h3>
-    <p>명지전문대학 웹 메일 시스템(MJC Mail)로 이동합니다.</p>
+    </label>
 
-    <a href="https://mpu.mjc.ac.kr/Career/Counsel/PAU.aspx" class="menu-card" target="_blank">
-     <div class="card-icon">  
-        <img src="image/smartcare.png" alt="Instagram" style="width: 50px; height: 50px;">
+
+    <label class="text-gray-400 cursor-pointer">
+      <input type="checkbox" class="hidden peer"
+        onclick="window.open('https://quizn.show/quz/pin/gamePinForm.do', '_blank'); return false;" />
+      <div
+        class="group flex flex-col gap-4 w-36 h-48 bg-white rounded-2xl p-4 shadow-xl border-2 border-gray-100 transition-all duration-300 hover:bg-gradient-to-b hover:from-orange-500 hover:to-orange-600 hover:border-orange-500">
+        <div class="relative">
+          <div
+            class="w-16 h-16 mx-auto flex items-center justify-center bg-orange-50 rounded-xl border border-orange-100 group-hover:bg-white/20">
+            <img src="image/quizn.png" class="w-20 h-20 object-contain">
+          </div>
+          <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-orange-400 animate-pulse"></div>
+        </div>
+        <div class="text-center">
+          <p class="font-bold text-gray-800 text-sm group-hover:text-white">QuizN</p>
+          <p class="text-[10px] text-gray-500 mt-1 group-hover:text-orange-100">Quiz Platform</p>
+        </div>
+        <div class="h-1 w-0 bg-orange-400 rounded-full mx-auto group-hover:w-full transition-all duration-300"></div>
+      </div>
+    </label>
+
+    <label class="text-gray-400 cursor-pointer">
+      <input type="checkbox" class="hidden peer"
+        onclick="window.open('https://github.com/', '_blank'); return false;" />
+      <div
+        class="group flex flex-col gap-4 w-36 h-48 bg-white rounded-2xl p-4 shadow-xl border-2 border-gray-100 transition-all duration-300 hover:bg-gradient-to-b hover:from-gray-700 hover:to-gray-800 hover:border-gray-600">
+        <div class="relative">
+          <div
+            class="w-16 h-16 mx-auto flex items-center justify-center bg-gray-50 rounded-xl border border-gray-100 group-hover:bg-white/20">
+            <img src="image/github.png" class="w-10 h-10 object-contain">
+          </div>
+          <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-gray-500 animate-pulse"></div>
+        </div>
+        <div class="text-center">
+          <p class="font-bold text-gray-800 text-sm group-hover:text-white">GitHub</p>
+          <p class="text-[10px] text-gray-500 mt-1 group-hover:text-gray-200">Git / Repository</p>
+        </div>
+        <div class="h-1 w-0 bg-gray-400 rounded-full mx-auto group-hover:w-full transition-all duration-300"></div>
+      </div>
+    </label>
+  </div>
+
+  <div class="lecture-container">
+    <div class="lecture-section">
+      <h3>게임프로그래밍</h3>
+      <div class="file-list">
+
+
+        <span>
+          <a href="pdf/ch01.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">C# 프로그래밍 첫걸음 (Chapter 01)</p>
+          </a>
+        </span>
+
+        <span>
+          <a href="pdf/ch02.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">기본 문법 (Chapter 02)</p>
+          </a>
+        </span>
+
+        <span>
+          <a href="pdf/ch03.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">조건문 (Chapter 03)</p>
+          </a>
+        </span>
+
+        <span>
+          <a href="pdf/ch04.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">반복문 (Chapter 04)</p>
+          </a>
+        </span>
+
+        <span>
+          <a href="pdf/ch05.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">클래스 기본 (Chapter 05)</p>
+          </a>
+        </span>
+
+        <span>
+          <a href="pdf/ch06.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">메서드 (Chap 06)</p>
+          </a>
+        </span>
+      </div>
     </div>
-    <h3>SmartCare</h3>
-    <p>명지전문대학 학생 역량 이력 관리 시스템(SmartCare)로 이동합니다.</p>
-</a>
-</div>
 
-<div class="flex flex-wrap gap-6 justify-center items-center mt-10 mb-2">
-    
-    <label class="text-gray-400 cursor-pointer">
-        <input type="checkbox" class="hidden peer" onclick="window.location.href='vs2026://'; return false;" />
-        <div class="group flex flex-col gap-4 w-36 h-48 bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl p-4 shadow-xl border-2 border-transparent transition-all duration-300 ease-in-out hover:border-purple-500 hover:shadow-purple-500/20 hover:translate-y-[-0.5rem]">
-            <div class="relative">
-                <div class="w-16 h-16 mx-auto flex items-center justify-center bg-purple-500/10 rounded-xl border border-purple-500/30">
-                    <img src="image/vs.png" class="w-10 h-10 object-contain">
-                </div>
-                <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-purple-500 animate-pulse"></div>
-            </div>
-            <div class="text-center">
-                <p class="font-bold text-white text-sm group-hover:text-purple-400">Visual Studio</p>
-                <p class="text-[10px] text-gray-400 mt-1">C# / IDE</p>
-            </div>
-            <div class="h-1 w-0 bg-purple-500 rounded-full mx-auto group-hover:w-full transition-all duration-300"></div>
+    <div class="lecture-section">
+      <h3>게임그래픽 기초</h3>
+      <div class="file-list">
+
+        <div class="flex flex-wrap gap-4 justify-center items-center mt-10 mb-10">
+<p>
+          <span>
+            <a href="https://youtu.be/0V7-B76oDb0?si=PeFMPxFw7EPmTvIX" target="_blank" class="maxvideo">
+              <span>▶ 3주차-컵</span>
+            </a>
+          </span>
+
+          <span>
+            <a href="https://youtu.be/v0lMKBo34ds?si=vzMUhstLUf5vWyTm" target="_blank" class="maxvideo">
+              <span>▶ 4주차-접시,스푼</span>
+            </a>
+          </span>
+</p>
+
+          <span>
+            <a href="https://youtu.be/JWFie9eDkGA?si=SR5KlKnALQNkAJ1U" target="_blank" class="maxvideo">
+              <span>▶ 5주차 1차시-세부편집</span>
+            </a>
+          </span>
+
+          <span>
+            <a href="https://youtu.be/BPHuUT0zoKI?si=2E8zRt2wzCqVUpap" target="_blank" class="maxvideo">
+              <span>▶ 5주차 2차시-세부편집</span>
+            </a>
+          </span>
+
+          <span>
+            <a href="https://youtu.be/v0lMKBo34ds?si=vzMUhstLUf5vWyTm" target="_blank" class="maxvideo">
+              <span>▶ 5주차 3차시-검,철퇴 </span>
+            </a>
+          </span>
+
+          <span>
+            <a href="https://youtu.be/KA9KfMoQhTg?si=pnl3XBBT_rgUec8K" target="_blank" class="maxvideo">
+              <span>▶ 6주차 1차시-Allign Pivot</span>
+            </a>
+          </span>
+
+          <span>
+            <a href="https://youtu.be/l6c1epTtNVk?si=nHLioGfYVnJxoUgU" target="_blank" class="maxvideo">
+              <span>▶ 6주차 2차시-Allign Pivot</span>
+            </a>
+          </span>
+
+          <span>
+            <a href="https://youtu.be/l6c1epTtNVk?si=9LZOjTp8TjOGZvCa" target="_blank" class="maxvideo">
+              <span>▶ 6주차 3차시-Reset X Form</span>
+            </a>
+          </span>
+
+          <span>
+            <a href="https://youtu.be/oy9rC6YQwfQ?si=iIa3w4etvMySTjXi" target="_blank" class="maxvideo">
+              <span>▶ 7주차 1차시-캐릭터(몸통)</span>
+            </a>
+          </span>
+
+          <span>
+            <a href="https://youtu.be/tt-hxXzbWu8?si=zoXrVXOO1LYpQBLW" target="_blank" class="maxvideo">
+              <span>▶ 7주차 2차시-캐릭터(팔)</span>
+            </a>
+          </span>
+          <span>
+            <a href="https://youtu.be/n9sNFonoh4g?si=fC5kPi6sG7FPzMVS" target="_blank" class="maxvideo">
+              <span>▶ 7주차 3차시-캐릭터(다리,이빨)</span>
+            </a>
+          </span>
+          <span>
+            <a href="https://youtu.be/IEzmA-YC7bs?si=AUfPz_gkkBLHrNdx" target="_blank" class="maxvideo">
+              <span>▶ 10주차 1차시-인체 캐릭터 특징분석</span>
+            </a>
+          </span>
+
+          <span>
+            <a href="https://youtu.be/m-Mxw36Ybjk?si=adOxKKQ5pC4pPPmL" target="_blank" class="maxvideo">
+              <span>▶ 10주차 2차시-인체(몸통)</span>
+            </a>
+          </span>
+
+          <span>
+            <a href="https://youtu.be/TgfCel9AQlI?si=LfxVTI1xvs_B8Gcc" target="_blank" class="maxvideo">
+              <span>▶ 10주차 3차시-인체(팔,다리)</span>
+            </a>
+          </span>
+
         </div>
-    </label>
+      </div>
+    </div>
 
-    <label class="text-gray-400 cursor-pointer">
-        <input type="checkbox" class="hidden peer" onclick="window.location.href='runmax://'; return false;" />
-        <div class="group flex flex-col gap-4 w-36 h-48 bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl p-4 shadow-xl border-2 border-transparent transition-all duration-300 ease-in-out hover:border-cyan-400 hover:shadow-cyan-400/20 hover:translate-y-[-0.5rem]">
-            <div class="relative">
-                <div class="w-16 h-16 mx-auto flex items-center justify-center bg-cyan-400/10 rounded-xl border border-cyan-400/30">
-                    <img src="image/3dsmax.png" class="w-15 h-15 object-contain">
-                </div>
-                <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-cyan-400 animate-pulse"></div>
-            </div>
-            <div class="text-center">
-                <p class="font-bold text-white text-sm group-hover:text-cyan-400">3ds Max</p>
-                <p class="text-[10px] text-gray-400 mt-1">Graphic Tool</p>
-            </div>
-            <div class="h-1 w-0 bg-cyan-400 rounded-full mx-auto group-hover:w-full transition-all duration-300"></div>
-        </div>
-    </label>
+    <div class="lecture-section">
+      <h3>객체 지향 프로그래밍</h3>
+      <div class="file-list">
 
-    <label class="text-gray-400 cursor-pointer">
-        <input type="checkbox" class="hidden peer" onclick="window.location.href='eclipse://'; return false;" />
-        <div class="group flex flex-col gap-4 w-36 h-48 bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl p-4 shadow-xl border-2 border-transparent transition-all duration-300 ease-in-out hover:border-orange-400 hover:shadow-amber-400/20 hover:translate-y-[-0.5rem]">
-            <div class="relative">
-                <div class="w-16 h-16 mx-auto flex items-center justify-center bg-amber-500/10 rounded-xl border border-amber-500/30">
-                    <img src="image/eclipse.png" class="w-11 h-11 object-contain">
-                </div>
-                <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-orange-400 animate-pulse"></div>
-            </div>
-            <div class="text-center">
-                <p class="font-bold text-white text-sm group-hover:text-amber-400">Eclipse</p>
-                <p class="text-[10px] text-gray-400 mt-1">Java IDE</p>
-            </div>
-            <div class="h-1 w-0 bg-orange-400 rounded-full mx-auto group-hover:w-full transition-all duration-300"></div>
-        </div>
-    </label>
+        <span>
+          <a href="pdf/Java_프로그래밍_1주차_강의노트.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">1장 Java 프로그래밍 언어의 특징 및 동작 원리 이해</p>
+          </a>
+        </span>
 
-    <label class="text-gray-400 cursor-pointer">
-        <input type="checkbox" class="hidden peer" onclick="window.location.href='vscode://'; return false;" />
-        <div class="group flex flex-col gap-4 w-36 h-48 bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl p-4 shadow-xl border-2 border-transparent transition-all duration-300 ease-in-out hover:border-blue-500 hover:shadow-blue-500/20 hover:translate-y-[-0.5rem]">
-            <div class="relative">
-                <div class="w-16 h-16 mx-auto flex items-center justify-center bg-blue-500/10 rounded-xl border border-blue-500/30">
-                    <img src="image/vscode.png" class="w-15 h-15 object-contain">
-                </div>
-                <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-blue-500 animate-pulse"></div>
-            </div>
-            <div class="text-center">
-                <p class="font-bold text-white text-sm group-hover:text-blue-400">VS Code</p>
-                <p class="text-[10px] text-gray-400 mt-1">Web / Editor</p>
-            </div>
-            <div class="h-1 w-0 bg-blue-500 rounded-full mx-auto group-hover:w-full transition-all duration-300"></div>
-        </div>
-    </label>
+        <span>
+          <a href="pdf/2장_자료형.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">2장-자료형</p>
+          </a>
+        </span>
 
-        </div>
-    </label>
-</div> 
+        <span>
+          <a href="pdf/3장_연산자.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">3장 연산자</p>
+          </a>
+        </span>
 
-<div class="flex flex-wrap gap-6 justify-center items-center mt-10 mb-2">
-        <input type="checkbox" class="hidden peer" onclick="window.location.href='marktext://'; return false;" />
-        <div class="group flex flex-col gap-4 w-36 h-48 bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl p-4 shadow-xl border-2 border-transparent transition-all duration-300 hover:border-green-500 hover:translate-y-[-0.5rem]">
-            <div class="relative">
-                <div class="w-16 h-16 mx-auto flex items-center justify-center bg-green-50 rounded-xl border border-green-500/30">
-                    <img src="image/marktext.png" class="w-11 h-11 object-contain">
-                </div>
-                <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
-            </div>
-            <div class="text-center">
-                <p class="font-bold text-white text-sm group-hover:text-green-400">MarkText</p>
-                <p class="text-[10px] text-gray-400 mt-1">Markdown</p>
-            </div>
-            <div class="h-1 w-0 bg-green-500 rounded-full mx-auto group-hover:w-full transition-all duration-300"></div>
-        </div>
-    </label>
+        <span>
+          <a href="pdf/4장_제어문과_제어키워드.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">4장-제어문과 제어키워드</p>
+          </a>
+        </span>
+
+        <span>
+          <a href="pdf/5장_참조자료형.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">5장-참조자료형</p>
+          </a>
+        </span>
+
+        <span>
+          <a href="pdf/6장_클래스(class)의_기본_문법.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">6장-클래스(class)의_기본_문법</p>
+          </a>
+        </span>
+      </div>
+    </div>
 
 
-    <label class="text-gray-400 cursor-pointer">
-        <input type="checkbox" class="hidden peer" onclick="window.open('https://quizn.show/quz/pin/gamePinForm.do', '_blank'); return false;" />
-        <div class="group flex flex-col gap-4 w-36 h-48 bg-white rounded-2xl p-4 shadow-xl border-2 border-gray-100 transition-all duration-300 hover:bg-gradient-to-b hover:from-orange-500 hover:to-orange-600 hover:border-orange-500">
-           <div class="relative">
-            <div class="w-16 h-16 mx-auto flex items-center justify-center bg-orange-50 rounded-xl border border-orange-100 group-hover:bg-white/20">
-                <img src="image/quizn.png" class="w-20 h-20 object-contain">
-            </div>
-            <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-orange-400 animate-pulse"></div>
-           </div>
-            <div class="text-center">
-                <p class="font-bold text-gray-800 text-sm group-hover:text-white">QuizN</p>
-                <p class="text-[10px] text-gray-500 mt-1 group-hover:text-orange-100">Quiz Platform</p>
-            </div>
-            <div class="h-1 w-0 bg-orange-400 rounded-full mx-auto group-hover:w-full transition-all duration-300"></div>
-        </div>
-    </label>
+    <div class="lecture-section">
+      <h3>프론트엔드프로그래밍</h3>
+      <div class="file-list">
 
-<label class="text-gray-400 cursor-pointer">
-        <input type="checkbox" class="hidden peer" onclick="window.open('https://github.com/', '_blank'); return false;" />
-        <div class="group flex flex-col gap-4 w-36 h-48 bg-white rounded-2xl p-4 shadow-xl border-2 border-gray-100 transition-all duration-300 hover:bg-gradient-to-b hover:from-gray-700 hover:to-gray-800 hover:border-gray-600">
-            <div class="relative">
-            <div class="w-16 h-16 mx-auto flex items-center justify-center bg-gray-50 rounded-xl border border-gray-100 group-hover:bg-white/20">
-                <img src="image/github.png" class="w-10 h-10 object-contain">
-            </div>
-            <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-gray-500 animate-pulse"></div>
-            </div>
-            <div class="text-center">
-                <p class="font-bold text-gray-800 text-sm group-hover:text-white">GitHub</p>
-                <p class="text-[10px] text-gray-500 mt-1 group-hover:text-gray-200">Git / Repository</p>
-            </div>
-            <div class="h-1 w-0 bg-gray-400 rounded-full mx-auto group-hover:w-full transition-all duration-300"></div>
-        </div>
-    </label>
-</div>
+        <span>
+          <a href="https://dayoung-univ.github.io/Frontend2026-01/OT" target="_blank" class="vspdf-btn"
+            style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">OT 자료 </p>
+          </a>
+        </span>
 
-<a href="pdf/ch01.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">C# 프로그래밍 첫걸음 (Chapter 01)</p>
-</a>
+        <span>
+          <a href="pdf/마크다운_보충자료.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">마크다운 작성방법 참고자료</p>
+          </a>
+        </span>
 
-<a href="pdf/ch02.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">기본 문법 (Chapter 02)</p>
-</a>
+        <span>
+          <a href="https://dayoung-univ.github.io/Frontend2026-01/week3" target="_blank" class="vspdf-btn"
+            style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">3주차 수업 자료-HTML Form & UI 기획 </p>
+          </a>
+        </span>
 
-<a href="pdf/ch03.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">조건문 (Chapter 03)</p>
-</a>
+        <span>
+          <a href="https://dayoung-univ.github.io/Frontend2026-01/week4" target="_blank" class="vspdf-btn"
+            style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">4주차 수업 자료-CSS 스타일링 & GitHub 배포</p>
+          </a>
+        </span>
 
-<a href="pdf/ch04.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">반복문 (Chapter 04)</p>
-</a>
+        <span>
+          <a href="https://dayoung-univ.github.io/Frontend2026-01/week5" target="_blank" class="vspdf-btn"
+            style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text"> 5주차 수업 자료-CSS Layout & 팀 협업</p>
+          </a>
+        </span>
 
-<a href="pdf/ch05.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">클래스 기본 (Chapter 05)</p>
-</a>
+        <span>
+          <a href="https://dayoung-univ.github.io/Frontend2026-01/week6" target="_blank" class="vspdf-btn"
+            style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">6주차 수업 자료-Flexbox & 반응형 웹</p>
+          </a>
+        </span>
 
-<a href="pdf/ch06.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">메서드 (Chap 06)</p>
-</a>
+        <span>
+          <a href="https://dayoung-univ.github.io/Frontend2026-01/week7" target="_blank" class="vspdf-btn"
+            style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">7주차 수업 자료-웹 디자인의 완성 </p>
+          </a>
+        </span>
 
-<div class="flex flex-wrap gap-4 justify-center items-center mt-10 mb-10">
-    
-    <a href="https://youtu.be/0V7-B76oDb0?si=PeFMPxFw7EPmTvIX" target="_blank" class="maxvideo">
-        <span>▶ 3주차-컵</span>
-    </a>
+        <span>
+          <a href="https://dayoung-univ.github.io/Frontend2026-01/week10" target="_blank" class="vspdf-btn"
+            style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text"> 10주차 수업 자료-실전 팀 빌딩 & README 기반 Git 협</p>
+          </a>
+        </span>
 
-    <a href="https://youtu.be/v0lMKBo34ds?si=vzMUhstLUf5vWyTm" target="_blank" class="maxvideo">
-        <span>▶ 4주차-접시,스푼</span>
-    </a>
+        <span>
+          <a href="pdf/프론트엔드 기말 프로젝트 (103).pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">프론트엔드 기말 프로젝트</p>
+          </a>
+        </span>
 
-    <a href="https://youtu.be/JWFie9eDkGA?si=SR5KlKnALQNkAJ1U" target="_blank" class="maxvideo">
-        <span>▶ 5주차 1차시-세부편집</span>
-    </a>
+        <span>
+          <a href="https://dayoung-univ.github.io/Frontend2026-01/week11" target="_blank" class="vspdf-btn"
+            style="text-decoration: none;">
+            <span class="folderContainer">
+              <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z"
+                  fill="#FFA500"></path>
+              </svg>
+              <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect width="88" height="99" fill="white"></rect>
+              </svg>
+              <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z"
+                  fill="#FFB224"></path>
+              </svg>
+            </span>
+            <p class="text">개발 착수 & MVP 기반 태스크 관리</p>
+          </a>
+        </span>
+      </div>
+    </div>
+  </div>
 
-    <a href="https://youtu.be/BPHuUT0zoKI?si=2E8zRt2wzCqVUpap" target="_blank" class="maxvideo">
-        <span>▶ 5주차 2차시-세부편집</span>
-    </a>
+  <script>
 
-    <a href="https://youtu.be/v0lMKBo34ds?si=vzMUhstLUf5vWyTm" target="_blank" class="maxvideo">
-        <span>▶ 5주차 3차시-검,철퇴 </span>
-    </a>
+    let myVantaBackground;
 
-    <a href="https://youtu.be/KA9KfMoQhTg?si=pnl3XBBT_rgUec8K" target="_blank" class="maxvideo">
-        <span>▶ 6주차 1차시-Allign Pivot</span>
-    </a>
+    window.onload = () => {
 
-    <a href="https://youtu.be/l6c1epTtNVk?si=nHLioGfYVnJxoUgU" target="_blank" class="maxvideo">
-        <span>▶ 6주차 2차시-Allign Pivot</span>
-    </a>
-
-    <a href="https://youtu.be/l6c1epTtNVk?si=9LZOjTp8TjOGZvCa" target="_blank" class="maxvideo">
-        <span>▶ 6주차 3차시-Reset X Form</span>
-    </a>
-
-    <a href="https://youtu.be/oy9rC6YQwfQ?si=iIa3w4etvMySTjXi" target="_blank" class="maxvideo">
-        <span>▶ 7주차 1차시-캐릭터(몸통)</span>
-    </a>
-
-      <a href="https://youtu.be/tt-hxXzbWu8?si=zoXrVXOO1LYpQBLW" target="_blank" class="maxvideo">
-        <span>▶ 7주차 2차시-캐릭터(팔)</span>
-    </a>
-
-      <a href="https://youtu.be/n9sNFonoh4g?si=fC5kPi6sG7FPzMVS" target="_blank" class="maxvideo">
-        <span>▶ 7주차 3차시-캐릭터(다리,이빨)</span>
-    </a>
-
-      <a href="https://youtu.be/IEzmA-YC7bs?si=AUfPz_gkkBLHrNdx" target="_blank" class="maxvideo">
-        <span>▶ 10주차 1차시-인체 캐릭터 특징분석</span>
-    </a>
-
-    <a href="https://youtu.be/m-Mxw36Ybjk?si=adOxKKQ5pC4pPPmL" target="_blank" class="maxvideo">
-        <span>▶ 10주차 2차시-인체(몸통)</span>
-    </a>
-
-    <a href="https://youtu.be/TgfCel9AQlI?si=LfxVTI1xvs_B8Gcc" target="_blank" class="maxvideo">
-        <span>▶ 10주차 3차시-인체(팔,다리)</span>
-    </a>
-</div>
-
-<a href="pdf/Java_프로그래밍_1주차_강의노트.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">1장 Java 프로그래밍 언어의 특징 및 동작 원리 이해</p>
-</a>
-
-<a href="pdf/2장_자료형.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">2장-자료형</p>
-</a>
-
-<a href="pdf/3장_연산자.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">3장 연산자</p>
-</a>
-
-<a href="pdf/4장_제어문과_제어키워드.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">4장-제어문과 제어키워드</p>
-</a>
-
-<a href="pdf/5장_참조자료형.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">5장-참조자료형</p>
-</a>
-
-<a href="pdf/6장_클래스(class)의_기본_문법.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">6장-클래스(class)의_기본_문법</p>
-</a>
-
-<br>
-
-<a href="https://dayoung-univ.github.io/Frontend2026-01/OT" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">OT 자료 </p>
-</a>
-
-<a href="pdf/마크다운_보충자료.pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">마크다운 작성방법 참고자료</p>
-</a>
-
-<a href="https://dayoung-univ.github.io/Frontend2026-01/week3" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">3주차 수업 자료-HTML Form & UI 기획 </p>
-</a>
-
-<a href="https://dayoung-univ.github.io/Frontend2026-01/week4" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">4주차 수업 자료-CSS 스타일링 & GitHub 배포</p>
-</a>
-
-<a href="https://dayoung-univ.github.io/Frontend2026-01/week5" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text"> 5주차 수업 자료-CSS Layout & 팀 협업</p>
-</a>
-
-<a href="https://dayoung-univ.github.io/Frontend2026-01/week6" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">6주차 수업 자료-Flexbox & 반응형 웹</p>
-</a>
-
-<a href="https://dayoung-univ.github.io/Frontend2026-01/week7" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">7주차 수업 자료-웹 디자인의 완성 </p>
-</a>
-
-<a href="https://dayoung-univ.github.io/Frontend2026-01/week10" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text"> 10주차 수업 자료-실전 팀 빌딩 & README 기반 Git 협</p>
-</a>
-
-<a href="pdf/프론트엔드 기말 프로젝트 (103).pdf" target="_blank" class="vspdf-btn" style="text-decoration: none;">
-  <span class="folderContainer">
-    <svg class="fileBack" width="146" height="113" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3823C52.1899 0 53.882 0.811927 55.0109 2.22298L62.5891 11.6955C63.718 13.1065 65.4101 13.9185 67.2177 13.9185H142C144.209 13.9185 146 15.7276 146 17.9369V109C146 111.209 144.209 113 142 113H4C1.79086 113 0 111.209 0 109V4Z" fill="#FFA500"></path>
-    </svg>
-    <svg class="filePage" width="88" height="99" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="88" height="99" fill="white"></rect>
-    </svg>
-    <svg class="fileFront" width="160" height="79" viewBox="0 0 160 79" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0.29306 12.2478C0.133905 9.38867 2.41128 7.00003 5.2808 7.00003H154.719C157.589 7.00003 159.866 9.38867 159.707 12.2478L156.374 72.2478C156.23 74.8435 154.074 76.8784 151.477 76.8784H8.52306C5.92561 76.8784 3.77012 74.8435 3.62639 72.2478L0.29306 12.2478Z" fill="#FFB224"></path>
-    </svg>
-  </span>
-  <p class="text">프론트엔드 기말 프로젝트</p>
-</a>s
-
-<script>
-
-let myVantaBackground;
-
-window.onload = () => {
-    // 1. 초기 배경 설정 (라이트 모드 기준)
-    myVantaBackground = VANTA.GLOBE({
+      myVantaBackground = VANTA.GLOBE({
         el: "#vanta-bg",
         mouseControls: true,
         touchControls: true,
@@ -1237,55 +1722,53 @@ window.onload = () => {
         minWidth: 200.00,
         scale: 1.00,
         scaleMobile: 1.00,
-        backgroundColor: 0xe3f2fd, // 라이트 배경
-        color: 0x64b5f6,           // 선 색상 (연하늘 - 이 부분이 노랑색이면 다 노랗게 보임)
-        color2: 0xfff176,          // 점 색상 (노란 별)
-        size: 1.50,
+        backgroundColor: 0xe3f2fd,
+        color: 0x64b5f6,
+        color2: 0xfff176,
         spacing: 20.00,
+        size: 1.5,
         showDots: true
-    });
-};
+      });
+    };
 
-function toggleDarkMode() {
-    const body = document.body;
-    body.classList.toggle('dark-mode');
-    const isDark = body.classList.contains('dark-mode');
+    function toggleDarkMode() {
+      const body = document.body;
+      body.classList.toggle('dark-mode');
+      const isDark = body.classList.contains('dark-mode');
 
-    if (myVantaBackground) {
+      if (myVantaBackground) {
         myVantaBackground.setOptions({
-            // 다크모드일 때 배경색
-            backgroundColor: isDark ? 0x0d1117 : 0xe3f2fd,
-            
-            // 선 색상: 다크모드면 보라색(#8983f7), 라이트모드면 연하늘색
-            color: isDark ? 0x8983f7 :0x8983f7, 
-            
-            // 점 색상: 항상 노란색 별빛 유지
-            color2:  0xffd700,
-            
-         
+
+          backgroundColor: isDark ? 0x0d1117 : 0xe3f2fd,
+
+
+          color: isDark ? 0x8983f7 : 0x64b5f6,
+
+
+          color2: isDark ? 0xffd700 : 0xffd700,
+
         });
+      }
     }
-}
 
+    {
+      updateTime();
+      setInterval(updateTime, 1000);
+    };
 
-{    
-    updateTime(); 
-    setInterval(updateTime, 1000); 
-};
-
-
-
-function updateTime() {
-    const timeElement = document.getElementById('current-time');
-    if (timeElement) {
+    function updateTime() {
+      const timeElement = document.getElementById('current-time');
+      if (timeElement) {
         const now = new Date();
         const hours = String(now.getHours()).padStart(2, '0');
         const minutes = String(now.getMinutes()).padStart(2, '0');
         const seconds = String(now.getSeconds()).padStart(2, '0');
         timeElement.textContent = `${hours}:${minutes}:${seconds}`;
+      }
     }
-}
-</script>
+
+  </script>
 
 </body>
+
 </html>
