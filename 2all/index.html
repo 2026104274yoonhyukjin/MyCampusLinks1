@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -89,28 +90,83 @@
     }
 
     /* Toggle Switch */
-    .toggle-track { position: relative; width: 44px; height: 24px; border-radius: 9999px; background: var(--ol-variant); transition: background .2s; }
-    :root:has(#darkToggle:checked) .toggle-track { background: var(--primary); }
-    .toggle-dot { position: absolute; left: 2px; top: 2px; width: 20px; height: 20px; border-radius: 9999px; background: var(--surface-c-lowest); transition: transform .2s; }
-    :root:has(#darkToggle:checked) .toggle-dot { transform: translateX(20px); }
+    .toggle-track {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      border-radius: 9999px;
+      background: var(--ol-variant);
+      transition: background .2s;
+    }
+
+    :root:has(#darkToggle:checked) .toggle-track {
+      background: var(--primary);
+    }
+
+    .toggle-dot {
+      position: absolute;
+      left: 2px;
+      top: 2px;
+      width: 20px;
+      height: 20px;
+      border-radius: 9999px;
+      background: var(--surface-c-lowest);
+      transition: transform .2s;
+    }
+
+    :root:has(#darkToggle:checked) .toggle-dot {
+      transform: translateX(20px);
+    }
 
     /* Sidebar Mobile */
-    .sidebar { transform: translateX(-100%); transition: transform .3s ease; }
-    :root:has(#sidebarToggle:checked) .sidebar { transform: translateX(0); }
-    .sidebar-overlay { display: none; }
-    :root:has(#sidebarToggle:checked) .sidebar-overlay { display: block; }
+    .sidebar {
+      transform: translateX(-100%);
+      transition: transform .3s ease;
+    }
+
+    :root:has(#sidebarToggle:checked) .sidebar {
+      transform: translateX(0);
+    }
+
+    .sidebar-overlay {
+      display: none;
+    }
+
+    :root:has(#sidebarToggle:checked) .sidebar-overlay {
+      display: block;
+    }
+
     @media (min-width: 1024px) {
-      .sidebar { transform: translateX(0); }
-      .sidebar-overlay { display: none !important; }
+      .sidebar {
+        transform: translateX(0);
+      }
+
+      .sidebar-overlay {
+        display: none !important;
+      }
     }
 
     /* Card Hover */
-    .dash-card { transition: transform .25s ease, filter .25s ease, box-shadow .25s ease; }
-    .dash-card:hover { transform: scale(1.05); filter: saturate(0.6); box-shadow: 0 8px 24px rgba(67, 85, 185, 0.12); }
+    .dash-card {
+      transition: transform .25s ease, filter .25s ease, box-shadow .25s ease;
+    }
+
+    .dash-card:hover {
+      transform: scale(1.05);
+      filter: saturate(0.6);
+      box-shadow: 0 8px 24px rgba(67, 85, 185, 0.12);
+    }
 
     /* Filter Tab */
-    .filter-tab { cursor: pointer; user-select: none; }
-    input[name="filter"]:checked + .filter-tab { background: var(--primary); color: var(--on-primary); }
+    .filter-tab {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    input[name="filter"]:checked+.filter-tab {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
   </style>
 </head>
 
@@ -126,7 +182,8 @@
 
 
   <!-- ========== SIDEBAR ========== -->
-  <aside class="sidebar fixed left-0 top-0 h-full w-[280px] bg-surface-c-low border-r border-ol-variant flex flex-col z-30">
+  <aside
+    class="sidebar fixed left-0 top-0 h-full w-[280px] bg-surface-c-low border-r border-ol-variant flex flex-col z-30">
 
     <!-- Logo -->
     <div class="px-6 pt-10 pb-6">
@@ -136,16 +193,20 @@
 
     <!-- Navigation: Upper -->
     <nav class="px-4 flex flex-col gap-1">
-      <a href="/1main/index.html" class="flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
+      <a href="/1main/index.html"
+        class="flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
         <span>🏠</span> 홈
       </a>
-      <a href="/2all/index.html" class="flex items-center gap-4 px-4 py-[10px] rounded bg-primary-fixed text-primary font-medium text-[14px]">
+      <a href="/2all/index.html"
+        class="flex items-center gap-4 px-4 py-[10px] rounded bg-primary-fixed text-primary font-medium text-[14px]">
         <span>📋</span> 전체 보기
       </a>
-      <a href="/3sub/index.html" class="flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
+      <a href="/3sub/index.html"
+        class="flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
         <span>📋</span> 과목별 보기
       </a>
-      <a href="/4week/index.html" class="flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
+      <a href="/4week/index.html"
+        class="flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
         <span>📋</span> 주차별 보기
       </a>
     </nav>
@@ -160,23 +221,28 @@
 
     <!-- Subjects List -->
     <nav class="flex-1 px-4 mt-3 flex flex-col gap-1 overflow-y-auto">
-      <a href="/5sub_c/index.html" class="flex items-center gap-3 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
+      <a href="/5sub_c/index.html"
+        class="flex items-center gap-3 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
         <span class="w-2 h-2 rounded-full bg-primary shrink-0"></span> 게임프로그래밍
       </a>
-      <a href="/6sub_3d/index.html" class="flex items-center gap-3 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
+      <a href="/6sub_3d/index.html"
+        class="flex items-center gap-3 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
         <span class="w-2 h-2 rounded-full bg-tertiary shrink-0"></span> 게임그래픽 기초
       </a>
-      <a href="/7sub_ja/index.html" class="flex items-center gap-3 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
+      <a href="/7sub_ja/index.html"
+        class="flex items-center gap-3 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
         <span class="w-2 h-2 rounded-full bg-error shrink-0"></span> 객체 지향 프로그래밍
       </a>
-      <a href="/8sub_fr/index.html" class="flex items-center gap-3 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
+      <a href="/8sub_fr/index.html"
+        class="flex items-center gap-3 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
         <span class="w-2 h-2 rounded-full bg-primary-container shrink-0"></span> 프론트엔드프로그래밍
       </a>
     </nav>
 
     <!-- Add Subject -->
     <div class="px-4 py-4 border-t border-ol-variant">
-      <button class="flex items-center justify-center gap-2 px-4 py-[10px] rounded border border-dashed border-ol text-on-surface-variant hover:bg-secondary-container text-[14px] font-medium">
+      <button
+        class="flex items-center justify-center gap-2 px-4 py-[10px] rounded border border-dashed border-ol text-on-surface-variant hover:bg-secondary-container text-[14px] font-medium">
         <span>＋</span> 과목 추가
       </button>
     </div>
@@ -188,7 +254,8 @@
   <main class="lg:ml-[280px] min-h-screen">
 
     <!-- TOP BAR -->
-    <header class="sticky top-0 z-10 bg-surface/80 backdrop-blur-md border-b border-ol-variant px-4 md:px-8 lg:px-10 py-4 flex items-center justify-between">
+    <header
+      class="sticky top-0 z-10 bg-surface/80 backdrop-blur-md border-b border-ol-variant px-4 md:px-8 lg:px-10 py-4 flex items-center justify-between">
 
       <!-- Left: Hamburger + Clock -->
       <div class="flex items-center gap-4">
@@ -205,7 +272,9 @@
       <!-- Right: Dark Mode Toggle -->
       <label for="darkToggle" class="flex items-center gap-2 cursor-pointer select-none">
         <span class="text-[16px]">☀️</span>
-        <div class="toggle-track"><div class="toggle-dot"></div></div>
+        <div class="toggle-track">
+          <div class="toggle-dot"></div>
+        </div>
         <span class="text-[16px]">🌙</span>
       </label>
 
@@ -221,7 +290,8 @@
           <h2 class="text-[22px] md:text-[26px] font-semibold text-on-surface leading-[34px]">전체 항목</h2>
           <p class="text-[14px] text-on-surface-variant mt-1">10개 항목</p>
         </div>
-        <button class="flex items-center gap-2 px-5 py-[10px] rounded bg-primary text-on-primary text-[14px] font-medium hover:opacity-90 transition-opacity">
+        <button
+          class="flex items-center gap-2 px-5 py-[10px] rounded bg-primary text-on-primary text-[14px] font-medium hover:opacity-90 transition-opacity">
           ＋ 항목 추가
         </button>
       </div>
@@ -237,15 +307,20 @@
           <!-- Dropdown: 전체 과목 -->
           <div class="flex items-center gap-2 text-[13px] text-on-surface-variant">
             <span class="hidden sm:inline">분류:</span>
-            <span class="bg-surface-c-lowest border border-ol-variant rounded px-3 py-[6px] cursor-pointer">전체 과목 ▾</span>
+            <span class="bg-surface-c-lowest border border-ol-variant rounded px-3 py-[6px] cursor-pointer">전체 과목
+              ▾</span>
           </div>
 
           <!-- Dropdown: 전체 주차 -->
-          <span class="bg-surface-c-lowest border border-ol-variant rounded px-3 py-[6px] text-[13px] text-on-surface-variant cursor-pointer">전체 주차 ▾</span>
+          <span
+            class="bg-surface-c-lowest border border-ol-variant rounded px-3 py-[6px] text-[13px] text-on-surface-variant cursor-pointer">전체
+            주차 ▾</span>
         </div>
 
         <!-- Right: Sort -->
-        <span class="bg-surface-c-lowest border border-ol-variant rounded px-3 py-[6px] text-[13px] text-on-surface-variant cursor-pointer self-start md:self-auto">🔃 최신순 ▾</span>
+        <span
+          class="bg-surface-c-lowest border border-ol-variant rounded px-3 py-[6px] text-[13px] text-on-surface-variant cursor-pointer self-start md:self-auto">🔃
+          최신순 ▾</span>
 
       </div>
 
@@ -254,54 +329,63 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5">
 
         <!-- 아이템 카드 예시 시작 -->
-        <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-5 cursor-pointer flex flex-col gap-3">
+        <div
+          class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-5 cursor-pointer flex flex-col gap-3">
           <div class="flex items-start gap-3">
             <span class="text-[28px] shrink-0">📋</span>
             <div class="flex-1 min-w-0">
               <h4 class="text-[15px] font-medium text-on-surface truncate">게임프로그래밍_1</h4>
-              <p class="text-[13px] text-on-surface-variant mt-[2px] truncate">1주차</p> 
+              <p class="text-[13px] text-on-surface-variant mt-[2px] truncate">1주차</p>
             </div>
-          
+
             <div class="flex flex-wrap gap-[6px]">
-              <span class="text-[11px] font-medium text-tertiary bg-tertiary-fixed px-2 py-[2px] rounded-full">C# 프로그래밍</span>
-              <span class="text-[11px] font-medium text-on-surface-variant bg-secondary-container px-2 py-[2px] rounded-full">1주차</span>
+              <span class="text-[11px] font-medium text-tertiary bg-tertiary-fixed px-2 py-[2px] rounded-full">C#
+                프로그래밍</span>
+              <span
+                class="text-[11px] font-medium text-on-surface-variant bg-secondary-container px-2 py-[2px] rounded-full">1주차</span>
             </div>
           </div>
         </div>
         <!-- 아이템 카드 예시 종료 -->
-      
-        <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-5 cursor-pointer flex flex-col gap-3">
+
+        <div
+          class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-5 cursor-pointer flex flex-col gap-3">
           <div class="flex items-start gap-3">
             <span class="text-[28px] shrink-0">📚</span>
             <div class="flex-1 min-w-0">
               <h4 class="text-[15px] font-medium text-on-surface truncate">게임그래픽 기초_1</h4>
               <p class="text-[13px] text-on-surface-variant mt-[2px] truncate">컵</p>
             </div>
-          
+
             <div class="flex flex-wrap gap-[6px]">
-              <span class="text-[11px] font-medium text-tertiary bg-tertiary-fixed px-2 py-[2px] rounded-full">게임그래픽 기초</span>
-              <span class="text-[11px] font-medium text-on-surface-variant bg-secondary-container px-2 py-[2px] rounded-full">2주차</span>
+              <span class="text-[11px] font-medium text-tertiary bg-tertiary-fixed px-2 py-[2px] rounded-full">게임그래픽
+                기초</span>
+              <span
+                class="text-[11px] font-medium text-on-surface-variant bg-secondary-container px-2 py-[2px] rounded-full">2주차</span>
             </div>
           </div>
         </div>
 
 
-       
-        <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-5 cursor-pointer flex flex-col gap-3">
+
+        <div
+          class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-5 cursor-pointer flex flex-col gap-3">
           <div class="flex items-start gap-3">
             <span class="text-[28px] shrink-0">🎨</span>
             <div class="flex-1 min-w-0">
               <h4 class="text-[15px] font-medium text-on-surface truncate">게임그래픽 기초_2</h4>
               <p class="text-[13px] text-on-surface-variant mt-[2px] truncate">상자</p>
             </div>
-          <div class="flex flex-wrap gap-[6px]">
-              <span class="text-[11px] font-medium text-tertiary bg-tertiary-fixed px-2 py-[2px] rounded-full">C# 프로그래밍</span>
-              <span class="text-[11px] font-medium text-on-surface-variant bg-secondary-container px-2 py-[2px] rounded-full">주차</span>
+            <div class="flex flex-wrap gap-[6px]">
+              <span class="text-[11px] font-medium text-tertiary bg-tertiary-fixed px-2 py-[2px] rounded-full">C#
+                프로그래밍</span>
+              <span
+                class="text-[11px] font-medium text-on-surface-variant bg-secondary-container px-2 py-[2px] rounded-full">주차</span>
             </div>
           </div>
         </div>
 
-        
+
 
       </div>
 
@@ -309,4 +393,5 @@
   </main>
 
 </body>
+
 </html>
