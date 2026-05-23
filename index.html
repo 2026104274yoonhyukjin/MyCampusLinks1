@@ -334,16 +334,58 @@
       }
     }
 
-    const defaultSubjects = ["게임프로그래밍", "게임그래픽 기초", "객체 지향 프로그래밍", "프론트엔드프로그래밍"];
+ const defaultSubjects = ["게임프로그래밍", "게임그래픽 기초", "객체 지향 프로그래밍", "프론트엔드프로그래밍"];
     const defaultData = [
+      // 게임프로그래밍
       { id: 1, title: "C# 프로그래밍 첫걸음 (Chapter 01)", week: "1주차", subject: "게임프로그래밍", link: "pdf/ch01.pdf" },
       { id: 2, title: "기본 문법 (Chapter 02)", week: "2주차", subject: "게임프로그래밍", link: "pdf/ch02.pdf" },
-      { id: 7, title: "3주차-컵", week: "3주차", subject: "게임그래픽 기초", link: "openmax://" },
-      { id: 8, title: "4주차 2차시-접시,스푼", week: "4주차", subject: "게임그래픽 기초", link: "https://youtu.be/v0lMKBo34ds?si=vzMUhstLUf5vWyTm" }
+      { id: 3, title: "조건문 (Chapter 03)", week: "3주차", subject: "게임프로그래밍", link: "pdf/ch03.pdf" },
+      { id: 4, title: "반복문 (Chapter 04)", week: "4주차", subject: "게임프로그래밍", link: "pdf/ch04.pdf" },
+      { id: 5, title: "클래스 기본 (Chapter 05)", week: "5주차", subject: "게임프로그래밍", link: "pdf/ch05.pdf" },
+      { id: 6, title: "메서드 (Chapter 06)", week: "6주차", subject: "게임프로그래밍", link: "pdf/ch06.pdf" },
+      
+      // 게임그래픽 기초
+      { id: 7, title: "3주차-컵", week: "3주차", subject: "게임그래픽 기초", link: "https://youtu.be/0V7-B76oDb0?si=PeFMPxFw7EPmTvIX" },
+      { id: 8, title: "4주차 2차시-접시,스푼", week: "4주차", subject: "게임그래픽 기초", link: "https://youtu.be/v0lMKBo34ds?si=vzMUhstLUf5vWyTm" },
+      { id: 9, title: "5주차 1차시-세부편집", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/JWFie9eDkGA?si=SR5KlKnALQNkAJ1U" },
+      { id: 10, title: "5주차 2차시-세부편집", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/BPHuUT0zoKI?si=2E8zRt2wzCqVUpap" },
+      { id: 11, title: "5주차 3차시-검,철퇴", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/XvxTYsfnPpI" },
+      { id: 12, title: "6주차 1차시-Allign Pivot", week: "6주차", subject: "게임그래픽 기초", link: "https://youtu.be/KA9KfMoQhTg?si=pnl3XBBT_rgUec8K" },
+      { id: 13, title: "6주차 2차시-Allign Pivot", week: "6주차", subject: "게임그래픽 기초", link: "https://youtu.be/DL9LDpRodEg" },
+      { id: 14, title: "6주차 3차시-Reset X Form", week: "6주차", subject: "게임그래픽 기초", link: "https://youtu.be/l6c1epTtNVk?si=9LZOjTp8TjOGZvCa" },
+      { id: 15, title: "7주차 1차시-캐릭터(몸통)", week: "7주차", subject: "게임그래픽 기초", link: "https://youtu.be/oy9rC6YQwfQ?si=iIa3w4etvMySTjXi" },
+      { id: 16, title: "7주차 2차시-캐릭터(팔)", week: "7주차", subject: "게임그래픽 기초", link: "https://youtu.be/tt-hxXzbWu8?si=zoXrVXOO1LYpQBLW" },
+      { id: 17, title: "7주차 3차시-캐릭터(다리,이빨)", week: "7주차", subject: "게임그래픽 기초", link: "https://youtu.be/n9sNFonoh4g?si=fC5kPi6sG7FPzMVS" },
+      { id: 18, title: "10주차 1차시-인체 캐릭터 특징분석", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/IEzmA-YC7bs?si=AUfPz_gkkBLHrNdx" },
+      { id: 19, title: "10주차 2차시-인체(몸통)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/m-Mxw36Ybjk?si=adOxKKQ5pC4pPPmL" },
+      { id: 20, title: "10주차 3차시-인체(팔,다리)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/TgfCel9AQlI?si=LfxVTI1xvs_B8Gcc" },
+      { id: 21, title: "10주차 3차시-인체(손,발)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/qHTTJ7woLNg" },
+
+      // 객체 지향 프로그래밍
+      { id: 22, title: "1장 Java 프로그래밍 언어의 특징 및 동작 원리 이해", week: "1주차", subject: "객체 지향 프로그래밍", link: "pdf/Java_프로그래밍_1주차_강의노트.pdf" },
+      { id: 23, title: "2장-자료형", week: "2주차", subject: "객체 지향 프로그래밍", link: "pdf/2장_자료형.pdf" },
+      { id: 24, title: "3장 연산자", week: "3주차", subject: "객체 지향 프로그래밍", link: "pdf/3장_연산자.pdf" },
+      { id: 25, title: "4장-제어문과 제어키워드", week: "4주차", subject: "객체 지향 프로그래밍", link: "pdf/4장_제어문과_제어키워드.pdf" },
+      { id: 26, title: "5장-참조자료형", week: "5주차", subject: "객체 지향 프로그래밍", link: "pdf/5장_참조자료형.pdf" },
+      { id: 27, title: "6장-클래스(class)의_기본_문법", week: "6주차", subject: "객체 지향 프로그래밍", link: "pdf/6장_클래스(class)의_기본_문법.pdf" },
+      { id: 28, title: "7장-클래스 내부 구성요소(필드메서드생성자)", week: "7주차", subject: "객체 지향 프로그래밍", link: "pdf/7장_클래스_내부_구성요소_1_(필드메서드생성자).pdf" },
+
+      // 프론트엔드프로그래밍 (서버 연동 오류 완벽 보완 주소)
+      { id: 29, title: "OT 자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/OT" },
+      { id: 30, title: "마크다운 작성방법 참고자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "pdf/마크다운_보충자료.pdf" },
+      { id: 31, title: "3주차 수업 자료-HTML Form & UI", week: "3주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week3" },
+      { id: 32, title: "4주차 수업 자료-CSS 스타일링 & GitHub 배포", week: "4주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week4" },
+      { id: 33, title: "5주차 수업 자료-CSS Layout & 팀 협업", week: "5주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week5" },
+      { id: 34, title: "6주차 수업 자료-Flexbox & 반응형 웹", week: "6주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week6" },
+      { id: 35, title: "7주차 수업 자료-Grid 레이아웃 & 동적 애니메이션", week: "7주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week7" },
+      { id: 36, title: "10주차 수업 자료-실전 팀 빌딩 & README 기반 Git 협업", week: "10주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week10" },
+      { id: 37, title: "11주차 수업 자료-개발 착수 & MVP 기반 태스크 관리", week: "11주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week11" },
+      { id: 38, title: "12주차 수업 자료-MVP 통합 및 알파 버전 완성", week: "12주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week12" },
+      { id: 39, title: "프론트엔드 기말 프로젝트 자료", week: "14주차", subject: "프론트엔드프로그래밍", link: "pdf/프론트엔드 기말 프로젝트 (103).pdf" }
     ];
 
-    let subjects = JSON.parse(localStorage.getItem('mySubjects')) || defaultSubjects;
-    let data = JSON.parse(localStorage.getItem('myData')) || defaultData;
+    let subjects = defaultSubjects;
+    let data = defaultData;
     let currentMode = 'subject';
 
     function saveToStorage() {
