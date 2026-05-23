@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MYCAMPUSLINKS — 통합 대시보드</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
@@ -24,49 +25,144 @@
             'on-error': { container: 'var(--on-error-container)' },
           },
           borderRadius: { sm: '0.25rem', DEFAULT: '0.5rem', md: '0.75rem', lg: '1rem', xl: '1.5rem', full: '9999px' },
-          maxWidth: { container: '100%' },
+          maxWidth: { container: '1280px' },
         }
       }
     }
   </script>
   <style>
+    /* Light Mode */
     :root {
-      --surface: #f8f9ff; --surface-dim: #ccdbf3; --surface-c-lowest: #ffffff;
-      --surface-c-low: #eff4ff; --surface-c: #e6eeff; --surface-c-high: #dce9ff;
-      --surface-tint: #4355b9; --on-surface: #0d1c2e; --on-surface-variant: #454652;
-      --ol: #757684; --ol-variant: #c5c5d4; --primary: #24389c;
-      --primary-container: #3f51b5; --primary-fixed: #dee0ff; --on-primary: #ffffff;
-      --on-primary-container: #cacfff; --inverse-primary: #bac3ff;
+      --surface: #f8f9ff;
+      --surface-dim: #ccdbf3;
+      --surface-c-lowest: #ffffff;
+      --surface-c-low: #eff4ff;
+      --surface-c: #e6eeff;
+      --surface-c-high: #dce9ff;
+      --surface-tint: #4355b9;
+      --on-surface: #0d1c2e;
+      --on-surface-variant: #454652;
+      --ol: #757684;
+      --ol-variant: #c5c5d4;
+      --primary: #24389c;
+      --primary-container: #3f51b5;
+      --primary-fixed: #dee0ff;
+      --on-primary: #ffffff;
+      --on-primary-container: #cacfff;
+      --inverse-primary: #bac3ff;
       --secondary-container: #e0e2ee;
-      --tertiary: #313e7e; --tertiary-fixed: #dee1ff;
-      --error: #ba1a1a; --error-container: #ffdad6; --on-error-container: #93000a;
+      --tertiary: #313e7e;
+      --tertiary-fixed: #dee1ff;
+      --error: #ba1a1a;
+      --error-container: #ffdad6;
+      --on-error-container: #93000a;
     }
+
+    /* Dark Mode */
     :root:has(#darkToggle:checked) {
-      --surface: #0f172a; --surface-dim: #1e293b; --surface-c-lowest: #1a2332;
-      --surface-c-low: #162032; --surface-c: #1e2a3a; --surface-c-high: #243042;
-      --surface-tint: #7986cb; --on-surface: #e2e8f0; --on-surface-variant: #94a3b8;
-      --ol: #475569; --ol-variant: #334155; --primary: #bac3ff;
-      --primary-container: #3f51b5; --primary-fixed: #1e2a4a; --on-primary: #00105c;
-      --on-primary-container: #dee0ff; --inverse-primary: #293ca0;
+      --surface: #0f172a;
+      --surface-dim: #1e293b;
+      --surface-c-lowest: #1a2332;
+      --surface-c-low: #162032;
+      --surface-c: #1e2a3a;
+      --surface-c-high: #243042;
+      --surface-tint: #7986cb;
+      --on-surface: #e2e8f0;
+      --on-surface-variant: #94a3b8;
+      --ol: #475569;
+      --ol-variant: #334155;
+      --primary: #bac3ff;
+      --primary-container: #3f51b5;
+      --primary-fixed: #1e2a4a;
+      --on-primary: #00105c;
+      --on-primary-container: #dee0ff;
+      --inverse-primary: #293ca0;
       --secondary-container: #2a3040;
-      --tertiary: #b9c3ff; --tertiary-fixed: #1e2550;
-      --error: #ffb4ab; --error-container: #93000a; --on-error-container: #ffdad6;
+      --tertiary: #b9c3ff;
+      --tertiary-fixed: #1e2550;
+      --error: #ffb4ab;
+      --error-container: #93000a;
+      --on-error-container: #ffdad6;
     }
-    .toggle-track { position:relative; width:44px; height:24px; border-radius:9999px; background:var(--ol-variant); transition:background .2s; }
-    :root:has(#darkToggle:checked) .toggle-track { background:var(--primary); }
-    .toggle-dot { position:absolute; left:2px; top:2px; width:20px; height:20px; border-radius:9999px; background:var(--surface-c-lowest); transition:transform .2s; }
-    :root:has(#darkToggle:checked) .toggle-dot { transform:translateX(20px); }
-    .sidebar { transform:translateX(-100%); transition:transform .3s ease; }
-    :root:has(#sidebarToggle:checked) .sidebar { transform:translateX(0); }
-    .sidebar-overlay { display:none; }
-    :root:has(#sidebarToggle:checked) .sidebar-overlay { display:block; }
-    @media(min-width:1024px) {
-      .sidebar { transform:translateX(0); }
-      .sidebar-overlay { display:none!important; }
+
+    /* Toggle Switch */
+    .toggle-track {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      border-radius: 9999px;
+      background: var(--ol-variant);
+      transition: background .2s;
     }
-    .dash-card { transition: transform .25s ease, filter .25s ease, box-shadow .25s ease; }
-    .dash-card:hover { transform: scale(1.03); box-shadow: 0 8px 24px rgba(67, 85, 185, 0.12); }
-    .kanban-card::before { content: ""; display: inline-block; width: 14px; height: 10px; background: #f59e0b; border-radius: 2px; flex-shrink: 0; }
+
+    :root:has(#darkToggle:checked) .toggle-track {
+      background: var(--primary);
+    }
+
+    .toggle-dot {
+      position: absolute;
+      left: 2px;
+      top: 2px;
+      width: 20px;
+      height: 20px;
+      border-radius: 9999px;
+      background: var(--surface-c-lowest);
+      transition: transform .2s;
+    }
+
+    :root:has(#darkToggle:checked) .toggle-dot {
+      transform: translateX(20px);
+    }
+
+    /* Sidebar Mobile */
+    .sidebar {
+      transform: translateX(-100%);
+      transition: transform .3s ease;
+    }
+
+    :root:has(#sidebarToggle:checked) .sidebar {
+      transform: translateX(0);
+    }
+
+    .sidebar-overlay {
+      display: none;
+    }
+
+    :root:has(#sidebarToggle:checked) .sidebar-overlay {
+      display: block;
+    }
+
+    @media (min-width: 1024px) {
+      .sidebar {
+        transform: translateX(0);
+      }
+
+      .sidebar-overlay {
+        display: none !important;
+      }
+    }
+
+    /* Card Hover */
+    .dash-card {
+      transition: transform .25s ease, filter .25s ease, box-shadow .25s ease;
+    }
+
+    .dash-card:hover {
+      transform: scale(1.05);
+      filter: saturate(0.6);
+      box-shadow: 0 8px 24px rgba(67, 85, 185, 0.12);
+    }
+
+    /* Filter Tab */
+    .filter-tab {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    input[name="filter"]:checked+.filter-tab {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
   </style>
 </head>
 
@@ -77,574 +173,335 @@
 
   <label for="sidebarToggle" class="sidebar-overlay fixed inset-0 bg-black/40 z-20 cursor-pointer"></label>
 
-  <aside class="sidebar fixed left-0 top-0 h-full w-[280px] bg-surface-c-low border-r border-ol-variant flex flex-col z-30">
+  <!-- ========== SIDEBAR ========== -->
+
+  <aside
+    class="sidebar fixed left-0 top-0 h-full w-[280px] bg-surface-c-low border-r border-ol-variant flex flex-col z-30">
     <div class="px-6 pt-10 pb-6">
       <h1 class="text-[20px] font-semibold text-primary tracking-tight">MYCAMPUSLINKS</h1>
       <p class="text-[12px] font-semibold text-on-surface-variant uppercase tracking-[0.05em] mt-1">통합 대시보드</p>
     </div>
-    <nav class="px-4 flex flex-col gap-1" id="menuGroup">
-      <a href="#" onclick="render('subject')" class="menu-item flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
-        <span>🏠</span> 홈 (과목별 보기)
+    <nav class="px-4 flex flex-col gap-1">
+      <a href="/1main/index.html"
+        class="flex items-center gap-4 px-4 py-[10px] rounded bg-primary-fixed text-primary font-medium text-[14px]">
+        <span>🏠</span> 홈
       </a>
-      <a href="#" onclick="render('all')" class="menu-item flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
+      <a href="/2all/index.html"
+        class="flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
         <span>📋</span> 전체 보기
       </a>
-      <a href="#" onclick="render('week')" class="menu-item flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
+      <a href="/3sub/index.html"
+        class="flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
+        <span>📋</span> 과목별 보기
+      </a>
+      <a href="/4week/index.html"
+        class="flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
         <span>📋</span> 주차별 보기
       </a>
     </nav>
     <div class="mx-4 my-4 border-t border-ol-variant"></div>
-    <div class="px-6 flex justify-between items-center">
+    <div class="px-6">
       <p class="text-[12px] font-semibold text-on-surface-variant uppercase tracking-[0.05em]">내 과목</p>
     </div>
-    
-    <nav id="sidebarSubjectList" class="flex-1 px-4 mt-3 flex flex-col gap-1 overflow-y-auto"></nav>
-
-    <div class="px-4 py-2 flex flex-col gap-2 border-t border-ol-variant">
-      <button onclick="openSubjectModal()" class="w-full flex items-center justify-center gap-2 px-4 py-[10px] rounded border border-dashed border-ol text-on-surface-variant hover:bg-secondary-container text-[14px] font-medium">
+    <nav class="flex-1 px-4 mt-3 flex flex-col gap-1 overflow-y-auto">
+      <a href="/5sub_c/index.html"
+        class="flex items-center gap-3 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
+        <span class="w-2 h-2 rounded-full bg-primary shrink-0"></span> 게임프로그래밍
+      </a>
+      <a href="/6sub_3d/index.html"
+        class="flex items-center gap-3 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
+        <span class="w-2 h-2 rounded-full bg-tertiary shrink-0"></span> 게임그래픽 기초
+      </a>
+      <a href="/7sub_ja/index.html"
+        class="flex items-center gap-3 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
+        <span class="w-2 h-2 rounded-full bg-error shrink-0"></span> 객체 지향 프로그래밍
+      </a>
+      <a href="/8sub_fr/index.html"
+        class="flex items-center gap-3 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
+        <span class="w-2 h-2 rounded-full bg-primary-container shrink-0"></span> 프론트엔드프로그래밍
+      </a>
+    </nav>
+    <div class="px-4 py-4 border-t border-ol-variant">
+      <button
+        class="flex items-center justify-center gap-2 px-4 py-[10px] rounded border border-dashed border-ol text-on-surface-variant hover:bg-secondary-container text-[14px] font-medium">
         <span>＋</span> 과목 추가
-      </button>
-      <button onclick="openItemModal()" class="w-full flex items-center justify-center gap-2 px-4 py-[10px] rounded bg-primary text-white text-[14px] font-medium shadow-sm hover:opacity-90">
-        <span>＋</span> 학습 자료 추가
       </button>
     </div>
   </aside>
 
-  <main class="lg:ml-[280px] min-h-screen flex flex-col">
-    <header class="sticky top-0 z-10 bg-surface/80 backdrop-blur-md border-b border-ol-variant px-4 md:px-8 lg:px-10 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+  <!-- ========== MAIN ========== -->
+  <main class="lg:ml-[280px] min-h-screen">
+
+    <!-- TOP BAR -->
+    <header
+      class="sticky top-0 z-10 bg-surface/80 backdrop-blur-md border-b border-ol-variant px-4 md:px-8 lg:px-10 py-4 flex items-center justify-between">
+      <!-- 좌측: 햄버거(모바일) + 시간 -->
       <div class="flex items-center gap-4">
         <label for="sidebarToggle" class="lg:hidden cursor-pointer text-on-surface text-[24px] leading-none">☰</label>
         <div class="flex items-center gap-3">
-          <span class="text-[28px] md:text-[32px]">📅</span>
+          <span class="text-[28px] md:text-[32px]">🕐</span>
           <div class="flex flex-col">
-            <span id="liveDateTime" class="text-[16px] md:text-[20px] font-bold text-on-surface leading-none tracking-tight">----년 --월 --일 (-) 오전 00:00:00</span>
-            <span class="text-[11px] text-on-surface-variant mt-1 hidden md:block">현재 날짜 및 실시간 정보</span>
+            <span class="text-[28px] md:text-[36px] font-bold text-on-surface leading-none tracking-tight">--:--</span>
+            <span class="text-[12px] text-on-surface-variant mt-1 hidden md:block">현재 시간</span>
           </div>
         </div>
       </div>
-      
-      <div class="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto border-t sm:border-t-0 pt-2 sm:pt-0 border-ol-variant">
-        <div id="examDDayContainer" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-c border border-ol-variant transition-all duration-300">
-          <span class="text-[13px] font-medium text-on-surface-variant">📝 기말고사 기간:</span>
-          <span id="examDDayText" class="font-extrabold tracking-tight transition-all duration-300">계산 중</span>
+      <!-- 우측: 다크모드 토글 -->
+      <label for="darkToggle" class="flex items-center gap-2 cursor-pointer select-none">
+        <span class="text-[16px]">☀️</span>
+        <div class="toggle-track">
+          <div class="toggle-dot"></div>
         </div>
-        <label for="darkToggle" class="flex items-center gap-2 cursor-pointer select-none shrink-0">
-          <span class="text-[16px]">☀️</span>
-          <div class="toggle-track"><div class="toggle-dot"></div></div>
-          <span class="text-[16px]">🌙</span>
-        </label>
-      </div>
+        <span class="text-[16px]">🌙</span>
+      </label>
     </header>
 
-    <div class="max-w-container w-full mx-auto px-4 md:px-8 py-8 flex flex-col gap-8 md:gap-10 flex-1">
+    <!-- DASHBOARD CONTENT -->
+    <div class="max-w-container mx-auto px-4 md:px-6 lg:px-6 py-8 md:py-10 flex flex-col gap-8 md:gap-10">
+
+      <!-- ===== 실행할 프로그램 ===== -->
       <section>
-        <div class="mb-4">
-          <h3 class="text-[18px] md:text-[20px] font-semibold text-on-surface">실행할 프로그램</h3>
-          <p class="text-[13px] text-on-surface-variant mt-0.5">개발 도구 및 학습 프로그램 원클릭 실행</p>
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h3 class="text-[18px] md:text-[20px] font-medium text-on-surface leading-[28px]">실행할 프로그램</h3>
+            <p class="text-[14px] text-on-surface-variant mt-1">개발 도구 및 학습 프로그램 원클릭 실행</p>
+          </div>
+
         </div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
-          <div onclick="launchTarget('C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer flex flex-col items-center text-center">
-            <span class="text-[24px] mb-2">💻</span>
-            <h4 class="text-[14px] font-medium text-on-surface">Visual Studio</h4>
-            <p class="text-[12px] text-on-surface-variant mt-0.5">C# / IDE</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+          <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-5 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[24px]">💻</span>
+            </div>
+            <h4 class="text-[16px] font-medium text-on-surface">Visual Studio</h4>
+            <p class="text-[14px] text-on-surface-variant mt-1">C# / IDE</p>
           </div>
-          <div onclick="launchTarget('openmax://')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer flex flex-col items-center text-center">
-            <span class="text-[24px] mb-2">☕</span>
-            <h4 class="text-[14px] font-medium text-on-surface">3ds Max</h4>
-            <p class="text-[12px] text-on-surface-variant mt-0.5">Graphic Tool</p>
+          <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-5 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[24px]">☕</span>
+            </div>
+            <h4 class="text-[16px] font-medium text-on-surface">3ds Max</h4>
+            <p class="text-[14px] text-on-surface-variant mt-1">Graphic Tool</p>
           </div>
-          <div onclick="launchTarget('C:\\eclipse\\eclipse.exe')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer flex flex-col items-center text-center">
-            <span class="text-[24px] mb-2">🌑</span>
-            <h4 class="text-[14px] font-medium text-on-surface">Eclipse</h4>
-            <p class="text-[12px] text-on-surface-variant mt-0.5">Java IDE</p>
+          <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-5 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[24px]">🌑</span>
+            </div>
+            <h4 class="text-[16px] font-medium text-on-surface">Eclipse</h4>
+            <p class="text-[14px] text-on-surface-variant mt-1">Java IDE</p>
           </div>
-          <div onclick="launchTarget('C:\\Users\\User\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer flex flex-col items-center text-center">
-            <span class="text-[24px] mb-2">🐬</span>
-            <h4 class="text-[14px] font-medium text-on-surface">VS Code</h4>
-            <p class="text-[12px] text-on-surface-variant mt-0.5">Web / Editor</p>
+          <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-5 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[24px]">🐬</span>
+            </div>
+            <h4 class="text-[16px] font-medium text-on-surface">VS Code</h4>
+            <p class="text-[14px] text-on-surface-variant mt-1">Web / Editor</p>
           </div>
-          <div onclick="launchTarget('C:\\Program Files\\MarkText\\MarkText.exe')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer flex flex-col items-center text-center">
-            <span class="text-[24px] mb-2">🎨</span>
-            <h4 class="text-[14px] font-medium text-on-surface">MarkText</h4>
-            <p class="text-[12px] text-on-surface-variant mt-0.5">Markdown</p>
+          <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-5 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[24px]">🎨</span>
+            </div>
+            <h4 class="text-[16px] font-medium text-on-surface">>MarkText</h4>
+            <p class="text-[14px] text-on-surface-variant mt-1">Markdown</p>
           </div>
-          <div onclick="launchTarget('https://www.quizn.show/')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer flex flex-col items-center text-center">
-            <span class="text-[24px] mb-2">🐙</span>
-            <h4 class="text-[14px] font-medium text-on-surface">QuizN</h4>
-            <p class="text-[12px] text-on-surface-variant mt-0.5">Quiz Platform</p>
+          <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-5 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[24px]">🐙</span>
+            </div>
+            <h4 class="text-[16px] font-medium text-on-surface">QuizN</h4>
+            <p class="text-[14px] text-on-surface-variant mt-1">Quiz Platform</p>
           </div>
-          <div onclick="launchTarget('https://github.com/')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer flex flex-col items-center text-center">
-            <span class="text-[24px] mb-2">📝</span>
-            <h4 class="text-[14px] font-medium text-on-surface">GitHub</h4>
-            <p class="text-[12px] text-on-surface-variant mt-0.5">Git / Repo</p>
+          <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-5 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[24px]">📝</span>
+            </div>
+            <h4 class="text-[16px] font-medium text-on-surface">GitHubn</h4>
+            <p class="text-[14px] text-on-surface-variant mt-1">Git / Repository</p>
           </div>
         </div>
       </section>
 
+      <!-- ===== 연결할 사이트 ===== -->
       <section>
-        <div class="mb-4">
-          <h3 class="text-[18px] md:text-[20px] font-semibold text-on-surface">연결할 사이트</h3>
-          <p class="text-[13px] text-on-surface-variant mt-0.5">학교 생활에 필요한 사이트 바로가기</p>
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h3 class="text-[18px] md:text-[20px] font-medium text-on-surface leading-[28px]">연결할 사이트</h3>
+            <p class="text-[14px] text-on-surface-variant mt-1">학교 생활에 필요한 사이트 바로가기</p>
+          </div>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          <div onclick="launchTarget('https://cyber.mjc.ac.kr/home/mainHome/Form/main')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer">
-            <span class="text-[22px] block mb-2">🏫</span>
-            <h4 class="text-[15px] font-medium text-on-surface">원격강좌/E-Class</h4>
-            <p class="text-[12px] text-on-surface-variant mt-1">원격강좌/재택수업 사이트</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6">
+          <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-5 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[24px]">🏫</span>
+            </div>
+            <h4 class="text-[16px] font-medium text-on-surface">원격강좌/E-Class</h4>
+            <p class="text-[14px] text-on-surface-variant mt-1">원격강좌/재택수업 사이트로 이동합니다!</p>
           </div>
-          <div onclick="launchTarget('https://mjc.factchat.bot/auth/sso?ssoPlatformId=5')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer">
-            <span class="text-[22px] block mb-2">🏫</span>
-            <h4 class="text-[15px] font-medium text-on-surface">AI검색(FactChat)</h4>
-            <p class="text-[12px] text-on-surface-variant mt-1">멀티LLM 플랫폼 이동</p>
+          <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-5 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[24px]">🏫</span>
+            </div>
+            <h4 class="text-[16px] font-medium text-on-surface">AI검색(FactChat)</h4>
+            <p class="text-[14px] text-on-surface-variant mt-1">멀티LLM 플랫폼(FactChat)으로 이동합니다.</p>
           </div>
-          <div onclick="launchTarget('https://icampus.mjc.ac.kr')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer">
-            <span class="text-[22px] block mb-2">🏫</span>
-            <h4 class="text-[15px] font-medium text-on-surface">ICampus</h4>
-            <p class="text-[12px] text-on-surface-variant mt-1">학습 관리 시스템</p>
+          <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-5 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[24px]">🏫</span>
+            </div>
+            <h4 class="text-[16px] font-medium text-on-surface">ICampus</h4>
+            <p class="text-[14px] text-on-surface-variant mt-1">ICampus로 이동합니다.</p>
           </div>
-          <div onclick="launchTarget('https://mail.mjc.ac.kr')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer">
-            <span class="text-[22px] block mb-2">🏫</span>
-            <h4 class="text-[15px] font-medium text-on-surface">MJC Mail</h4>
-            <p class="text-[12px] text-on-surface-variant mt-1">명지전문대 웹 메일</p>
+          <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-5 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[24px]">🏫</span>
+            </div>
+            <h4 class="text-[16px] font-medium text-on-surface">MJC Mail</h4>
+            <p class="text-[14px] text-on-surface-variant mt-1">명지전문대학 웹 메일 시스템(MJC Mail)로 이동합니다.</p>
           </div>
-          <div onclick="launchTarget('https://mpu.mjc.ac.kr/')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer">
-            <span class="text-[22px] block mb-2">🏫</span>
-            <h4 class="text-[15px] font-medium text-on-surface">SmartCare</h4>
-            <p class="text-[12px] text-on-surface-variant mt-1">학생 역량 이력 관리</p>
+          <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-5 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[24px]">🏫</span>
+            </div>
+            <h4 class="text-[16px] font-medium text-on-surface">SmartCare</h4>
+            <p class="text-[14px] text-on-surface-variant mt-1">명지전문대학 학생 역량 이력 관리 시스템(SmartCare)로 이동합니다.</p>
           </div>
         </div>
       </section>
 
-      <section class="flex-1 flex flex-col">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+      <!-- ===== 저장 자료 ===== -->
+      <section>
+        <div class="flex items-center justify-between mb-6">
           <div>
-            <h3 id="boardTitle" class="text-[18px] md:text-[20px] font-semibold text-on-surface">저장 자료</h3>
-            <p class="text-[13px] text-on-surface-variant mt-0.5">정렬 기준에 따른 학습 자료 보드</p>
-          </div>
-          <div>
-            <button onclick="resetAllStorageData()" class="px-3 py-1 text-[12px] font-medium rounded border border-error text-error bg-surface-c-lowest hover:bg-error-container hover:text-white transition-all">
-              ⚠️ 초기화 (과거 데이터 강제 삭제)
-            </button>
+            <h3 class="text-[18px] md:text-[20px] font-medium text-on-surface leading-[28px]">저장 자료</h3>
+            <p class="text-[14px] text-on-surface-variant mt-1">PDF · 사이트를 저장하고 빠르게 접근하세요</p>
           </div>
         </div>
-        <div id="board" class="w-full"></div>
-      </section>
+        <a href="/5sub_c/index.html">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6">
+            <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-xl p-6 cursor-pointer">
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-[28px]">📕</span>
+              </div>
+              <h4 class="text-[16px] font-medium text-on-surface">게임프로그래밍</h4>
+              <p class="text-[14px] text-on-surface-variant mt-1">자료모음</p>
+            </div>
+        </a>
+        <a href="/6sub_3d/index.html">
+          <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-xl p-6 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[28px]">🔗</span>
+            </div>
+            <h4 class="text-[16px] font-medium text-on-surface">게임그래픽 기초</h4>
+            <p class="text-[14px] text-on-surface-variant mt-1">자료모음</p>
+          </div>
+        </a>
+        <a href="/7sub_ja/index.html">
+          <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-xl p-6 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[28px]">📗</span>
+            </div>
+            <h4 class="text-[16px] font-medium text-on-surface">객체 지향 프로그래밍</h4>
+            <p class="text-[14px] text-on-surface-variant mt-1">자료모음</p>
+          </div>
+        </a>
+        <a href="/8sub_fr/index.html">
+          <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-xl p-6 cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[28px]">🔗</span>
+            </div>
+            <h4 class="text-[16px] font-medium text-on-surface">프론트엔드프로그래밍</h4>
+            <p class="text-[14px] text-on-surface-variant mt-1">자료모음</p>
+          </div>
+        </a>
+        <!-- 자료 추가 카드 -->
+        <div
+          class="dash-card border border-dashed border-ol rounded-xl p-6 flex flex-col items-center justify-center gap-2 cursor-pointer min-h-[180px]">
+          <button class="text-[28px] text-on-surface-variant">＋</button>
+          <p class="text-[14px] font-medium text-on-surface-variant">자료 추가</p>
+        </div>
+    </div>
+    </section>
+
     </div>
   </main>
 
-  <div id="subjectModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
-    <div class="bg-surface rounded-xl max-w-sm w-full p-6 shadow-xl border border-ol-variant mx-4">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-[16px] font-bold text-on-surface">새 과목 추가</h3>
-        <button onclick="closeSubjectModal()" class="text-[18px] text-on-surface-variant hover:text-on-surface">&times;</button>
-      </div>
-      <div class="flex flex-col gap-4">
-        <div>
-          <label class="block text-[12px] font-semibold text-on-surface-variant uppercase mb-1">과목명 *</label>
-          <input type="text" id="newSubjectName" placeholder="예: 게임그래픽 기초" class="w-full px-3 py-2 text-[14px] rounded border border-ol-variant bg-surface-c-lowest text-on-surface focus:outline-none focus:border-primary">
-        </div>
-        <div class="flex gap-2 justify-end mt-2">
-          <button onclick="closeSubjectModal()" class="px-4 py-2 text-[13px] font-medium rounded border border-ol-variant bg-surface-c-lowest text-on-surface hover:bg-secondary-container">취소</button>
-          <button onclick="addSubject()" class="px-4 py-2 text-[13px] font-medium rounded bg-primary text-white hover:opacity-90">추가하기</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="itemModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
-    <div class="bg-surface rounded-xl max-w-md w-full p-6 shadow-xl border border-ol-variant mx-4">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-[16px] font-bold text-on-surface">새 항목 추가하기</h3>
-        <button onclick="closeItemModal()" class="text-[18px] text-on-surface-variant hover:text-on-surface">&times;</button>
-      </div>
-      <div class="flex flex-col gap-4">
-        <div>
-          <label class="block text-[12px] font-semibold text-on-surface-variant uppercase mb-1">제목 *</label>
-          <input type="text" id="newItemTitle" placeholder="항목 제목을 입력하세요" class="w-full px-3 py-2 text-[14px] rounded border border-ol-variant bg-surface-c-lowest text-on-surface focus:outline-none focus:border-primary">
-        </div>
-        <div>
-          <label class="block text-[12px] font-semibold text-on-surface-variant uppercase mb-1">URL 또는 프로토콜 주소</label>
-          <input type="text" id="newItemLink" placeholder="https://... 또는 openmax://" class="w-full px-3 py-2 text-[14px] rounded border border-ol-variant bg-surface-c-lowest text-on-surface focus:outline-none focus:border-primary">
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-[12px] font-semibold text-on-surface-variant uppercase mb-1">과목 *</label>
-            <select id="newItemSubject" class="w-full px-3 py-2 text-[14px] rounded border border-ol-variant bg-surface-c-lowest text-on-surface focus:outline-none focus:border-primary"></select>
-          </div>
-          <div>
-            <label class="block text-[12px] font-semibold text-on-surface-variant uppercase mb-1">주차 *</label>
-            <select id="newItemWeek" class="w-full px-3 py-2 text-[14px] rounded border border-ol-variant bg-surface-c-lowest text-on-surface focus:outline-none focus:border-primary">
-              <option value="1주차">1주차</option>
-              <option value="2주차">2주차</option>
-              <option value="3주차">3주차</option>
-              <option value="4주차">4주차</option>
-              <option value="5주차">5주차</option>
-              <option value="6주차">6주차</option>
-              <option value="7주차">7주차</option>
-              <option value="8주차">8주차</option>
-              <option value="9주차">9주차</option>
-              <option value="10주차">10주차</option>
-              <option value="11주차">11주차</option>
-              <option value="12주차">12주차</option>
-              <option value="13주차">13주차</option>
-              <option value="14주차">14주차</option>
-              <option value="15주차">15주차</option>
-            </select>
-          </div>
-        </div>
-        <div class="flex gap-2 justify-end mt-2">
-          <button onclick="closeItemModal()" class="px-4 py-2 text-[13px] font-medium rounded border border-ol-variant bg-surface-c-lowest text-on-surface hover:bg-secondary-container">취소</button>
-          <button onclick="addItem()" class="px-4 py-2 text-[13px] font-medium rounded bg-primary text-white hover:opacity-90">추가하기</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <script>
-    // 🛠️ [원클릭 실행/이동 핸들러 - 이스케이프 충돌 완벽 교정 버전]
-    function launchTarget(target) {
-      if (!target) return;
-      const cleanTarget = target.trim();
+  const subjectContainer = document.querySelector("nav.flex-1");
+  const addSubjectButton = document.querySelector(".px-4.py-4.border-t button");
 
-      // 1. 일반 인터넷 주소(http://, https://) 새 탭 처리
-      if (cleanTarget.startsWith('http://') || cleanTarget.startsWith('https://')) {
-        window.open(cleanTarget, '_blank');
-        return;
-      } 
-      
-      // 2. 고유 프로토콜 주소 처리
-      if (cleanTarget.includes('://')) {
-        window.location.href = cleanTarget;
-        return;
-      }
+  addSubjectButton.addEventListener("click", () => {
+    const subjectName = prompt("추가할 과목명을 입력하세요.");
 
-      // 3. 일렉트론 환경 처리
-      if (window.electron && window.electron.ipcRenderer) {
-        window.electron.ipcRenderer.send('launch-app', cleanTarget);
-        return;
-      }
+    if (!subjectName || subjectName.trim() === "") return;
 
-      // 4. 로컬 프로그램 구동 자동 프로토콜 맵핑
-      let protocolUrl = "";
-      const lowerTarget = cleanTarget.toLowerCase();
-      
-      if (lowerTarget.includes("3dsmax.exe")) { protocolUrl = "openmax://"; } 
-      else if (lowerTarget.includes("devenv.exe")) { protocolUrl = "vs2026://"; } 
-      else if (lowerTarget.includes("eclipse.exe")) { protocolUrl = "eclipse://"; } 
-      else if (lowerTarget.includes("code.exe")) { protocolUrl = "vscode://"; } 
-      else if (lowerTarget.includes("marktext.exe")) { protocolUrl = "marktext://"; }
+    const subjectItem = document.createElement("div");
 
-      if (protocolUrl) {
-        window.location.href = protocolUrl;
-        return;
-      }
+    subjectItem.className =
+      "group flex items-center justify-between gap-3 px-4 py-[10px] rounded hover:bg-secondary-container text-[14px]";
 
-      // 5. 로컬 및 깃허브 상대경로 PDF 처리
-      if (cleanTarget.startsWith('pdf/')) {
-        if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
-          window.open(cleanTarget, '_blank');
-        } else {
-          const encodedTarget = cleanTarget.split('/').map(part => encodeURIComponent(part)).join('/');
-          const finalUrl = "https://2026104274yoonhyukjin.github.io/MyCampusLinks1/" + encodedTarget;
-          window.open(finalUrl, '_blank');
-        }
-        return;
-      }
+    subjectItem.innerHTML = `
+      <div class="flex items-center gap-3 text-on-surface-variant">
+        <span class="w-2 h-2 rounded-full bg-primary shrink-0"></span>
+        <span>${subjectName}</span>
+      </div>
 
-      // 6. 예외 로컬 파일 구동 백업
-      window.open('file:///' + cleanTarget.replace(/\\/g, '/'), '_blank');
-    }
+      <button class="delete-subject opacity-0 group-hover:opacity-100 transition text-[12px] px-2 py-1 rounded-md bg-error text-white">
+        삭제
+      </button>
+    `;
 
-    const defaultSubjects = ["게임프로그래밍", "게임그래픽 기초", "객체 지향 프로그래밍", "프론트엔드프로그래밍"];
-    const defaultData = [
-      // 게임프로그래밍
-      { id: 1, title: "C# 프로그래밍 첫걸음 (Chapter 01)", week: "1주차", subject: "게임프로그래밍", link: "pdf/ch01.pdf" },
-      { id: 2, title: "기본 문법 (Chapter 02)", week: "2주차", subject: "게임프로그래밍", link: "pdf/ch02.pdf" },
-      { id: 3, title: "조건문 (Chapter 03)", week: "3주차", subject: "게임프로그래밍", link: "pdf/ch03.pdf" },
-      { id: 4, title: "반복문 (Chapter 04)", week: "4주차", subject: "게임프로그래밍", link: "pdf/ch04.pdf" },
-      { id: 5, title: "클래스 기본 (Chapter 05)", week: "5주차", subject: "게임프로그래밍", link: "pdf/ch05.pdf" },
-      { id: 6, title: "메서드 (Chapter 06)", week: "6주차", subject: "게임프로그래밍", link: "pdf/ch06.pdf" },
-      
-      // 게임그래픽 기초
-      { id: 7, title: "3주차-컵", week: "3주차", subject: "게임그래픽 기초", link: "https://youtu.be/0V7-B76oDb0?si=PeFMPxFw7EPmTvIX" },
-      { id: 8, title: "4주차 2차시-접시,스푼", week: "4주차", subject: "게임그래픽 기초", link: "https://youtu.be/v0lMKBo34ds?si=vzMUhstLUf5vWyTm" },
-      { id: 9, title: "5주차 1차시-세부편집", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/JWFie9eDkGA?si=SR5KlKnALQNkAJ1U" },
-      { id: 10, title: "5주차 2차시-세부편집", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/BPHuUT0zoKI?si=2E8zRt2wzCqVUpap" },
-      { id: 11, title: "5주차 3차시-검,철퇴", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/XvxTYsfnPpI" },
-      { id: 12, title: "6주차 1차시-Allign Pivot", week: "6주차", subject: "게임그래픽 기초", link: "https://youtu.be/KA9KfMoQhTg?si=pnl3XBBT_rgUec8K" },
-      { id: 13, title: "6주차 2차시-Allign Pivot", week: "6주차", subject: "게임그래픽 기초", link: "https://youtu.be/DL9LDpRodEg" },
-      { id: 14, title: "6주차 3차시-Reset X Form", week: "6주차", subject: "게임그래픽 기초", link: "https://youtu.be/l6c1epTtNVk?si=9LZOjTp8TjOGZvCa" },
-      { id: 15, title: "7주차 1차시-캐릭터(몸통)", week: "7주차", subject: "게임그래픽 기초", link: "https://youtu.be/oy9rC6YQwfQ?si=iIa3w4etvMySTjXi" },
-      { id: 16, title: "7주차 2차시-캐릭터(팔)", week: "7주차", subject: "게임그래픽 기초", link: "https://youtu.be/tt-hxXzbWu8?si=zoXrVXOO1LYpQBLW" },
-      { id: 17, title: "7주차 3차시-캐릭터(다리,이빨)", week: "7주차", subject: "게임그래픽 기초", link: "https://youtu.be/n9sNFonoh4g?si=fC5kPi6sG7FPzMVS" },
-      { id: 18, title: "10주차 1차시-인체 캐릭터 특징분석", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/IEzmA-YC7bs?si=AUfPz_gkkBLHrNdx" },
-      { id: 19, title: "10주차 2차시-인체(몸통)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/m-Mxw36Ybjk?si=adOxKKQ5pC4pPPmL" },
-      { id: 20, title: "10주차 3차시-인체(팔,다리)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/TgfCel9AQlI?si=LfxVTI1xvs_B8Gcc" },
-      { id: 21, title: "10주차 3차시-인체(손,발)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/qHTTJ7woLNg" },
+    subjectContainer.appendChild(subjectItem);
 
-      // 객체 지향 프로그래밍
-      { id: 22, title: "1장 Java 프로그래밍 언어의 특징 및 동작 원리 이해", week: "1주차", subject: "객체 지향 프로그래밍", link: "pdf/Java_프로그래밍_1주차_강의노트.pdf" },
-      { id: 23, title: "2장-자료형", week: "2주차", subject: "객체 지향 프로그래밍", link: "pdf/2장_자료형.pdf" },
-      { id: 24, title: "3장 연산자", week: "3주차", subject: "객체 지향 프로그래밍", link: "pdf/3장_연산자.pdf" },
-      { id: 25, title: "4장-제어문과 제어키워드", week: "4주차", subject: "객체 지향 프로그래밍", link: "pdf/4장_제어문과_제어키워드.pdf" },
-      { id: 26, title: "5장-참조자료형", week: "5주차", subject: "객체 지향 프로그래밍", link: "pdf/5장_참조자료형.pdf" },
-      { id: 27, title: "6장-클래스(class)의_기본_문법", week: "6주차", subject: "객체 지향 프로그래밍", link: "pdf/6장_클래스(class)의_기본_문법.pdf" },
-      { id: 28, title: "7장-클래스 내부 구성요소(필드메서드생성자)", week: "7주차", subject: "객체 지향 프로그래밍", link: "pdf/7장_클래스_내부_구성요소_1_(필드메서드생성자).pdf" },
-
-      // 프론트엔드프로그래밍
-      { id: 29, title: "OT 자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/OT" },
-      { id: 30, title: "마크다운 작성방법 참고자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "pdf/마크다운_보충자료.pdf" },
-      { id: 31, title: "3주차 수업 자료-HTML Form & UI", week: "3주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week3" },
-      { id: 32, title: "4주차 수업 자료-CSS 스타일링 & GitHub 배포", week: "4주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week4" },
-      { id: 33, title: "5주차 수업 자료-CSS Layout & 팀 협업", week: "5주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week5" },
-      { id: 34, title: "6주차 수업 자료-Flexbox & 반응형 웹", week: "6주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week6" },
-      { id: 35, title: "7주차 수업 자료-Grid 레이아웃 & 동적 애니메이션", week: "7주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week7" },
-      { id: 36, title: "10주차 수업 자료-실전 팀 빌딩 & README 기반 Git 협업", week: "10주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week10" },
-      { id: 37, title: "11주차 수업 자료-개발 착수 & MVP 기반 태스크 관리", week: "11주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week11" },
-      { id: 38, title: "12주차 수업 자료-MVP 통합 및 알파 버전 완성", week: "12주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week12" }
-    ];
-
-    let subjects = JSON.parse(localStorage.getItem('mySubjects')) || defaultSubjects;
-    let data = JSON.parse(localStorage.getItem('myData')) || defaultData;
-    let currentMode = 'subject';
-
-    function saveToStorage() {
-      localStorage.setItem('mySubjects', JSON.stringify(subjects));
-      localStorage.setItem('myData', JSON.stringify(data));
-    }
-
-    // ⚠️ 구버전 데이터 완벽 파괴 및 리셋 함수 추가
-    function resetAllStorageData() {
-      if (confirm(*주의* 추가된 과목,파일들이 전부 초기화됩니다. *주의*
-        "과거에 누적 저장된 링크 캐시 데이터를 전부 완전 초기화하시겠습니까?")) {
-        localStorage.removeItem('mySubjects');
-        localStorage.removeItem('myData');
-        subjects = [...defaultSubjects];
-        data = [...defaultData];
-        saveToStorage();
-        updateSidebarSubjects();
-        render(currentMode);
-        alert("브라우저 누적 캐시 청소가 완료되었습니다! 이제 링크를 다시 테스트해보세요.");
-      }
-    }
-
-    function openSubjectModal() { document.getElementById('subjectModal').classList.remove('hidden'); }
-    function closeSubjectModal() { document.getElementById('subjectModal').classList.add('hidden'); document.getElementById('newSubjectName').value = ''; }
-    
-    function openItemModal() { 
-      const select = document.getElementById('newItemSubject');
-      select.innerHTML = '';
-      subjects.forEach(sub => { select.innerHTML += `<option value="${sub}">${sub}</option>`; });
-      document.getElementById('itemModal').classList.remove('hidden'); 
-    }
-    function closeItemModal() { 
-      document.getElementById('itemModal').classList.add('hidden'); 
-      document.getElementById('newItemTitle').value = '';
-      document.getElementById('newItemLink').value = '';
-    }
-
-    function addSubject() {
-      const name = document.getElementById('newSubjectName').value.trim();
-      if(!name) { alert('과목명을 입력해주세요.'); return; }
-      if(subjects.includes(name)) { alert('이미 존재하는 과목입니다.'); return; }
-      subjects.push(name);
-      saveToStorage();
-      updateSidebarSubjects();
-      closeSubjectModal();
-    }
-
-    function addItem() {
-      const title = document.getElementById('newItemTitle').value.trim();
-      const link = document.getElementById('newItemLink').value.trim();
-      const subject = document.getElementById('newItemSubject').value;
-      const week = document.getElementById('newItemWeek').value;
-
-      if(!title) { alert('제목을 입력해주세요.'); return; }
-
-      const newItem = { id: Date.now(), title: title, week: week, subject: subject, link: link || null };
-      data.push(newItem);
-      saveToStorage();
-      render(currentMode);
-      closeItemModal();
-    }
-
-    function updateSidebarSubjects() {
-      const sidebarContainer = document.getElementById('sidebarSubjectList');
-      sidebarContainer.innerHTML = '';
-      const colors = ['bg-primary', 'bg-tertiary', 'bg-error', 'bg-primary-container', 'bg-orange-500', 'bg-teal-500'];
-      
-      subjects.forEach((sub, idx) => {
-        const colorClass = colors[idx % colors.length];
-        sidebarContainer.innerHTML += `
-          <a href="#" onclick="filterBySubject('${sub}')" class="flex items-center gap-3 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
-            <span class="w-2 h-2 rounded-full ${colorClass} shrink-0"></span> ${sub}
-          </a>
-        `;
+    subjectItem
+      .querySelector(".delete-subject")
+      .addEventListener("click", () => {
+        subjectItem.remove();
       });
-    }
+  });
 
-    // ⭐ [핵심 수정] 일반 인터넷 url 문자열이 통째로 망가지던 replace(/\\/g) 처리를 제거했습니다.
-    function createCardHtml(item, showSubject = false) {
-      const subjectTag = showSubject ? `
-        <div class="mt-1.5 flex">
-          <span class="text-[11px] font-semibold text-primary bg-surface-c px-2 py-0.5 rounded tracking-wide">${item.subject}</span>
-        </div>` : '';
-      
-      if (item.link) {
-        return `
-          <a href="#" onclick="event.preventDefault(); launchTarget('${item.link}')" class="kanban-card flex items-start gap-3 p-3 rounded-lg bg-surface-c-lowest border border-ol-variant hover:border-primary hover:-translate-y-0.5 transition duration-200">
-            <div class="flex-1 min-w-0 flex flex-col">
-              <span class="text-[14px] font-medium text-on-surface whitespace-normal break-words leading-relaxed">${item.title}</span>
-              ${subjectTag}
-            </div>
-          </a>`;
-      } else {
-        return `
-          <div class="kanban-card flex items-start gap-3 p-3 rounded-lg bg-surface-c-lowest border border-ol-variant opacity-75">
-            <div class="flex-1 min-w-0 flex flex-col">
-              <span class="text-[14px] font-medium text-on-surface whitespace-normal break-words leading-relaxed">${item.title}</span>
-              ${subjectTag}
-            </div>
-          </div>`;
-      }
-    }
+  const materialGrid = document.querySelector(
+    "section:last-of-type .grid"
+  );
 
-    function render(mode) {
-      currentMode = mode;
-      const board = document.getElementById('board');
-      const boardTitle = document.getElementById('boardTitle');
-      board.innerHTML = '';
-      updateActiveMenu(mode);
+  const addMaterialCard = materialGrid.lastElementChild;
 
-      if (mode === 'all') {
-        boardTitle.innerText = "전체 리스트 자료";
-        let html = `
-          <div class="bg-surface-c-low border border-ol-variant rounded-xl p-5 shadow-sm max-w-3xl mx-auto w-full">
-            <h2 class="text-[16px] font-bold text-primary border-b border-ol-variant pb-3 mb-4 text-center">전체 리스트 (${data.length}개 항목)</h2>
-            <div class="card-list flex flex-col gap-2.5 max-h-[500px] overflow-y-auto pr-1">`;
-        data.forEach(item => { html += createCardHtml(item, true); });
-        html += `</div></div>`;
-        board.innerHTML = html;
-      } else {
-        boardTitle.innerText = mode === 'week' ? "주차별 학습 보드" : "과목별 학습 보드";
-        let gridWrapperHtml = `<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 w-full items-start">`;
+  addMaterialCard.addEventListener("click", () => {
+    const materialName = prompt("추가할 자료명을 입력하세요.");
 
-        const groups = data.reduce((acc, item) => {
-          const key = item[mode];
-          if (!key) return acc;
-          if (!acc[key]) acc[key] = [];
-          acc[key].push(item);
-          return acc;
-        }, {});
+    if (!materialName || materialName.trim() === "") return;
 
-        const loopKeys = mode === 'week' 
-          ? ["1주차","2주차","3주차","4주차","5주차","6주차","7주차","8주차","9주차","10주차","11주차","12주차","13주차","14주차","15주차"] 
-          : subjects;
+    const materialItem = document.createElement("div");
 
-        loopKeys.forEach(key => {
-          const itemsInKey = groups[key] || [];
-          let columnHtml = `
-            <div class="column flex flex-col w-full bg-surface-c-low border border-ol-variant rounded-xl p-4 shadow-sm">
-              <h2 class="text-[15px] font-bold text-primary border-b border-ol-variant pb-2.5 mb-3 text-center">${key}</h2>
-              <div class="card-list flex flex-col gap-2">`;
-          
-          itemsInKey.forEach(item => { columnHtml += createCardHtml(item, mode === 'week'); });
-          columnHtml += `</div></div>`;
-          gridWrapperHtml += columnHtml;
-        });
-        
-        gridWrapperHtml += `</div>`;
-        board.innerHTML = gridWrapperHtml;
-      }
-    }
+    materialItem.className =
+      "group relative dash-card bg-surface-c-lowest border border-ol-variant rounded-xl p-6 cursor-pointer";
 
-    function filterBySubject(subjectName) {
-      currentMode = 'subject';
-      const board = document.getElementById('board');
-      const boardTitle = document.getElementById('boardTitle');
-      board.innerHTML = '';
-      boardTitle.innerText = `과목 상세: ${subjectName}`;
+    materialItem.innerHTML = `
+      <button class="delete-material absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition text-[12px] px-2 py-1 rounded-md bg-error text-white">
+        삭제
+      </button>
 
-      let html = `
-        <div class="bg-surface-c-low border border-ol-variant rounded-xl p-5 shadow-sm max-w-3xl mx-auto w-full">
-          <h2 class="text-[16px] font-bold text-primary border-b border-ol-variant pb-3 mb-4 text-center">${subjectName} 자료집</h2>
-          <div class="card-list flex flex-col gap-2.5">`;
-      
-      const filtered = data.filter(item => item.subject === subjectName);
-      filtered.forEach(item => { html += createCardHtml(item, false); });
-      html += `</div></div>`;
-      board.innerHTML = html;
-    }
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-[28px]">📘</span>
+      </div>
 
-    function updateActiveMenu(mode) {
-      const items = document.querySelectorAll('.menu-item');
-      items.forEach(el => el.classList.remove('bg-primary-fixed', 'text-primary', 'font-medium'));
-      if(mode === 'subject') items[0].classList.add('bg-primary-fixed', 'text-primary', 'font-medium');
-      if(mode === 'all') items[1].classList.add('bg-primary-fixed', 'text-primary', 'font-medium');
-      if(mode === 'week') items[2].classList.add('bg-primary-fixed', 'text-primary', 'font-medium');
-    }
+      <h4 class="text-[16px] font-medium text-on-surface">
+        ${materialName}
+      </h4>
 
-    function updateLiveDateTime() {
-      const dateTimeEl = document.getElementById('liveDateTime');
-      const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
-      function setDateTime() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const date = String(now.getDate()).padStart(2, '0');
-        const dayName = weekDays[now.getDay()];
-        let hours = now.getHours();
-        const ampm = hours >= 12 ? '오후' : '오전';
-        hours = hours % 12 || 12;
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        dateTimeEl.innerText = `${year}년 ${month}월 ${date}일 (${dayName}) ${ampm} ${hours}:${minutes}:${seconds}`;
-      }
-      setDateTime(); setInterval(setDateTime, 1000);
-    }
+      <p class="text-[14px] text-on-surface-variant mt-1">
+        추가된 자료
+      </p>
+    `;
 
-    function calculateExamDDay() {
-      const dDayTextEl = document.getElementById('examDDayText');
-      const containerEl = document.getElementById('examDDayContainer');
-      const startDate = new Date(2026, 5, 9);
-      const endDate = new Date(2026, 5, 15);
-      
-      function updateDDay() {
-        const today = new Date();
-        const cleanToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        if (cleanToday < startDate) {
-          const diffDays = Math.ceil((startDate - cleanToday) / (1000 * 60 * 60 * 24));
-          dDayTextEl.innerText = `D-${diffDays}`;
-          if (diffDays <= 3) {
-            dDayTextEl.className = "text-[18px] md:text-[22px] font-black text-red-600 animate-pulse";
-            containerEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 border-2 border-red-500";
-          } else if (diffDays <= 7) {
-            dDayTextEl.className = "text-[16px] md:text-[18px] font-extrabold text-orange-600";
-            containerEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-50 border border-orange-400";
-          } else {
-            dDayTextEl.className = "text-[14px] font-bold text-primary";
-            containerEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-c border border-ol-variant";
-          }
-        } else if (cleanToday >= startDate && cleanToday <= endDate) {
-          const progressDays = Math.floor((cleanToday - startDate) / (1000 * 60 * 60 * 24)) + 1;
-          dDayTextEl.innerText = `진행 중 🔥 (${progressDays}일차)`;
-          dDayTextEl.className = "text-[16px] md:text-[18px] font-black text-red-600 animate-pulse";
-          containerEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-100 border-2 border-red-600 shadow-md";
-        } else {
-          dDayTextEl.innerText = "종료 🎉";
-          dDayTextEl.className = "text-[14px] font-medium text-on-surface-variant";
-          containerEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-c border border-ol-variant";
-        }
-      }
-      updateDDay();
-    }
+    materialGrid.insertBefore(materialItem, addMaterialCard);
 
-    window.onload = () => {
-      updateLiveDateTime(); 
-      calculateExamDDay(); 
-      updateSidebarSubjects();
-      render('subject');
-    };
-  </script>
+    materialItem
+      .querySelector(".delete-material")
+      .addEventListener("click", () => {
+        materialItem.remove();
+      });
+  });
+</script>
 </body>
+
 </html>
