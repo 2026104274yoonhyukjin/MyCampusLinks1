@@ -301,59 +301,64 @@
   </div>
 
   <script>
-    // 🛠️ [원클릭 실행/이동 핸들러 - 이스케이프 충돌 완벽 교정 버전]
-    function launchTarget(target) {
-      if (!target) return;
-      const cleanTarget = target.trim();
+// 🛠️ [원클릭 프로그램 실행 핸들러 교정 버전]
+function launchTarget(target) {
+  if (!target) return;
+  const cleanTarget = target.trim();
 
-      // 1. 일반 인터넷 주소(http://, https://) 새 탭 처리
-      if (cleanTarget.startsWith('http://') || cleanTarget.startsWith('https://')) {
-        window.open(cleanTarget, '_blank');
-        return;
-      } 
-      
-      // 2. 고유 프로토콜 주소 처리
-      if (cleanTarget.includes('://')) {
-        window.location.href = cleanTarget;
-        return;
-      }
+  // 1. 일반 인터넷 주소(http://, https://) 새 탭 처리
+  if (cleanTarget.startsWith('http://') || cleanTarget.startsWith('https://')) {
+    window.open(cleanTarget, '_blank');
+    return;
+  } 
+  
+  // 2. 이미 프로토콜 형태(://)로 들어온 주소는 그대로 실행 (3ds Max 등)
+  if (cleanTarget.includes('://')) {
+    window.location.href = cleanTarget;
+    return;
+  }
 
-      // 3. 일렉트론 환경 처리
-      if (window.electron && window.electron.ipcRenderer) {
-        window.electron.ipcRenderer.send('launch-app', cleanTarget);
-        return;
-      }
+  // 3. 일렉트론(Electron) 앱 환경인 경우 처리
+  if (window.electron && window.electron.ipcRenderer) {
+    window.electron.ipcRenderer.send('launch-app', cleanTarget);
+    return;
+  }
 
-      // 4. 로컬 프로그램 구동 자동 프로토콜 맵핑
-      let protocolUrl = "";
-      const lowerTarget = cleanTarget.toLowerCase();
-      
-      if (lowerTarget.includes("3dsmax.exe")) { protocolUrl = "openmax://"; } 
-      else if (lowerTarget.includes("devenv.exe")) { protocolUrl = "vs2026://"; } 
-      else if (lowerTarget.includes("eclipse.exe")) { protocolUrl = "eclipse://"; } 
-      else if (lowerTarget.includes("code.exe")) { protocolUrl = "vscode://"; } 
-      else if (lowerTarget.includes("marktext.exe")) { protocolUrl = "marktext://"; }
+  // 4. 로컬 프로그램 경로인 경우 커스텀 프로토콜로 강제 변환하여 호출
+  const lowerTarget = cleanTarget.toLowerCase();
+  
+  if (lowerTarget.includes("devenv.exe")) {
+    window.location.href = "visualstudio://";
+    return;
+  } 
+  else if (lowerTarget.includes("eclipse.exe")) {
+    window.location.href = "eclipse://";
+    return;
+  } 
+  else if (lowerTarget.includes("code.exe")) {
+    window.location.href = "vscode://";
+    return;
+  } 
+  else if (lowerTarget.includes("marktext.exe")) {
+    window.location.href = "marktext://";
+    return;
+  }
 
-      if (protocolUrl) {
-        window.location.href = protocolUrl;
-        return;
-      }
-
-      // 5. 로컬 및 깃허브 상대경로 PDF 처리
-      if (cleanTarget.startsWith('pdf/')) {
-        if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
-          window.open(cleanTarget, '_blank');
-        } else {
-          const encodedTarget = cleanTarget.split('/').map(part => encodeURIComponent(part)).join('/');
-          const finalUrl = "https://2026104274yoonhyukjin.github.io/MyCampusLinks1/" + encodedTarget;
-          window.open(finalUrl, '_blank');
-        }
-        return;
-      }
-
-      // 6. 예외 로컬 파일 구동 백업
-      window.open('file:///' + cleanTarget.replace(/\\/g, '/'), '_blank');
+  // 5. 로컬 및 깃허브 상대경로 PDF 처리
+  if (cleanTarget.startsWith('pdf/')) {
+    if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+      window.open(cleanTarget, '_blank');
+    } else {
+      const encodedTarget = cleanTarget.split('/').map(part => encodeURIComponent(part)).join('/');
+      const finalUrl = "https://2026104274yoonhyukjin.github.io/MyCampusLinks1/" + encodedTarget;
+      window.open(finalUrl, '_blank');
     }
+    return;
+  }
+
+  // 6. 기타 예외 로컬 파일 안전 차단 안내 (브라우저 보안 우회용)
+  alert("보안 정책으로 인해 실행할 수 없는 로컬 경로입니다: " + cleanTarget);
+}
 
     const defaultSubjects = ["게임프로그래밍", "게임그래픽 기초", "객체 지향 프로그래밍", "프론트엔드프로그래밍"];
     const defaultData = [
