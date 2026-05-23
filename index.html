@@ -187,7 +187,7 @@
           <p class="text-[13px] text-on-surface-variant mt-0.5">학교 생활에 필요한 사이트 바로가기</p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          <div onclick="launchTarget('https://cyber.mjc.ac.kr/home/mainHome/Form/myPage')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer">
+          <div onclick="launchTarget('https://cyber.mjc.ac.kr/home/mainHome/Form/main')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer">
             <span class="text-[22px] block mb-2">🏫</span>
             <h4 class="text-[15px] font-medium text-on-surface">원격강좌/E-Class</h4>
             <p class="text-[12px] text-on-surface-variant mt-1">원격강좌/재택수업 사이트</p>
@@ -297,42 +297,60 @@
 
   <script>
     // 🛠️ [원클릭 실행/이동 핸들러]
-    function launchTarget(target) {
-      if (!target) return;
-      const cleanTarget = target.trim();
+   function launchTarget(target) {
+  if (!target) return;
+  const cleanTarget = target.trim();
 
-      if (cleanTarget.startsWith('http://') || cleanTarget.startsWith('https://')) {
-        window.open(cleanTarget, '_blank');
-      } else if (cleanTarget.includes('://')) {
-        window.location.href = cleanTarget;
-      } else {
-        if (window.electron && window.electron.ipcRenderer) {
-          window.electron.ipcRenderer.send('launch-app', cleanTarget);
-          return;
-        }
+  // 1. 외부 웹사이트 (유튜브, 구글 등) 처리
+  if (cleanTarget.startsWith('http://') || cleanTarget.startsWith('https://')) {
+    window.open(cleanTarget, '_blank');
+    return; // 실행 후 함수 종료
+  } 
+  
+  // 2. 이미 프로토콜 형태(openmax:// 등)로 들어온 경우 처리
+  if (cleanTarget.includes('://')) {
+    window.location.href = cleanTarget;
+    return;
+  }
 
-        let protocolUrl = "";
-        const lowerTarget = cleanTarget.toLowerCase();
-        
-        if (lowerTarget.includes("3dsmax.exe")) {
-          protocolUrl = "openmax://";
-        } else if (lowerTarget.includes("devenv.exe")) {
-          protocolUrl = "vs2026://";
-        } else if (lowerTarget.includes("eclipse.exe")) {
-          protocolUrl = "eclipse://";
-        } else if (lowerTarget.includes("code.exe")) {
-          protocolUrl = "vscode://"; 
-        } else if (lowerTarget.includes("marktext.exe")) {
-          protocolUrl = "marktext://";
-        }
+  // 3. Electron(데스크톱 앱) 환경 지원용 백업
+  if (window.electron && window.electron.ipcRenderer) {
+    window.electron.ipcRenderer.send('launch-app', cleanTarget);
+    return;
+  }
 
-        if (protocolUrl) {
-          window.location.href = protocolUrl;
-        } else {
-          window.open('file:///' + cleanTarget.replace(/\\/g, '/'), '_blank');
-        }
-      }
+  // 4. 프로그램 실행 파일(.exe)인지, 일반 파일(PDF 등)인지 판별
+  let protocolUrl = "";
+  const lowerTarget = cleanTarget.toLowerCase();
+  
+  if (lowerTarget.includes("3dsmax.exe")) {
+    protocolUrl = "openmax://";
+  } else if (lowerTarget.includes("devenv.exe")) {
+    protocolUrl = "vs2026://";
+  } else if (lowerTarget.includes("eclipse.exe")) {
+    protocolUrl = "eclipse://";
+  } else if (lowerTarget.includes("code.exe")) {
+    protocolUrl = "vscode://"; 
+  } else if (lowerTarget.includes("marktext.exe")) {
+    protocolUrl = "marktext://";
+  }
+
+  // 5. 판별 결과에 따른 최종 실행
+  if (protocolUrl) {
+    // 프로그램 실행 프로토콜이 매칭되면 앱 실행
+    window.location.href = protocolUrl;
+  } else {
+    // [핵심 수정] pdf/ch01.pdf 같은 상대 경로 파일은 브라우저 주소 기준으로 새 탭에서 열기
+    // 만약 절대 경로(C:\...)인 경우에만 file:/// 처리를 하도록 안전하게 분기합니다.
+    if (cleanTarget.includes(':') || cleanTarget.startsWith('\\\\')) {
+      // 절대 경로인 경우 (브라우저 보안으로 차단될 수 있음)
+      window.open('file:///' + cleanTarget.replace(/\\/g, '/'), '_blank');
+    } else {
+      // 상대 경로인 경우 (Live Server 주소 안에서 파일 열기 -> PDF 정상 작동!)
+      window.open(cleanTarget, '_blank');
     }
+  }
+}
 
     const defaultSubjects = ["게임프로그래밍", "게임그래픽 기초", "객체 지향 프로그래밍", "프론트엔드프로그래밍"];
      const defaultData = [
@@ -371,16 +389,16 @@
       { id: 28, title: "7장-클래스 내부 구성요소(필드메서드생성자)", week: "7주차", subject: "객체 지향 프로그래밍", link: "pdf/7장_클래스_내부_구성요소_1_(필드메서드생성자).pdf" },
 
       // 프론트엔드프로그래밍 (누락되었던 연결파일 및 상대경로 보완 완료)
-      { id: 29, title: "OT 자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "pdf/frontend_ot.pdf" },
+      { id: 29, title: "OT 자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/OT" },
       { id: 30, title: "마크다운 작성방법 참고자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "pdf/markdown_guide.pdf" },
-      { id: 31, title: "3주차 수업 자료-HTML Form & UI", week: "3주차", subject: "프론트엔드프로그래밍", link: "pdf/frontend_w03.pdf" },
-      { id: 32, title: "4주차 수업 자료-CSS 스타일링 & GitHub 배포", week: "4주차", subject: "프론트엔드프로그래밍", link: "pdf/frontend_w04.pdf" },
-      { id: 33, title: "5주차 수업 자료-CSS Layout & 팀 협업", week: "5주차", subject: "프론트엔드프로그래밍", link: "pdf/frontend_w05.pdf" },
-      { id: 34, title: "6주차 수업 자료-Flexbox & 반응형 웹", week: "6주차", subject: "프론트엔드프로그래밍", link: "pdf/frontend_w06.pdf" },
-      { id: 35, title: "7주차 수업 자료-Grid 레이아웃 & 동적 애니메이션", week: "7주차", subject: "프론트엔드프로그래밍", link: "pdf/frontend_w07.pdf" },
-      { id: 36, title: "10주차 수업 자료-실전 팀 빌딩 & README 기반 Git 협업", week: "10주차", subject: "프론트엔드프로그래밍", link: "pdf/frontend_w10.pdf" },
-      { id: 37, title: "11주차 수업 자료-개발 착수 & MVP 기반 태스크 관리", week: "11주차", subject: "프론트엔드프로그래밍", link: "pdf/frontend_w11.pdf" },
-      { id: 38, title: "12주차 수업 자료-MVP 통합 및 알파 버전 완성", week: "12주차", subject: "프론트엔드프로그래밍", link: "pdf/frontend_w12.pdf" }
+      { id: 31, title: "3주차 수업 자료-HTML Form & UI", week: "3주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week3" },
+      { id: 32, title: "4주차 수업 자료-CSS 스타일링 & GitHub 배포", week: "4주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week4" },
+      { id: 33, title: "5주차 수업 자료-CSS Layout & 팀 협업", week: "5주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week5" },
+      { id: 34, title: "6주차 수업 자료-Flexbox & 반응형 웹", week: "6주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week6" },
+      { id: 35, title: "7주차 수업 자료-Grid 레이아웃 & 동적 애니메이션", week: "7주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week7" },
+      { id: 36, title: "10주차 수업 자료-실전 팀 빌딩 & README 기반 Git 협업", week: "10주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week10" },
+      { id: 37, title: "11주차 수업 자료-개발 착수 & MVP 기반 태스크 관리", week: "11주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week11" },
+      { id: 38, title: "12주차 수업 자료-MVP 통합 및 알파 버전 완성", week: "12주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week12" }
     ];
 
     let subjects = JSON.parse(localStorage.getItem('mySubjects')) || defaultSubjects;
