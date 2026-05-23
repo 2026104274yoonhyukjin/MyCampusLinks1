@@ -415,7 +415,8 @@
 
     // ⚠️ 구버전 데이터 완벽 파괴 및 리셋 함수 추가
     function resetAllStorageData() {
-      if (confirm("과거에 누적 저장된 링크 캐시 데이터를 전부 완전 초기화하시겠습니까?")) {
+      if (confirm(*주의* 추가된 과목,파일들이 전부 초기화됩니다. *주의*
+        "과거에 누적 저장된 링크 캐시 데이터를 전부 완전 초기화하시겠습니까?")) {
         localStorage.removeItem('mySubjects');
         localStorage.removeItem('myData');
         subjects = [...defaultSubjects];
