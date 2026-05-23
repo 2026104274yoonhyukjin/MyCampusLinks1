@@ -296,44 +296,80 @@
   </div>
 
   <script>
-    // 🛠️ [원클릭 실행/이동 핸들러]
+   // 🛠️ [원클릭 실행/이동 핸들러 - 다운로드 방지 및 즉시 열기 버전]
     function launchTarget(target) {
       if (!target) return;
       const cleanTarget = target.trim();
 
+      // 1. 외부 웹사이트 (유튜브, 구글, 타 대학 링크 등) 처리
       if (cleanTarget.startsWith('http://') || cleanTarget.startsWith('https://')) {
-        window.open(cleanTarget, '_blank');
-      } else if (cleanTarget.includes('://')) {
-        window.location.href = cleanTarget;
-      } else {
-        if (window.electron && window.electron.ipcRenderer) {
-          window.electron.ipcRenderer.send('launch-app', cleanTarget);
-          return;
-        }
-
-        let protocolUrl = "";
-        const lowerTarget = cleanTarget.toLowerCase();
-        
-        if (lowerTarget.includes("3dsmax.exe")) {
-          protocolUrl = "openmax://";
-        } else if (lowerTarget.includes("devenv.exe")) {
-          protocolUrl = "vs2026://";
-        } else if (lowerTarget.includes("eclipse.exe")) {
-          protocolUrl = "eclipse://";
-        } else if (lowerTarget.includes("code.exe")) {
-          protocolUrl = "vscode://"; 
-        } else if (lowerTarget.includes("marktext.exe")) {
-          protocolUrl = "marktext://";
-        }
-
-        if (protocolUrl) {
-          window.location.href = protocolUrl;
+        if (cleanTarget.includes('github.com') && cleanTarget.includes('/blob/')) {
+          const fixedUrl = cleanTarget
+            .replace('github.com', '2026104274yoonhyukjin.github.io')
+            .replace('/blob/main/', '/');
+          window.open(fixedUrl, '_blank');
         } else {
-          window.open('file:///' + cleanTarget.replace(/\\/g, '/'), '_blank');
+          window.open(cleanTarget, '_blank');
         }
+        return; 
+      } 
+      
+      // 2. 이미 프로토콜 형태(openmax:// 등)로 들어온 경우 처리
+      if (cleanTarget.includes('://')) {
+        window.location.href = cleanTarget;
+        return;
       }
-    }
 
+      // 3. Electron(데스크톱 앱) 환경 지원용 백업
+      if (window.electron && window.electron.ipcRenderer) {
+        window.electron.ipcRenderer.send('launch-app', cleanTarget);
+        return;
+      }
+
+      // 4. 프로그램 실행 파일(.exe)인지 판별하여 커스텀 프로토콜 실행
+      let protocolUrl = "";
+      const lowerTarget = cleanTarget.toLowerCase();
+      
+      if (lowerTarget.includes("3dsmax.exe")) {
+        protocolUrl = "openmax://";
+      } else if (lowerTarget.includes("devenv.exe")) {
+        protocolUrl = "vs2026://";
+      } else if (lowerTarget.includes("eclipse.exe")) {
+          protocolUrl = "eclipse://";
+      } else if (lowerTarget.includes("code.exe")) {
+        protocolUrl = "vscode://"; 
+      } else if (lowerTarget.includes("marktext.exe")) {
+        protocolUrl = "marktext://";
+      }
+
+      if (protocolUrl) {
+        window.location.href = protocolUrl;
+        return;
+      }
+
+      // 5. ⭐ pdf/ 로 시작하는 상대 경로 파일 처리 (강제 웹 뷰어 실행으로 다운로드 원천 차단)
+      if (cleanTarget.startsWith('pdf/')) {
+        // 로컬(VS Code Live Server) 환경일 때는 내 컴퓨터 안에서 파일 열기
+        if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+          window.open(cleanTarget, '_blank');
+        } 
+        // 깃허브 웹사이트로 접속했을 때 (★절대 다운로드되지 않고 구글 뷰어로 웹에서 바로 열기)
+        else {
+          const githubRawUrl = "https://raw.githubusercontent.com/2026104274yoonhyukjin/MyCampusLinks1/main/";
+          const encodedTarget = cleanTarget.split('/').map(part => encodeURIComponent(part)).join('/');
+          const finalFileUrl = githubRawUrl + encodedTarget;
+          
+          // 구글 공식 뷰어 주소를 앞에 입혀 브라우저가 다운로드 대신 '웹 뷰어 화면'을 강제로 열도록 설정합니다.
+          const googleViewerUrl = "https://docs.google.com/gview?embedded=true&url=" + encodeURIComponent(finalFileUrl);
+          
+          window.open(googleViewerUrl, '_blank');
+        }
+        return;
+      }
+
+      // 6. 예외 주소 처리
+      window.open(cleanTarget, '_blank');
+    }
     const defaultSubjects = ["게임프로그래밍", "게임그래픽 기초", "객체 지향 프로그래밍", "프론트엔드프로그래밍"];
      const defaultData = [
       // 게임프로그래밍
