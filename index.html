@@ -223,7 +223,7 @@
           </div>
           <div>
             <button onclick="resetAllStorageData()" class="px-3 py-1 text-[12px] font-medium rounded border border-error text-error bg-surface-c-lowest hover:bg-error-container hover:text-white transition-all">
-              ⚠️ 초기화 (과거 데이터 강제 삭제)
+              ⚠️ 전체 초기화
             </button>
           </div>
         </div>
@@ -301,35 +301,31 @@
   </div>
 
   <script>
-    // 🛠️ [원클릭 실행/이동 핸들러 - 이스케이프 충돌 완벽 교정 버전]
+    // 🛠️ [원클릭 실행/이동 핸들러]
     function launchTarget(target) {
       if (!target) return;
       const cleanTarget = target.trim();
 
-      // 1. 일반 인터넷 주소(http://, https://) 새 탭 처리
       if (cleanTarget.startsWith('http://') || cleanTarget.startsWith('https://')) {
         window.open(cleanTarget, '_blank');
         return;
       } 
       
-      // 2. 고유 프로토콜 주소 처리
       if (cleanTarget.includes('://')) {
         window.location.href = cleanTarget;
         return;
       }
 
-      // 3. 일렉트론 환경 처리
       if (window.electron && window.electron.ipcRenderer) {
         window.electron.ipcRenderer.send('launch-app', cleanTarget);
         return;
       }
 
-      // 4. 로컬 프로그램 구동 자동 프로토콜 맵핑
       let protocolUrl = "";
       const lowerTarget = cleanTarget.toLowerCase();
       
       if (lowerTarget.includes("3dsmax.exe")) { protocolUrl = "openmax://"; } 
-      else if (lowerTarget.includes("devenv.exe")) { protocolUrl = "vs2026://"; } 
+      else if (lowerTarget.includes("devenv.exe")) { protocolUrl = "visualstudio://"; } 
       else if (lowerTarget.includes("eclipse.exe")) { protocolUrl = "eclipse://"; } 
       else if (lowerTarget.includes("code.exe")) { protocolUrl = "vscode://"; } 
       else if (lowerTarget.includes("marktext.exe")) { protocolUrl = "marktext://"; }
@@ -339,7 +335,6 @@
         return;
       }
 
-      // 5. 로컬 및 깃허브 상대경로 PDF 처리
       if (cleanTarget.startsWith('pdf/')) {
         if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
           window.open(cleanTarget, '_blank');
@@ -351,21 +346,17 @@
         return;
       }
 
-      // 6. 예외 로컬 파일 구동 백업
-      window.open('file:///' + cleanTarget.replace(/\\/g, '/'), '_blank');
+      alert("보안 정책으로 인해 실행할 수 없는 로컬 경로입니다: " + cleanTarget);
     }
 
     const defaultSubjects = ["게임프로그래밍", "게임그래픽 기초", "객체 지향 프로그래밍", "프론트엔드프로그래밍"];
     const defaultData = [
-      // 게임프로그래밍
       { id: 1, title: "C# 프로그래밍 첫걸음 (Chapter 01)", week: "1주차", subject: "게임프로그래밍", link: "pdf/ch01.pdf" },
       { id: 2, title: "기본 문법 (Chapter 02)", week: "2주차", subject: "게임프로그래밍", link: "pdf/ch02.pdf" },
       { id: 3, title: "조건문 (Chapter 03)", week: "3주차", subject: "게임프로그래밍", link: "pdf/ch03.pdf" },
       { id: 4, title: "반복문 (Chapter 04)", week: "4주차", subject: "게임프로그래밍", link: "pdf/ch04.pdf" },
       { id: 5, title: "클래스 기본 (Chapter 05)", week: "5주차", subject: "게임프로그래밍", link: "pdf/ch05.pdf" },
       { id: 6, title: "메서드 (Chapter 06)", week: "6주차", subject: "게임프로그래밍", link: "pdf/ch06.pdf" },
-      
-      // 게임그래픽 기초
       { id: 7, title: "3주차-컵", week: "3주차", subject: "게임그래픽 기초", link: "https://youtu.be/0V7-B76oDb0?si=PeFMPxFw7EPmTvIX" },
       { id: 8, title: "4주차 2차시-접시,스푼", week: "4주차", subject: "게임그래픽 기초", link: "https://youtu.be/v0lMKBo34ds?si=vzMUhstLUf5vWyTm" },
       { id: 9, title: "5주차 1차시-세부편집", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/JWFie9eDkGA?si=SR5KlKnALQNkAJ1U" },
@@ -381,8 +372,6 @@
       { id: 19, title: "10주차 2차시-인체(몸통)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/m-Mxw36Ybjk?si=adOxKKQ5pC4pPPmL" },
       { id: 20, title: "10주차 3차시-인체(팔,다리)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/TgfCel9AQlI?si=LfxVTI1xvs_B8Gcc" },
       { id: 21, title: "10주차 3차시-인체(손,발)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/qHTTJ7woLNg" },
-
-      // 객체 지향 프로그래밍
       { id: 22, title: "1장 Java 프로그래밍 언어의 특징 및 동작 원리 이해", week: "1주차", subject: "객체 지향 프로그래밍", link: "pdf/Java_프로그래밍_1주차_강의노트.pdf" },
       { id: 23, title: "2장-자료형", week: "2주차", subject: "객체 지향 프로그래밍", link: "pdf/2장_자료형.pdf" },
       { id: 24, title: "3장 연산자", week: "3주차", subject: "객체 지향 프로그래밍", link: "pdf/3장_연산자.pdf" },
@@ -390,8 +379,6 @@
       { id: 26, title: "5장-참조자료형", week: "5주차", subject: "객체 지향 프로그래밍", link: "pdf/5장_참조자료형.pdf" },
       { id: 27, title: "6장-클래스(class)의_기본_문법", week: "6주차", subject: "객체 지향 프로그래밍", link: "pdf/6장_클래스(class)의_기본_문법.pdf" },
       { id: 28, title: "7장-클래스 내부 구성요소(필드메서드생성자)", week: "7주차", subject: "객체 지향 프로그래밍", link: "pdf/7장_클래스_내부_구성요소_1_(필드메서드생성자).pdf" },
-
-      // 프론트엔드프로그래밍
       { id: 29, title: "OT 자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/OT" },
       { id: 30, title: "마크다운 작성방법 참고자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "pdf/마크다운_보충자료.pdf" },
       { id: 31, title: "3주차 수업 자료-HTML Form & UI", week: "3주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week3" },
@@ -413,10 +400,9 @@
       localStorage.setItem('myData', JSON.stringify(data));
     }
 
-    // ⚠️ 구버전 데이터 완벽 파괴 및 리셋 함수 추가
+    // ⚠️ 전체 초기화 함수
     function resetAllStorageData() {
-     if (confirm("⚠️ 주의: 추가하여 저장된 과목들과 파일들이 전부 초기화됩니다.\n\n과거에 누적 저장된 링크 캐시 데이터를 전부 완전 초기화하시겠습니까?")) {
-  // 초기화 실행 코드
+      if (confirm("⚠️ [주의] 추가하여 저장된 과목들과 파일들이 전부 초기화됩니다.\n\n과거에 누적 저장된 링크 캐시 데이터를 전부 완전 초기화하시겠습니까?")) {
         localStorage.removeItem('mySubjects');
         localStorage.removeItem('myData');
         subjects = [...defaultSubjects];
@@ -424,7 +410,31 @@
         saveToStorage();
         updateSidebarSubjects();
         render(currentMode);
-        alert("브라우저 누적 캐시 청소가 완료되었습니다! 이제 링크를 다시 테스트해보세요.");
+        alert("브라우저 누적 캐시 청소가 완료되었습니다!");
+      }
+    }
+
+    // ❌ 개별 파일(자료 카드) 삭제 함수
+    function deleteItem(id, event) {
+      if(event) event.stopPropagation(); // 카드 클릭 이벤트 차단
+      if (confirm("선택한 학습 자료를 삭제하시겠습니까?")) {
+        data = data.filter(item => item.id !== id);
+        saveToStorage();
+        render(currentMode);
+      }
+    }
+
+    // ❌ 개별 과목 삭제 함수
+    function deleteSubject(subjectName, event) {
+      if(event) event.stopPropagation(); // 메뉴 링크 클릭 이벤트 차단
+      if (confirm(`★ [주의] 과목 [ ${subjectName} ]을(를) 삭제하시겠습니까?\n\n해당 과목에 포함된 모든 파일들도 함께 영구 삭제됩니다.`)) {
+        // 과목 목록에서 제거
+        subjects = subjects.filter(sub => sub !== subjectName);
+        // 해당 과목 소속 파일들도 동시 제거
+        data = data.filter(item => item.subject !== subjectName);
+        saveToStorage();
+        updateSidebarSubjects();
+        render('subject');
       }
     }
 
@@ -468,6 +478,7 @@
       closeItemModal();
     }
 
+    // 🛠️ 사이드바 내과목 목록 렌더링 (❌ 개별 삭제 아이콘 연동)
     function updateSidebarSubjects() {
       const sidebarContainer = document.getElementById('sidebarSubjectList');
       sidebarContainer.innerHTML = '';
@@ -476,35 +487,49 @@
       subjects.forEach((sub, idx) => {
         const colorClass = colors[idx % colors.length];
         sidebarContainer.innerHTML += `
-          <a href="#" onclick="filterBySubject('${sub}')" class="flex items-center gap-3 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
-            <span class="w-2 h-2 rounded-full ${colorClass} shrink-0"></span> ${sub}
-          </a>
+          <div class="group flex items-center justify-between px-4 py-[10px] rounded hover:bg-secondary-container text-[14px]">
+            <a href="#" onclick="filterBySubject('${sub}')" class="flex items-center gap-3 text-on-surface-variant flex-1 min-w-0 truncate">
+              <span class="w-2 h-2 rounded-full ${colorClass} shrink-0"></span>
+              <span class="truncate">${sub}</span>
+            </a>
+            <button onclick="deleteSubject('${sub}', event)" class="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 font-bold px-1 transition-opacity duration-200" title="과목 삭제">
+              &times;
+            </button>
+          </div>
         `;
       });
     }
 
-    // ⭐ [핵심 수정] 일반 인터넷 url 문자열이 통째로 망가지던 replace(/\\/g) 처리를 제거했습니다.
+    // 🛠️ 개별 자료 카드 컴포넌트 생성 (❌ 개별 삭제 아이콘 연동)
     function createCardHtml(item, showSubject = false) {
       const subjectTag = showSubject ? `
         <div class="mt-1.5 flex">
           <span class="text-[11px] font-semibold text-primary bg-surface-c px-2 py-0.5 rounded tracking-wide">${item.subject}</span>
         </div>` : '';
       
+      const deleteButtonHtml = `
+        <button onclick="deleteItem(${item.id}, event)" class="text-[18px] text-gray-400 hover:text-red-600 font-bold px-1 leading-none self-start transition-colors" title="자료 삭제">
+          &times;
+        </button>
+      `;
+
       if (item.link) {
         return `
-          <a href="#" onclick="event.preventDefault(); launchTarget('${item.link}')" class="kanban-card flex items-start gap-3 p-3 rounded-lg bg-surface-c-lowest border border-ol-variant hover:border-primary hover:-translate-y-0.5 transition duration-200">
+          <div onclick="launchTarget('${item.link}')" class="kanban-card flex items-start justify-between gap-3 p-3 rounded-lg bg-surface-c-lowest border border-ol-variant hover:border-primary hover:-translate-y-0.5 transition duration-200 cursor-pointer">
             <div class="flex-1 min-w-0 flex flex-col">
               <span class="text-[14px] font-medium text-on-surface whitespace-normal break-words leading-relaxed">${item.title}</span>
               ${subjectTag}
             </div>
-          </a>`;
+            ${deleteButtonHtml}
+          </div>`;
       } else {
         return `
-          <div class="kanban-card flex items-start gap-3 p-3 rounded-lg bg-surface-c-lowest border border-ol-variant opacity-75">
+          <div class="kanban-card flex items-start justify-between gap-3 p-3 rounded-lg bg-surface-c-lowest border border-ol-variant opacity-75">
             <div class="flex-1 min-w-0 flex flex-col">
               <span class="text-[14px] font-medium text-on-surface whitespace-normal break-words leading-relaxed">${item.title}</span>
               ${subjectTag}
             </div>
+            ${deleteButtonHtml}
           </div>`;
       }
     }
