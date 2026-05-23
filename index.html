@@ -296,46 +296,63 @@
   </div>
 
   <script>
-    // 🛠️ [원클릭 실행/이동 핸들러]
+    // 🛠️ [원클릭 실행/이동 핸들러 - 다운로드 방지 처리]
     function launchTarget(target) {
       if (!target) return;
       const cleanTarget = target.trim();
 
       if (cleanTarget.startsWith('http://') || cleanTarget.startsWith('https://')) {
         window.open(cleanTarget, '_blank');
-      } else if (cleanTarget.includes('://')) {
+        return;
+      } 
+      
+      if (cleanTarget.includes('://')) {
         window.location.href = cleanTarget;
-      } else {
-        if (window.electron && window.electron.ipcRenderer) {
-          window.electron.ipcRenderer.send('launch-app', cleanTarget);
-          return;
-        }
-
-        let protocolUrl = "";
-        const lowerTarget = cleanTarget.toLowerCase();
-        
-        if (lowerTarget.includes("3dsmax.exe")) {
-          protocolUrl = "openmax://";
-        } else if (lowerTarget.includes("devenv.exe")) {
-          protocolUrl = "vs2026://";
-        } else if (lowerTarget.includes("eclipse.exe")) {
-          protocolUrl = "eclipse://";
-        } else if (lowerTarget.includes("code.exe")) {
-          protocolUrl = "vscode://"; 
-        } else if (lowerTarget.includes("marktext.exe")) {
-          protocolUrl = "marktext://";
-        }
-
-        if (protocolUrl) {
-          window.location.href = protocolUrl;
-        } else {
-          window.open('file:///' + cleanTarget.replace(/\\/g, '/'), '_blank');
-        }
+        return;
       }
+
+      if (window.electron && window.electron.ipcRenderer) {
+        window.electron.ipcRenderer.send('launch-app', cleanTarget);
+        return;
+      }
+
+      let protocolUrl = "";
+      const lowerTarget = cleanTarget.toLowerCase();
+      
+      if (lowerTarget.includes("3dsmax.exe")) {
+        protocolUrl = "openmax://";
+      } else if (lowerTarget.includes("devenv.exe")) {
+        protocolUrl = "vs2026://";
+      } else if (lowerTarget.includes("eclipse.exe")) {
+        protocolUrl = "eclipse://";
+      } else if (lowerTarget.includes("code.exe")) {
+        protocolUrl = "vscode://"; 
+      } else if (lowerTarget.includes("marktext.exe")) {
+        protocolUrl = "marktext://";
+      }
+
+      if (protocolUrl) {
+        window.location.href = protocolUrl;
+        return;
+      }
+
+      // pdf/ 파일 경로일 때 다운로드되지 않고 새 탭에서 즉시 열리도록 강제 처리
+      if (cleanTarget.startsWith('pdf/')) {
+        if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+          window.open(cleanTarget, '_blank');
+        } else {
+          const encodedTarget = cleanTarget.split('/').map(part => encodeURIComponent(part)).join('/');
+          const finalUrl = "https://2026104274yoonhyukjin.github.io/MyCampusLinks1/" + encodedTarget;
+          window.open(finalUrl, '_blank');
+        }
+        return;
+      }
+
+      window.open('file:///' + cleanTarget.replace(/\\/g, '/'), '_blank');
     }
 
     const defaultSubjects = ["게임프로그래밍", "게임그래픽 기초", "객체 지향 프로그래밍", "프론트엔드프로그래밍"];
-     const defaultData = [
+    const defaultData = [
       // 게임프로그래밍
       { id: 1, title: "C# 프로그래밍 첫걸음 (Chapter 01)", week: "1주차", subject: "게임프로그래밍", link: "pdf/ch01.pdf" },
       { id: 2, title: "기본 문법 (Chapter 02)", week: "2주차", subject: "게임프로그래밍", link: "pdf/ch02.pdf" },
@@ -370,7 +387,7 @@
       { id: 27, title: "6장-클래스(class)의_기본_문법", week: "6주차", subject: "객체 지향 프로그래밍", link: "pdf/6장_클래스(class)의_기본_문법.pdf" },
       { id: 28, title: "7장-클래스 내부 구성요소(필드메서드생성자)", week: "7주차", subject: "객체 지향 프로그래밍", link: "pdf/7장_클래스_내부_구성요소_1_(필드메서드생성자).pdf" },
 
-      // 프론트엔드프로그래밍 (누락되었던 연결파일 및 상대경로 보완 완료)
+      // 프론트엔드프로그래밍
       { id: 29, title: "OT 자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "pdf/frontend_ot.pdf" },
       { id: 30, title: "마크다운 작성방법 참고자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "pdf/markdown_guide.pdf" },
       { id: 31, title: "3주차 수업 자료-HTML Form & UI", week: "3주차", subject: "프론트엔드프로그래밍", link: "pdf/frontend_w03.pdf" },
@@ -383,18 +400,10 @@
       { id: 38, title: "12주차 수업 자료-MVP 통합 및 알파 버전 완성", week: "12주차", subject: "프론트엔드프로그래밍", link: "pdf/frontend_w12.pdf" }
     ];
 
-   // ⚙️ [수정 완료] 기존 저장 데이터와 기본 데이터를 안전하게 연동하여 저장 기능 복구
-    let subjects = JSON.parse(localStorage.getItem('subjects')) || defaultSubjects;
-    let data = JSON.parse(localStorage.getItem('data')) || defaultData;
+    // ⚙️ [해결 완료] 중복 선언 부분을 삭제하고, LocalStorage 데이터 연동만 남겨두었습니다.
+    let subjects = JSON.parse(localStorage.getItem('mySubjects')) || defaultSubjects;
+    let data = JSON.parse(localStorage.getItem('myData')) || defaultData;
     let currentMode = 'subject';
-
-    // 처음 접속한 컴퓨터라면 기본 데이터를 브라우저 저장소에 최초 1회 강제 저장
-    if (!localStorage.getItem('subjects')) {
-      localStorage.setItem('subjects', JSON.stringify(defaultSubjects));
-    }
-    if (!localStorage.getItem('data')) {
-      localStorage.setItem('data', JSON.stringify(defaultData));
-    }
 
     function saveToStorage() {
       localStorage.setItem('mySubjects', JSON.stringify(subjects));
@@ -481,7 +490,6 @@
       }
     }
 
-    // 🌟 [주차별 고정 버그 완벽 수정 엔진]
     function render(mode) {
       currentMode = mode;
       const board = document.getElementById('board');
@@ -510,7 +518,6 @@
           return acc;
         }, {});
 
-        // 🟢 기존 ["1주차"..."4주차"] 하드코딩 배열을 전체 15주차까지 커버할 수 있도록 전면 확장!
         const loopKeys = mode === 'week' 
           ? ["1주차","2주차","3주차","4주차","5주차","6주차","7주차","8주차","9주차","10주차","11주차","12주차","13주차","14주차","15주차"] 
           : subjects;
