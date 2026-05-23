@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -6,7 +6,6 @@
   <title>MYCAMPUSLINKS — 통합 대시보드</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700&display=swap" rel="stylesheet">
-  <script src="data.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -112,24 +111,19 @@
   </aside>
 
   <main class="lg:ml-[280px] min-h-screen flex flex-col">
-    <header class="sticky top-0 z-10 bg-surface/80 backdrop-blur-md border-b border-ol-variant px-4 md:px-8 lg:px-10 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-      <div class="flex items-center gap-4 flex-1">
+    <header class="sticky top-0 z-10 bg-surface/80 backdrop-blur-md border-b border-ol-variant px-4 md:px-8 lg:px-10 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
         <label for="sidebarToggle" class="lg:hidden cursor-pointer text-on-surface text-[24px] leading-none">☰</label>
         <div class="flex items-center gap-3">
-          <span class="text-[28px] mb-2 hidden sm:block">📅</span>
+          <span class="text-[28px] md:text-[32px]">📅</span>
           <div class="flex flex-col">
-            <span id="liveDateTime" class="text-[14px] md:text-[18px] font-bold text-on-surface leading-none tracking-tight">----년 --월 --일 (-) 오전 00:00:00</span>
+            <span id="liveDateTime" class="text-[16px] md:text-[20px] font-bold text-on-surface leading-none tracking-tight">----년 --월 --일 (-) 오전 00:00:00</span>
             <span class="text-[11px] text-on-surface-variant mt-1 hidden md:block">현재 날짜 및 실시간 정보</span>
           </div>
         </div>
-        
-        <div class="relative flex-1 max-w-md ml-2 md:ml-6">
-          <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">🔍</span>
-          <input type="text" id="searchInput" oninput="handleSearch()" placeholder="자료 제목, 과목, 주차 검색..." class="w-full pl-9 pr-4 py-2 text-[14px] rounded-lg border border-ol-variant bg-surface-c-lowest text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm">
-        </div>
       </div>
       
-      <div class="flex items-center justify-between md:justify-end gap-6 w-full md:w-auto border-t md:border-t-0 pt-2 md:pt-0 border-ol-variant">
+      <div class="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto border-t sm:border-t-0 pt-2 sm:pt-0 border-ol-variant">
         <div id="examDDayContainer" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-c border border-ol-variant transition-all duration-300">
           <span class="text-[13px] font-medium text-on-surface-variant">📝 기말고사 기간:</span>
           <span id="examDDayText" class="font-extrabold tracking-tight transition-all duration-300">계산 중</span>
@@ -229,7 +223,7 @@
           </div>
           <div>
             <button onclick="resetAllStorageData()" class="px-3 py-1 text-[12px] font-medium rounded border border-error text-error bg-surface-c-lowest hover:bg-error-container hover:text-white transition-all">
-              ⚠️ 전체 초기화
+              ⚠️ 초기화 (과거 데이터 강제 삭제)
             </button>
           </div>
         </div>
@@ -280,11 +274,21 @@
           <div>
             <label class="block text-[12px] font-semibold text-on-surface-variant uppercase mb-1">주차 *</label>
             <select id="newItemWeek" class="w-full px-3 py-2 text-[14px] rounded border border-ol-variant bg-surface-c-lowest text-on-surface focus:outline-none focus:border-primary">
-              <option value="1주차">1주차</option><option value="2주차">2주차</option><option value="3주차">3주차</option>
-              <option value="4주차">4주차</option><option value="5주차">5주차</option><option value="6주차">6주차</option>
-              <option value="7주차">7주차</option><option value="8주차">8주차</option><option value="9주차">9주차</option>
-              <option value="10주차">10주차</option><option value="11주차">11주차</option><option value="12주차">12주차</option>
-              <option value="13주차">13주차</option><option value="14주차">14주차</option><option value="15주차">15주차</option>
+              <option value="1주차">1주차</option>
+              <option value="2주차">2주차</option>
+              <option value="3주차">3주차</option>
+              <option value="4주차">4주차</option>
+              <option value="5주차">5주차</option>
+              <option value="6주차">6주차</option>
+              <option value="7주차">7주차</option>
+              <option value="8주차">8주차</option>
+              <option value="9주차">9주차</option>
+              <option value="10주차">10주차</option>
+              <option value="11주차">11주차</option>
+              <option value="12주차">12주차</option>
+              <option value="13주차">13주차</option>
+              <option value="14주차">14주차</option>
+              <option value="15주차">15주차</option>
             </select>
           </div>
         </div>
@@ -297,95 +301,156 @@
   </div>
 
   <script>
+    // 🛠️ [원클릭 실행/이동 핸들러 - 이스케이프 충돌 완벽 교정 버전]
     function launchTarget(target) {
       if (!target) return;
       const cleanTarget = target.trim();
-      if (cleanTarget.startsWith('http://') || cleanTarget.startsWith('https://')) { window.open(cleanTarget, '_blank'); return; } 
-      if (cleanTarget.includes('://')) { window.location.href = cleanTarget; return; }
-      if (window.electron && window.electron.ipcRenderer) { window.electron.ipcRenderer.send('launch-app', cleanTarget); return; }
 
+      // 1. 일반 인터넷 주소(http://, https://) 새 탭 처리
+      if (cleanTarget.startsWith('http://') || cleanTarget.startsWith('https://')) {
+        window.open(cleanTarget, '_blank');
+        return;
+      } 
+      
+      // 2. 고유 프로토콜 주소 처리
+      if (cleanTarget.includes('://')) {
+        window.location.href = cleanTarget;
+        return;
+      }
+
+      // 3. 일렉트론 환경 처리
+      if (window.electron && window.electron.ipcRenderer) {
+        window.electron.ipcRenderer.send('launch-app', cleanTarget);
+        return;
+      }
+
+      // 4. 로컬 프로그램 구동 자동 프로토콜 맵핑
       let protocolUrl = "";
       const lowerTarget = cleanTarget.toLowerCase();
+      
       if (lowerTarget.includes("3dsmax.exe")) { protocolUrl = "openmax://"; } 
-      else if (lowerTarget.includes("devenv.exe")) { protocolUrl = "visualstudio://"; } 
+      else if (lowerTarget.includes("devenv.exe")) { protocolUrl = "vs2026://"; } 
       else if (lowerTarget.includes("eclipse.exe")) { protocolUrl = "eclipse://"; } 
       else if (lowerTarget.includes("code.exe")) { protocolUrl = "vscode://"; } 
       else if (lowerTarget.includes("marktext.exe")) { protocolUrl = "marktext://"; }
 
-      if (protocolUrl) { window.location.href = protocolUrl; return; }
+      if (protocolUrl) {
+        window.location.href = protocolUrl;
+        return;
+      }
+
+      // 5. 로컬 및 깃허브 상대경로 PDF 처리
       if (cleanTarget.startsWith('pdf/')) {
-        if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') { window.open(cleanTarget, '_blank'); } 
-        else {
+        if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+          window.open(cleanTarget, '_blank');
+        } else {
           const encodedTarget = cleanTarget.split('/').map(part => encodeURIComponent(part)).join('/');
-          window.open("https://2026104274yoonhyukjin.github.io/MyCampusLinks1/" + encodedTarget, '_blank');
+          const finalUrl = "https://2026104274yoonhyukjin.github.io/MyCampusLinks1/" + encodedTarget;
+          window.open(finalUrl, '_blank');
         }
         return;
       }
-      alert("보안 정책으로 인해 실행할 수 없는 로컬 경로입니다: " + cleanTarget);
+
+      // 6. 예외 로컬 파일 구동 백업
+      window.open('file:///' + cleanTarget.replace(/\\/g, '/'), '_blank');
     }
 
     const defaultSubjects = ["게임프로그래밍", "게임그래픽 기초", "객체 지향 프로그래밍", "프론트엔드프로그래밍"];
-    
+    const defaultData = [
+      // 게임프로그래밍
+      { id: 1, title: "C# 프로그래밍 첫걸음 (Chapter 01)", week: "1주차", subject: "게임프로그래밍", link: "pdf/ch01.pdf" },
+      { id: 2, title: "기본 문법 (Chapter 02)", week: "2주차", subject: "게임프로그래밍", link: "pdf/ch02.pdf" },
+      { id: 3, title: "조건문 (Chapter 03)", week: "3주차", subject: "게임프로그래밍", link: "pdf/ch03.pdf" },
+      { id: 4, title: "반복문 (Chapter 04)", week: "4주차", subject: "게임프로그래밍", link: "pdf/ch04.pdf" },
+      { id: 5, title: "클래스 기본 (Chapter 05)", week: "5주차", subject: "게임프로그래밍", link: "pdf/ch05.pdf" },
+      { id: 6, title: "메서드 (Chapter 06)", week: "6주차", subject: "게임프로그래밍", link: "pdf/ch06.pdf" },
+      
+      // 게임그래픽 기초
+      { id: 7, title: "3주차-컵", week: "3주차", subject: "게임그래픽 기초", link: "https://youtu.be/0V7-B76oDb0?si=PeFMPxFw7EPmTvIX" },
+      { id: 8, title: "4주차 2차시-접시,스푼", week: "4주차", subject: "게임그래픽 기초", link: "https://youtu.be/v0lMKBo34ds?si=vzMUhstLUf5vWyTm" },
+      { id: 9, title: "5주차 1차시-세부편집", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/JWFie9eDkGA?si=SR5KlKnALQNkAJ1U" },
+      { id: 10, title: "5주차 2차시-세부편집", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/BPHuUT0zoKI?si=2E8zRt2wzCqVUpap" },
+      { id: 11, title: "5주차 3차시-검,철퇴", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/XvxTYsfnPpI" },
+      { id: 12, title: "6주차 1차시-Allign Pivot", week: "6주차", subject: "게임그래픽 기초", link: "https://youtu.be/KA9KfMoQhTg?si=pnl3XBBT_rgUec8K" },
+      { id: 13, title: "6주차 2차시-Allign Pivot", week: "6주차", subject: "게임그래픽 기초", link: "https://youtu.be/DL9LDpRodEg" },
+      { id: 14, title: "6주차 3차시-Reset X Form", week: "6주차", subject: "게임그래픽 기초", link: "https://youtu.be/l6c1epTtNVk?si=9LZOjTp8TjOGZvCa" },
+      { id: 15, title: "7주차 1차시-캐릭터(몸통)", week: "7주차", subject: "게임그래픽 기초", link: "https://youtu.be/oy9rC6YQwfQ?si=iIa3w4etvMySTjXi" },
+      { id: 16, title: "7주차 2차시-캐릭터(팔)", week: "7주차", subject: "게임그래픽 기초", link: "https://youtu.be/tt-hxXzbWu8?si=zoXrVXOO1LYpQBLW" },
+      { id: 17, title: "7주차 3차시-캐릭터(다리,이빨)", week: "7주차", subject: "게임그래픽 기초", link: "https://youtu.be/n9sNFonoh4g?si=fC5kPi6sG7FPzMVS" },
+      { id: 18, title: "10주차 1차시-인체 캐릭터 특징분석", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/IEzmA-YC7bs?si=AUfPz_gkkBLHrNdx" },
+      { id: 19, title: "10주차 2차시-인체(몸통)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/m-Mxw36Ybjk?si=adOxKKQ5pC4pPPmL" },
+      { id: 20, title: "10주차 3차시-인체(팔,다리)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/TgfCel9AQlI?si=LfxVTI1xvs_B8Gcc" },
+      { id: 21, title: "10주차 3차시-인체(손,발)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/qHTTJ7woLNg" },
+
+      // 객체 지향 프로그래밍
+      { id: 22, title: "1장 Java 프로그래밍 언어의 특징 및 동작 원리 이해", week: "1주차", subject: "객체 지향 프로그래밍", link: "pdf/Java_프로그래밍_1주차_강의노트.pdf" },
+      { id: 23, title: "2장-자료형", week: "2주차", subject: "객체 지향 프로그래밍", link: "pdf/2장_자료형.pdf" },
+      { id: 24, title: "3장 연산자", week: "3주차", subject: "객체 지향 프로그래밍", link: "pdf/3장_연산자.pdf" },
+      { id: 25, title: "4장-제어문과 제어키워드", week: "4주차", subject: "객체 지향 프로그래밍", link: "pdf/4장_제어문과_제어키워드.pdf" },
+      { id: 26, title: "5장-참조자료형", week: "5주차", subject: "객체 지향 프로그래밍", link: "pdf/5장_참조자료형.pdf" },
+      { id: 27, title: "6장-클래스(class)의_기본_문법", week: "6주차", subject: "객체 지향 프로그래밍", link: "pdf/6장_클래스(class)의_기본_문법.pdf" },
+      { id: 28, title: "7장-클래스 내부 구성요소(필드메서드생성자)", week: "7주차", subject: "객체 지향 프로그래밍", link: "pdf/7장_클래스_내부_구성요소_1_(필드메서드생성자).pdf" },
+
+      // 프론트엔드프로그래밍
+      { id: 29, title: "OT 자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/OT" },
+      { id: 30, title: "마크다운 작성방법 참고자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "pdf/마크다운_보충자료.pdf" },
+      { id: 31, title: "3주차 수업 자료-HTML Form & UI", week: "3주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week3" },
+      { id: 32, title: "4주차 수업 자료-CSS 스타일링 & GitHub 배포", week: "4주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week4" },
+      { id: 33, title: "5주차 수업 자료-CSS Layout & 팀 협업", week: "5주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week5" },
+      { id: 34, title: "6주차 수업 자료-Flexbox & 반응형 웹", week: "6주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week6" },
+      { id: 35, title: "7주차 수업 자료-Grid 레이아웃 & 동적 애니메이션", week: "7주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week7" },
+      { id: 36, title: "10주차 수업 자료-실전 팀 빌딩 & README 기반 Git 협업", week: "10주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week10" },
+      { id: 37, title: "11주차 수업 자료-개발 착수 & MVP 기반 태스크 관리", week: "11주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week11" },
+      { id: 38, title: "12주차 수업 자료-MVP 통합 및 알파 버전 완성", week: "12주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week12" }
+    ];
+
     let subjects = JSON.parse(localStorage.getItem('mySubjects')) || defaultSubjects;
     let data = JSON.parse(localStorage.getItem('myData')) || defaultData;
     let currentMode = 'subject';
-    let currentSearchQuery = '';
 
     function saveToStorage() {
       localStorage.setItem('mySubjects', JSON.stringify(subjects));
       localStorage.setItem('myData', JSON.stringify(data));
     }
 
+    // ⚠️ 구버전 데이터 완벽 파괴 및 리셋 함수 추가
     function resetAllStorageData() {
-      if (confirm("⚠️ [주의] 추가하여 저장된 과목들과 파일들이 전부 초기화됩니다.\n\n과거에 누적 저장된 링크 캐시 데이터를 전부 완전 초기화하시겠습니까?")) {
+     if (confirm("⚠️ 주의: 추가하여 저장된 과목들과 파일들이 전부 초기화됩니다.\n\n과거에 누적 저장된 링크 캐시 데이터를 전부 완전 초기화하시겠습니까?")) {
+  // 초기화 실행 코드
         localStorage.removeItem('mySubjects');
         localStorage.removeItem('myData');
         subjects = [...defaultSubjects];
         data = [...defaultData];
         saveToStorage();
         updateSidebarSubjects();
-        document.getElementById('searchInput').value = '';
-        currentSearchQuery = '';
         render(currentMode);
-        alert("브라우저 누적 캐시 청소가 완료되었습니다!");
-      }
-    }
-
-    function deleteItem(id, event) {
-      if(event) event.stopPropagation();
-      if (confirm("선택한 학습 자료를 삭제하시겠습니까?")) {
-        data = data.filter(item => item.id !== id);
-        saveToStorage();
-        render(currentMode);
-      }
-    }
-
-    function deleteSubject(subjectName, event) {
-      if(event) event.stopPropagation();
-      if (confirm(`★ [위험] 과목 [ ${subjectName} ]을(를) 삭제하시겠습니까?\n\n해당 과목에 포함된 모든 파일들도 함께 영구 삭제됩니다.`)) {
-        subjects = subjects.filter(sub => sub !== subjectName);
-        data = data.filter(item => item.subject !== subjectName);
-        saveToStorage();
-        updateSidebarSubjects();
-        render('subject');
+        alert("브라우저 누적 캐시 청소가 완료되었습니다! 이제 링크를 다시 테스트해보세요.");
       }
     }
 
     function openSubjectModal() { document.getElementById('subjectModal').classList.remove('hidden'); }
     function closeSubjectModal() { document.getElementById('subjectModal').classList.add('hidden'); document.getElementById('newSubjectName').value = ''; }
+    
     function openItemModal() { 
       const select = document.getElementById('newItemSubject');
       select.innerHTML = '';
       subjects.forEach(sub => { select.innerHTML += `<option value="${sub}">${sub}</option>`; });
       document.getElementById('itemModal').classList.remove('hidden'); 
     }
-    function closeItemModal() { document.getElementById('itemModal').classList.add('hidden'); document.getElementById('newItemTitle').value = ''; document.getElementById('newItemLink').value = ''; }
+    function closeItemModal() { 
+      document.getElementById('itemModal').classList.add('hidden'); 
+      document.getElementById('newItemTitle').value = '';
+      document.getElementById('newItemLink').value = '';
+    }
 
     function addSubject() {
       const name = document.getElementById('newSubjectName').value.trim();
       if(!name) { alert('과목명을 입력해주세요.'); return; }
       if(subjects.includes(name)) { alert('이미 존재하는 과목입니다.'); return; }
-      subjects.push(name); saveToStorage(); updateSidebarSubjects(); closeSubjectModal();
+      subjects.push(name);
+      saveToStorage();
+      updateSidebarSubjects();
+      closeSubjectModal();
     }
 
     function addItem() {
@@ -393,88 +458,103 @@
       const link = document.getElementById('newItemLink').value.trim();
       const subject = document.getElementById('newItemSubject').value;
       const week = document.getElementById('newItemWeek').value;
+
       if(!title) { alert('제목을 입력해주세요.'); return; }
-      data.push({ id: Date.now(), title: title, week: week, subject: subject, link: link || null });
-      saveToStorage(); render(currentMode); closeItemModal();
+
+      const newItem = { id: Date.now(), title: title, week: week, subject: subject, link: link || null };
+      data.push(newItem);
+      saveToStorage();
+      render(currentMode);
+      closeItemModal();
     }
 
     function updateSidebarSubjects() {
       const sidebarContainer = document.getElementById('sidebarSubjectList');
       sidebarContainer.innerHTML = '';
       const colors = ['bg-primary', 'bg-tertiary', 'bg-error', 'bg-primary-container', 'bg-orange-500', 'bg-teal-500'];
+      
       subjects.forEach((sub, idx) => {
+        const colorClass = colors[idx % colors.length];
         sidebarContainer.innerHTML += `
-          <div class="group flex items-center justify-between px-4 py-[10px] rounded hover:bg-secondary-container text-[14px]">
-            <a href="#" onclick="filterBySubject('${sub}')" class="flex items-center gap-3 text-on-surface-variant flex-1 min-w-0 truncate">
-              <span class="w-2 h-2 rounded-full ${colors[idx % colors.length]} shrink-0"></span>
-              <span class="truncate">${sub}</span>
-            </a>
-            <button onclick="deleteSubject('${sub}', event)" class="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 font-bold px-1 transition-opacity" title="과목 삭제">&times;</button>
-          </div>`;
+          <a href="#" onclick="filterBySubject('${sub}')" class="flex items-center gap-3 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">
+            <span class="w-2 h-2 rounded-full ${colorClass} shrink-0"></span> ${sub}
+          </a>
+        `;
       });
     }
 
+    // ⭐ [핵심 수정] 일반 인터넷 url 문자열이 통째로 망가지던 replace(/\\/g) 처리를 제거했습니다.
     function createCardHtml(item, showSubject = false) {
-      const subjectTag = showSubject ? `<div class="mt-1.5 flex"><span class="text-[11px] font-semibold text-primary bg-surface-c px-2 py-0.5 rounded tracking-wide">${item.subject}</span></div>` : '';
-      const delBtn = `<button onclick="deleteItem(${item.id}, event)" class="text-[18px] text-gray-400 hover:text-red-600 font-bold px-1 leading-none self-start transition-colors" title="자료 삭제">&times;</button>`;
-      return item.link ? `
-        <div onclick="launchTarget('${item.link}')" class="kanban-card flex items-start justify-between gap-3 p-3 rounded-lg bg-surface-c-lowest border border-ol-variant hover:border-primary hover:-translate-y-0.5 transition duration-200 cursor-pointer">
-          <div class="flex-1 min-w-0 flex flex-col"><span class="text-[14px] font-medium text-on-surface whitespace-normal break-words leading-relaxed">${item.title}</span>${subjectTag}</div>${delBtn}
-        </div>` : `
-        <div class="kanban-card flex items-start justify-between gap-3 p-3 rounded-lg bg-surface-c-lowest border border-ol-variant opacity-75">
-          <div class="flex-1 min-w-0 flex flex-col"><span class="text-[14px] font-medium text-on-surface whitespace-normal break-words leading-relaxed">${item.title}</span>${subjectTag}</div>${delBtn}
-        </div>`;
-    }
-
-    // 🔍 실시간 검색창 입력 핸들러
-    function handleSearch() {
-      currentSearchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
-      render(currentMode);
+      const subjectTag = showSubject ? `
+        <div class="mt-1.5 flex">
+          <span class="text-[11px] font-semibold text-primary bg-surface-c px-2 py-0.5 rounded tracking-wide">${item.subject}</span>
+        </div>` : '';
+      
+      if (item.link) {
+        return `
+          <a href="#" onclick="event.preventDefault(); launchTarget('${item.link}')" class="kanban-card flex items-start gap-3 p-3 rounded-lg bg-surface-c-lowest border border-ol-variant hover:border-primary hover:-translate-y-0.5 transition duration-200">
+            <div class="flex-1 min-w-0 flex flex-col">
+              <span class="text-[14px] font-medium text-on-surface whitespace-normal break-words leading-relaxed">${item.title}</span>
+              ${subjectTag}
+            </div>
+          </a>`;
+      } else {
+        return `
+          <div class="kanban-card flex items-start gap-3 p-3 rounded-lg bg-surface-c-lowest border border-ol-variant opacity-75">
+            <div class="flex-1 min-w-0 flex flex-col">
+              <span class="text-[14px] font-medium text-on-surface whitespace-normal break-words leading-relaxed">${item.title}</span>
+              ${subjectTag}
+            </div>
+          </div>`;
+      }
     }
 
     function render(mode) {
       currentMode = mode;
       const board = document.getElementById('board');
       const boardTitle = document.getElementById('boardTitle');
-      board.innerHTML = ''; updateActiveMenu(mode);
-
-      let filteredData = data;
-      if (currentSearchQuery) {
-        filteredData = data.filter(item => 
-          item.title.toLowerCase().includes(currentSearchQuery) ||
-          item.subject.toLowerCase().includes(currentSearchQuery) ||
-          item.week.toLowerCase().includes(currentSearchQuery)
-        );
-        boardTitle.innerText = `🔍 검색 결과 ("${document.getElementById('searchInput').value}" 필터링 중)`;
-      } else {
-        boardTitle.innerText = mode === 'week' ? "주차별 학습 보드" : (mode === 'all' ? "전체 리스트 자료" : "과목별 학습 보드");
-      }
+      board.innerHTML = '';
+      updateActiveMenu(mode);
 
       if (mode === 'all') {
-        let html = `<div class="bg-surface-c-low border border-ol-variant rounded-xl p-5 shadow-sm max-w-3xl mx-auto w-full"><h2 class="text-[16px] font-bold text-primary border-b border-ol-variant pb-3 mb-4 text-center">전체 리스트 (${filteredData.length}개 항목)</h2><div class="card-list flex flex-col gap-2.5 max-h-[500px] overflow-y-auto pr-1">`;
-        filteredData.forEach(item => { html += createCardHtml(item, true); });
-        if(filteredData.length === 0) html += `<p class="text-center text-on-surface-variant text-[14px] py-8">검색 결과와 일치하는 자료가 없습니다.</p>`;
-        board.innerHTML = html + `</div></div>`;
+        boardTitle.innerText = "전체 리스트 자료";
+        let html = `
+          <div class="bg-surface-c-low border border-ol-variant rounded-xl p-5 shadow-sm max-w-3xl mx-auto w-full">
+            <h2 class="text-[16px] font-bold text-primary border-b border-ol-variant pb-3 mb-4 text-center">전체 리스트 (${data.length}개 항목)</h2>
+            <div class="card-list flex flex-col gap-2.5 max-h-[500px] overflow-y-auto pr-1">`;
+        data.forEach(item => { html += createCardHtml(item, true); });
+        html += `</div></div>`;
+        board.innerHTML = html;
       } else {
+        boardTitle.innerText = mode === 'week' ? "주차별 학습 보드" : "과목별 학습 보드";
         let gridWrapperHtml = `<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 w-full items-start">`;
-        const groups = filteredData.reduce((acc, item) => { const key = item[mode]; if (key) { if (!acc[key]) acc[key] = []; acc[key].push(item); } return acc; }, {});
-        const loopKeys = mode === 'week' ? ["1주차","2주차","3주차","4주차","5주차","6주차","7주차","8주차","9주차","10주차","11주차","12주차","13주차","14주차","15주차"] : subjects;
 
-        let totalShown = 0;
+        const groups = data.reduce((acc, item) => {
+          const key = item[mode];
+          if (!key) return acc;
+          if (!acc[key]) acc[key] = [];
+          acc[key].push(item);
+          return acc;
+        }, {});
+
+        const loopKeys = mode === 'week' 
+          ? ["1주차","2주차","3주차","4주차","5주차","6주차","7주차","8주차","9주차","10주차","11주차","12주차","13주차","14주차","15주차"] 
+          : subjects;
+
         loopKeys.forEach(key => {
-          const itemsInGroup = groups[key] || [];
-          if (currentSearchQuery && itemsInGroup.length === 0) return;
+          const itemsInKey = groups[key] || [];
+          let columnHtml = `
+            <div class="column flex flex-col w-full bg-surface-c-low border border-ol-variant rounded-xl p-4 shadow-sm">
+              <h2 class="text-[15px] font-bold text-primary border-b border-ol-variant pb-2.5 mb-3 text-center">${key}</h2>
+              <div class="card-list flex flex-col gap-2">`;
           
-          totalShown++;
-          let columnHtml = `<div class="column flex flex-col w-full bg-surface-c-low border border-ol-variant rounded-xl p-4 shadow-sm"><h2 class="text-[15px] font-bold text-primary border-b border-ol-variant pb-2.5 mb-3 text-center">${key}</h2><div class="card-list flex flex-col gap-2">`;
-          itemsInGroup.forEach(item => { columnHtml += createCardHtml(item, mode === 'week'); });
-          gridWrapperHtml += columnHtml + `</div></div>`;
+          itemsInKey.forEach(item => { columnHtml += createCardHtml(item, mode === 'week'); });
+          columnHtml += `</div></div>`;
+          gridWrapperHtml += columnHtml;
         });
         
-        if(totalShown === 0) {
-          gridWrapperHtml += `<div class="col-span-full bg-surface-c-low border border-ol-variant rounded-xl p-8 text-center text-on-surface-variant text-[14px]">검색 결과와 일치하는 자료가 없습니다.</div>`;
-        }
-        board.innerHTML = gridWrapperHtml + `</div>`;
+        gridWrapperHtml += `</div>`;
+        board.innerHTML = gridWrapperHtml;
       }
     }
 
@@ -482,19 +562,18 @@
       currentMode = 'subject';
       const board = document.getElementById('board');
       const boardTitle = document.getElementById('boardTitle');
-      
-      let filtered = data.filter(item => item.subject === subjectName);
-      if (currentSearchQuery) {
-        filtered = filtered.filter(item => item.title.toLowerCase().includes(currentSearchQuery));
-        boardTitle.innerText = `🔍 과목 내 검색: ${subjectName} ("${document.getElementById('searchInput').value}")`;
-      } else {
-        boardTitle.innerText = `과목 상세: ${subjectName}`;
-      }
+      board.innerHTML = '';
+      boardTitle.innerText = `과목 상세: ${subjectName}`;
 
-      let html = `<div class="bg-surface-c-low border border-ol-variant rounded-xl p-5 shadow-sm max-w-3xl mx-auto w-full"><h2 class="text-[16px] font-bold text-primary border-b border-ol-variant pb-3 mb-4 text-center">${subjectName} 자료집</h2><div class="card-list flex flex-col gap-2.5">`;
+      let html = `
+        <div class="bg-surface-c-low border border-ol-variant rounded-xl p-5 shadow-sm max-w-3xl mx-auto w-full">
+          <h2 class="text-[16px] font-bold text-primary border-b border-ol-variant pb-3 mb-4 text-center">${subjectName} 자료집</h2>
+          <div class="card-list flex flex-col gap-2.5">`;
+      
+      const filtered = data.filter(item => item.subject === subjectName);
       filtered.forEach(item => { html += createCardHtml(item, false); });
-      if(filtered.length === 0) html += `<p class="text-center text-on-surface-variant text-[14px] py-8">일치하는 자료가 없습니다.</p>`;
-      board.innerHTML = html + `</div></div>`;
+      html += `</div></div>`;
+      board.innerHTML = html;
     }
 
     function updateActiveMenu(mode) {
@@ -508,34 +587,64 @@
     function updateLiveDateTime() {
       const dateTimeEl = document.getElementById('liveDateTime');
       const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
-      setInterval(() => {
+      function setDateTime() {
         const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const date = String(now.getDate()).padStart(2, '0');
+        const dayName = weekDays[now.getDay()];
         let hours = now.getHours();
-        dateTimeEl.innerText = `${now.getFullYear()}년 ${String(now.getMonth() + 1).padStart(2, '0')}월 ${String(now.getDate()).padStart(2, '0')}일 (${weekDays[now.getDay()]}) ${hours >= 12 ? '오후' : '오전'} ${hours % 12 || 12}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-      }, 1000);
+        const ampm = hours >= 12 ? '오후' : '오전';
+        hours = hours % 12 || 12;
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        dateTimeEl.innerText = `${year}년 ${month}월 ${date}일 (${dayName}) ${ampm} ${hours}:${minutes}:${seconds}`;
+      }
+      setDateTime(); setInterval(setDateTime, 1000);
     }
 
     function calculateExamDDay() {
       const dDayTextEl = document.getElementById('examDDayText');
       const containerEl = document.getElementById('examDDayContainer');
-      const startDate = new Date(2026, 5, 9), endDate = new Date(2026, 5, 15);
-      const cleanToday = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+      const startDate = new Date(2026, 5, 9);
+      const endDate = new Date(2026, 5, 15);
       
-      if (cleanToday < startDate) {
-        const diffDays = Math.ceil((startDate - cleanToday) / (1000 * 60 * 60 * 24));
-        dDayTextEl.innerText = `D-${diffDays}`;
-        if (diffDays <= 3) { dDayTextEl.className = "text-[18px] md:text-[22px] font-black text-red-600 animate-pulse"; containerEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 border-2 border-red-500"; }
-        else if (diffDays <= 7) { dDayTextEl.className = "text-[16px] md:text-[18px] font-extrabold text-orange-600"; containerEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-50 border border-orange-400"; }
-        else { dDayTextEl.className = "text-[14px] font-bold text-primary"; containerEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-c border border-ol-variant"; }
-      } else if (cleanToday >= startDate && cleanToday <= endDate) {
-        dDayTextEl.innerText = `진행 중 🔥 (${Math.floor((cleanToday - startDate) / (1000 * 60 * 60 * 24)) + 1}일차)`;
-        dDayTextEl.className = "text-[16px] md:text-[18px] font-black text-red-600 animate-pulse"; containerEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-100 border-2 border-red-600 shadow-md";
-      } else {
-        dDayTextEl.innerText = "종료 🎉"; dDayTextEl.className = "text-[14px] font-medium text-on-surface-variant"; containerEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-c border border-ol-variant";
+      function updateDDay() {
+        const today = new Date();
+        const cleanToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        if (cleanToday < startDate) {
+          const diffDays = Math.ceil((startDate - cleanToday) / (1000 * 60 * 60 * 24));
+          dDayTextEl.innerText = `D-${diffDays}`;
+          if (diffDays <= 3) {
+            dDayTextEl.className = "text-[18px] md:text-[22px] font-black text-red-600 animate-pulse";
+            containerEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 border-2 border-red-500";
+          } else if (diffDays <= 7) {
+            dDayTextEl.className = "text-[16px] md:text-[18px] font-extrabold text-orange-600";
+            containerEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-50 border border-orange-400";
+          } else {
+            dDayTextEl.className = "text-[14px] font-bold text-primary";
+            containerEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-c border border-ol-variant";
+          }
+        } else if (cleanToday >= startDate && cleanToday <= endDate) {
+          const progressDays = Math.floor((cleanToday - startDate) / (1000 * 60 * 60 * 24)) + 1;
+          dDayTextEl.innerText = `진행 중 🔥 (${progressDays}일차)`;
+          dDayTextEl.className = "text-[16px] md:text-[18px] font-black text-red-600 animate-pulse";
+          containerEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-100 border-2 border-red-600 shadow-md";
+        } else {
+          dDayTextEl.innerText = "종료 🎉";
+          dDayTextEl.className = "text-[14px] font-medium text-on-surface-variant";
+          containerEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-c border border-ol-variant";
+        }
       }
+      updateDDay();
     }
 
-    window.onload = () => { updateLiveDateTime(); calculateExamDDay(); updateSidebarSubjects(); render('subject'); };
+    window.onload = () => {
+      updateLiveDateTime(); 
+      calculateExamDDay(); 
+      updateSidebarSubjects();
+      render('subject');
+    };
   </script>
 </body>
 </html>
