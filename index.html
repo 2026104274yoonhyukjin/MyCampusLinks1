@@ -5,14 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MYCAMPUSLINKS — 통합 대시보드 & 광장</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Firebase 설정 -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <!-- SortableJS -->
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
   <script>
     const firebaseConfig = {
@@ -34,7 +31,7 @@
         extend: {
           fontFamily: { inter: ['Inter', 'sans-serif'] },
           colors: {
-            surface: { DEFAULT: 'var(--surface)', dim: 'var(--surface-dim)', 'c-lowest:': 'var(--surface-c-lowest)', 'c-low': 'var(--surface-c-low)', c: 'var(--surface-c)', 'c-high': 'var(--surface-c-high)', tint: 'var(--surface-tint)' },
+            surface: { DEFAULT: 'var(--surface)', dim: 'var(--surface-dim)', 'c-lowest': 'var(--surface-c-lowest)', 'c-low': 'var(--surface-c-low)', c: 'var(--surface-c)', 'c-high': 'var(--surface-c-high)', tint: 'var(--surface-tint)' },
             'on-surface': { DEFAULT: 'var(--on-surface)', variant: 'var(--on-surface-variant)' },
             ol: { DEFAULT: 'var(--ol)', variant: 'var(--ol-variant)' },
             primary: { DEFAULT: 'var(--primary)', container: 'var(--primary-container)', fixed: 'var(--primary-fixed)' },
@@ -192,7 +189,7 @@
       </div>
       <div class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto border-t sm:border-t-0 pt-2 sm:pt-0 border-ol-variant">
         <button onclick="openCalendarModal()" class="bg-primary text-white text-[13px] font-medium px-3 py-1.5 rounded-lg hover:opacity-90 transition shadow-sm">
-          📅 캘린더
+          📅 학사 달력
         </button>
         <div class="flex flex-wrap items-center gap-2 max-w-[400px]">
           <div id="ddayListContainer" class="flex flex-wrap items-center gap-2"></div>
@@ -219,19 +216,19 @@
           <p class="text-[13px] text-on-surface-variant mt-0.5">개발 도구 및 학습 프로그램 원클릭 실행</p>
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
-          <div onclick="launchTarget('C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer flex flex-col items-center text-center">
+          <div onclick="launchTarget('C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer flex flex-col items-center text-center">
             <span class="text-[24px] mb-2">💻</span><h4 class="text-[14px] font-medium text-on-surface">Visual Studio</h4><p class="text-[12px] text-on-surface-variant mt-0.5">C# / IDE</p>
           </div>
           <div onclick="launchTarget('openmax://')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer flex flex-col items-center text-center">
             <span class="text-[24px] mb-2">☕</span><h4 class="text-[14px] font-medium text-on-surface">3ds Max</h4><p class="text-[12px] text-on-surface-variant mt-0.5">Graphic Tool</p>
           </div>
-          <div onclick="launchTarget('C:\eclipse\eclipse.exe')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer flex flex-col items-center text-center">
+          <div onclick="launchTarget('C:\\eclipse\\eclipse.exe')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer flex flex-col items-center text-center">
             <span class="text-[24px] mb-2">🌑</span><h4 class="text-[14px] font-medium text-on-surface">Eclipse</h4><p class="text-[12px] text-on-surface-variant mt-0.5">Java IDE</p>
           </div>
-          <div onclick="launchTarget('C:\Users\User\AppData\Local\Programs\Microsoft VS Code\Code.exe')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer flex flex-col items-center text-center">
+          <div onclick="launchTarget('C:\\Users\\User\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer flex flex-col items-center text-center">
             <span class="text-[24px] mb-2">🐬</span><h4 class="text-[14px] font-medium text-on-surface">VS Code</h4><p class="text-[12px] text-on-surface-variant mt-0.5">Web / Editor</p>
           </div>
-          <div onclick="launchTarget('C:\Program Files\MarkText\MarkText.exe')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer flex flex-col items-center text-center">
+          <div onclick="launchTarget('C:\\Program Files\\MarkText\\MarkText.exe')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer flex flex-col items-center text-center">
             <span class="text-[24px] mb-2">🎨</span><h4 class="text-[14px] font-medium text-on-surface">MarkText</h4><p class="text-[12px] text-on-surface-variant mt-0.5">Markdown</p>
           </div>
           <div onclick="launchTarget('https://www.quizn.show/')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer flex flex-col items-center text-center">
@@ -270,7 +267,7 @@
       <section class="flex-1 flex flex-col">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
           <div>
-           <h3 id="boardTitle" class="text-[18px] md:text-[20px] font-semibold text-on-surface">저장 자료</h3>
+            <h3 id="boardTitle" class="text-[18px] md:text-[20px] font-semibold text-on-surface">저장 자료</h3>
             <p class="text-[13px] text-on-surface-variant mt-0.5">클라우드 계정 연동 학습 자료 보드</p>
           </div>
           <div>
@@ -375,7 +372,7 @@
   <div id="itemModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
     <div class="bg-surface rounded-xl max-w-md w-full p-6 shadow-xl border border-ol-variant mx-4">
       <div class="flex justify-between items-center mb-4">
-       <h3 class="text-[16px] font-bold text-on-surface">새 항목 추가하기</h3>
+        <h3 class="text-[16px] font-bold text-on-surface">새 항목 추가하기</h3>
         <button onclick="closeItemModal()" class="text-[18px] text-on-surface-variant hover:text-on-surface">&times;</button>
       </div>
       <div class="flex flex-col gap-3.5">
@@ -398,7 +395,7 @@
         </div>
         <div>
           <label class="block text-[12px] font-semibold text-on-surface-variant uppercase mb-1">링크 주소 (선택)</label>
-          <input type="text" id="newItemLink" placeholder="https://youtube.com/ 또는 프로토콜" class="w-full px-3 py-2 text-[14px] rounded border border-ol-variant bg-surface-c-lowest text-on-surface focus:outline-none focus:border-primary">
+          <input type="text" id="newItemLink" placeholder="https://youtube.com/... 또는 프로토콜" class="w-full px-3 py-2 text-[14px] rounded border border-ol-variant bg-surface-c-lowest text-on-surface focus:outline-none focus:border-primary">
         </div>
         <div class="flex gap-2 justify-end mt-2">
           <button onclick="closeItemModal()" class="px-4 py-2 text-[13px] font-medium rounded border border-ol-variant bg-surface-c-lowest text-on-surface hover:bg-secondary-container">취소</button>
@@ -456,17 +453,19 @@
   </div>
 
   <script>
-    const ADMIN_EMAIL = '2026104274yoonhyukjin@gmail.com'; 
+    const ADMIN_EMAIL = '2026104274yoonhyukjin@gmail.com'; // 관리자 계정 이메일
 
+    // 🍎 [추가] 촘촘하고 강력한 초성 및 비속어 원천 차단 필터
     function validateContent(text) {
       const bannedWords = [
         "ㅅㅂ", "ㅗ", "ㅅㅅ", "ㅄ", "ㅂㅅ", "ㄲㅈ", "ㅈㄹ", "ㅁㅊ",
-        "시발", "씨발", "개새끼", "존나", "병신", "지랄", "뻐큐", "fuck",
+        "시발", "씨발", "개새끼", "존나", "병신", "지랄", "뻐큐", "fuck", 
         "새끼", "느금마", "미친년", "미친놈", "좆", "새키", "씨팔", "썅", 
         "개년", "씹", "애미", "애비", "창녀",
         "섹스", "자지", "보지", "한남", "김치녀", "맘충", "틀딱", "재기해"
       ];
-
+      
+      // 악의적인 띄어쓰기(예: "시 발") 방지를 위해 공백을 모두 제거한 문자열도 검사
       const cleanedText = text.replace(/\s+/g, "");
 
       for (let i = 0; i < bannedWords.length; i++) {
@@ -489,11 +488,107 @@
       const userStatusBtn = document.getElementById('userStatusBtn');
       const userEmailDisplay = document.getElementById('userEmailDisplay');
       if (user) {
+        authContainer.classList.add('hidden');
+        if (userStatusBtn) userStatusBtn.classList.remove('hidden');
+        if (userEmailDisplay) {
+          userEmailDisplay.classList.remove('hidden');
+          userEmailDisplay.innerText = `👤 ${user.email.split('@')[0]} 학우님`;
+        }
+      } else {
+        authContainer.classList.remove('hidden');
+        if (userStatusBtn) userStatusBtn.classList.add('hidden');
+        if (userEmailDisplay) userEmailDisplay.classList.add('hidden');
+      }
+    });
+
+    function launchTarget(target) {
+      if (!target) return;
+      const cleanTarget = target.trim();
+      if (cleanTarget.startsWith('http://') || cleanTarget.startsWith('https://')) { window.open(cleanTarget, '_blank'); return; }
+      if (cleanTarget.includes('://')) { window.location.href = cleanTarget; return; }
+      if (window.electron && window.electron.ipcRenderer) { window.electron.ipcRenderer.send('launch-app', cleanTarget); return; }
+      let protocolUrl = "";
+      const lowerTarget = cleanTarget.toLowerCase();
+      if (lowerTarget.includes("3dsmax.exe")) { protocolUrl = "openmax://"; }
+      else if (lowerTarget.includes("devenv.exe")) { protocolUrl = "vs2026://"; }
+      else if (lowerTarget.includes("eclipse.exe")) { protocolUrl = "eclipse://"; }
+      else if (lowerTarget.includes("code.exe")) { protocolUrl = "vscode://"; }
+      else if (lowerTarget.includes("marktext.exe")) { protocolUrl = "marktext://"; }
+      if (protocolUrl) { window.location.href = protocolUrl; return; }
+      if (cleanTarget.startsWith('pdf/')) {
+        if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+          window.open(cleanTarget, '_blank');
+        } else {
+          const encodedTarget = cleanTarget.split('/').map(part => encodeURIComponent(part)).join('/');
+          window.open("https://2026104274yoonhyukjin.github.io/MyCampusLinks1/" + encodedTarget, '_blank');
+        }
+        return;
+      }
+      window.open('file:///' + cleanTarget.replace(/\\/g, '/'), '_blank');
+    }
+
+    const defaultSubjects = ["게임프로그래밍","게임그래픽 기초","객체지향프로그래밍", "프론트엔드프로그래밍"];
+    const defaultData = [
+         // 게임프로그래밍
+      { id: 1, title: "C# 프로그래밍 첫걸음 (Chapter 01)", week: "1주차", subject: "게임프로그래밍", link: "pdf/ch01.pdf" },
+      { id: 2, title: "기본 문법 (Chapter 02)", week: "2주차", subject: "게임프로그래밍", link: "pdf/ch02.pdf" },
+      { id: 3, title: "조건문 (Chapter 03)", week: "3주차", subject: "게임프로그래밍", link: "pdf/ch03.pdf" },
+      { id: 4, title: "반복문 (Chapter 04)", week: "4주차", subject: "게임프로그래밍", link: "pdf/ch04.pdf" },
+      { id: 5, title: "클래스 기본 (Chapter 05)", week: "5주차", subject: "게임프로그래밍", link: "pdf/ch05.pdf" },
+      { id: 6, title: "메서드 (Chapter 06)", week: "6주차", subject: "게임프로그래밍", link: "pdf/ch06.pdf" },
+      { id: 7, title: "메서드 (Chapter 07)", week: "7주차", subject: "게임프로그래밍", link: "pdf/ch07.pdf" },
+
+      // 게임그래픽 기초
+      { id: 8, title: "3주차-컵", week: "3주차", subject: "게임그래픽 기초", link: "https://youtu.be/0V7-B76oDb0?si=PeFMPxFw7EPmTvIX" },
+      { id: 9, title: "4주차 2차시-접시,스푼", week: "4주차", subject: "게임그래픽 기초", link: "https://youtu.be/v0lMKBo34ds?si=vzMUhstLUf5vWyTm" },
+      { id: 10, title: "5주차 1차시-세부편집", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/JWFie9eDkGA?si=SR5KlKnALQNkAJ1U" },
+      { id: 11, title: "5주차 2차시-세부편집", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/BPHuUT0zoKI?si=2E8zRt2wzCqVUpap" },
+      { id: 12, title: "5주차 3차시-검,철퇴", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/XvxTYsfnPpI" },
+      { id: 13, title: "6주차 1차시-Allign Pivot", week: "6주차", subject: "게임그래픽 기초", link: "https://youtu.be/KA9KfMoQhTg?si=pnl3XBBT_rgUec8K" },
+      { id: 14, title: "6주차 2차시-Allign Pivot", week: "6주차", subject: "게임그래픽 기초", link: "https://youtu.be/DL9LDpRodEg" },
+      { id: 15, title: "6주차 3차시-Reset X Form", week: "6주차", subject: "게임그래픽 기초", link: "https://youtu.be/l6c1epTtNVk?si=9LZOjTp8TjOGZvCa" },
+      { id: 16, title: "7주차 1차시-캐릭터(몸통)", week: "7주차", subject: "게임그래픽 기초", link: "https://youtu.be/oy9rC6YQwfQ?si=iIa3w4etvMySTjXi" },
+      { id: 17, title: "7주차 2차시-캐릭터(팔)", week: "7주차", subject: "게임그래픽 기초", link: "https://youtu.be/tt-hxXzbWu8?si=zoXrVXOO1LYpQBLW" },
+      { id: 18, title: "7주차 3차시-캐릭터(다리,이빨)", week: "7주차", subject: "게임그래픽 기초", link: "https://youtu.be/n9sNFonoh4g?si=fC5kPi6sG7FPzMVS" },
+      { id: 19, title: "10주차 1차시-인체 캐릭터 특징분석", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/IEzmA-YC7bs?si=AUfPz_gkkBLHrNdx" },
+      { id: 20, title: "10주차 2차시-인체(몸통)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/m-Mxw36Ybjk?si=adOxKKQ5pC4pPPmL" },
+      { id: 21, title: "10주차 3차시-인체(팔,다리)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/TgfCel9AQlI?si=LfxVTI1xvs_B8Gcc" },
+      { id: 22, title: "10주차 3차시-인체(손,발)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/qHTTJ7woLNg" },
+
+      // 객체 지향 프로그래밍
+      { id: 23, title: "1장 Java 프로그래밍 언어의 특징 및 동작 원리 이해", week: "1주차", subject: "객체 지향 프로그래밍", link: "pdf/Java_프로그래밍_1주차_강의노트.pdf" },
+      { id: 24, title: "2장-자료형", week: "2주차", subject: "객체 지향 프로그래밍", link: "pdf/2장_자료형.pdf" },
+      { id: 25, title: "3장 연산자", week: "3주차", subject: "객체 지향 프로그래밍", link: "pdf/3장_연산자.pdf" },
+      { id: 26, title: "4장-제어문과 제어키워드", week: "4주차", subject: "객체 지향 프로그래밍", link: "pdf/4장_제어문과_제어키워드.pdf" },
+      { id: 27, title: "5장-참조자료형", week: "5주차", subject: "객체 지향 프로그래밍", link: "pdf/5장_참조자료형.pdf" },
+      { id: 28, title: "6장-클래스(class)의_기본_문법", week: "6주차", subject: "객체 지향 프로그래밍", link: "pdf/6장_클래스(class)의_기본_문법.pdf" },
+      { id: 29, title: "7장-클래스 내부 구성요소(필드메서드생성자)", week: "7주차", subject: "객체 지향 프로그래밍", link: "pdf/7장_클래스_내부_구성요소_1_(필드메서드생성자).pdf" },
+
+      // 프론트엔드프로그래밍
+      { id: 30, title: "OT 자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/OT" },
+      { id: 31, title: "마크다운 작성방법 참고자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "pdf/마크다운_보충자료.pdf" },
+      { id: 32, title: "3주차 수업 자료-HTML Form & UI", week: "3주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week3" },
+      { id: 33, title: "4주차 수업 자료-CSS 스타일링 & GitHub 배포", week: "4주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week4" },
+      { id: 34, title: "5주차 수업 자료-CSS Layout & 팀 협업", week: "5주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week5" },
+      { id: 35, title: "6주차 수업 자료-Flexbox & 반응형 웹", week: "6주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week6" },
+      { id: 36, title: "7주차 수업 자료-Grid 레이아웃 & 동적 애니메이션", week: "7주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week7" },
+      { id: 37, title: "10주차 수업 자료-실전 팀 빌딩 & README 기반 Git 협업", week: "10주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week10" },
+      { id: 38, title: "11주차 수업 자료-개발 착수 & MVP 기반 태스크 관리", week: "11주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week11" },
+      { id: 39, title: "12주차 수업 자료-MVP 통합 및 알파 버전 완성", week: "12주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week12" }
+    ];
+    const defaultDDayList = [{ id: 1001, title: "기말고사 및 종강", date: "2026-06-15" }];
+
+    // Auth 인증 상태 변화 실시간 감시자
+    auth.onAuthStateChanged(user => {
+      const authContainer = document.getElementById('authContainer');
+      const userStatusBtn = document.getElementById('userStatusBtn');
+      const userEmailDisplay = document.getElementById('userEmailDisplay');
+      if (user) {
         currentUser = user;
         authContainer.classList.add('hidden');
         if (userStatusBtn) userStatusBtn.classList.remove('hidden');
         if (userEmailDisplay) {
-          userEmailDisplay.innerText = `👤 ${user.displayName || user.email.split('@')[0]}님`;
+          userEmailDisplay.innerText = user.email;
           userEmailDisplay.classList.remove('hidden');
         }
 
@@ -502,28 +597,6 @@
           if(val) {
             subjects = val.subjects || []; data = val.data || [];
             ddayList = val.ddayList || []; personalEvents = val.personalEvents || [];
-            // 🔥 [자동 병합 처리] 띄어쓰기 문제로 분리된 과목을 하나로 합치기
-            const badSubject = "객체지향프로그래밍";
-            const goodSubject = "객체 지향 프로그래밍";
-            let needsMerge = false;
-
-            if (subjects.includes(badSubject)) {
-              subjects = subjects.filter(s => s !== badSubject);
-              if (!subjects.includes(goodSubject)) subjects.push(goodSubject);
-              needsMerge = true;
-            }
-
-            data.forEach(item => {
-              if (item.subject === badSubject) {
-                item.subject = goodSubject;
-                needsMerge = true;
-              }
-            });
-
-            if (needsMerge) {
-              saveCurrentStateToFirebase();
-            }
-
           } else {
             subjects = [...defaultSubjects]; data = [...defaultData];
             ddayList = [...defaultDDayList]; personalEvents = [];
@@ -540,88 +613,9 @@
       }
     });
 
-    function launchTarget(target) {
-      if (!target) return;
-      const cleanTarget = target.trim();
-
-      if (cleanTarget.startsWith('http://') || cleanTarget.startsWith('https://')) { window.open(cleanTarget, '_blank'); return; }
-      if (cleanTarget.includes('://')) { window.location.href = cleanTarget; return; }
-      if (window.electron && window.electron.ipcRenderer) { window.electron.ipcRenderer.send('launch-app', cleanTarget); return; }
-
-      let protocolUrl = "";
-      const lowerTarget = cleanTarget.toLowerCase();
-      if (lowerTarget.includes("3dsmax.exe")) { protocolUrl = "openmax://"; }
-      else if (lowerTarget.includes("devenv.exe")) { protocolUrl = "vs2026://"; }
-      else if (lowerTarget.includes("eclipse.exe")) { protocolUrl = "eclipse://"; }
-      else if (lowerTarget.includes("code.exe")) { protocolUrl = "vscode://"; }
-      else if (lowerTarget.includes("marktext.exe")) { protocolUrl = "marktext://"; }
-
-      if (protocolUrl) { window.location.href = protocolUrl; return; }
-
-      if (cleanTarget.startsWith('pdf/')) {
-        if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
-          window.open(cleanTarget, '_blank');
-        } else {
-          const encodedTarget = cleanTarget.split('/').map(part => encodeURIComponent(part)).join('/');
-          window.open("https://2026104274yoonhyukjin.github.io/MyCampusLinks1/" + encodedTarget, '_blank');
-        }
-        return;
-      }
-
-      window.open('file:///' + cleanTarget.replace(/\\/g, '/'), '_blank');
-    }
-
-    const defaultSubjects = ["게임프로그래밍","게임그래픽 기초","객체 지향 프로그래밍", "프론트엔드프로그래밍"];
-    const defaultData = [
-      { id: 1, title: "C# 프로그래밍 첫걸음 (Chapter 01)", week: "1주차", subject: "게임프로그래밍", link: "pdf/ch01.pdf" },
-      { id: 2, title: "기본 문법 (Chapter 02)", week: "2주차", subject: "게임프로그래밍", link: "pdf/ch02.pdf" },
-      { id: 3, title: "조건문 (Chapter 03)", week: "3주차", subject: "게임프로그래밍", link: "pdf/ch03.pdf" },
-      { id: 4, title: "반복문 (Chapter 04)", week: "4주차", subject: "게임프로그래밍", link: "pdf/ch04.pdf" },
-      { id: 5, title: "클래스 기본 (Chapter 05)", week: "5주차", subject: "게임프로그래밍", link: "pdf/ch05.pdf" },
-      { id: 6, title: "메서드 (Chapter 06)", week: "6주차", subject: "게임프로그래밍", link: "pdf/ch06.pdf" },
-
-      { id: 7, title: "3주차-컵", week: "3주차", subject: "게임그래픽 기초", link: "https://youtu.be/0V7-B76oDb0?si=PeFMPxFw7EPmTvIX" },
-      { id: 8, title: "4주차 2차시-접시,스푼", week: "4주차", subject: "게임그래픽 기초", link: "https://youtu.be/v0lMKBo34ds?si=vzMUhstLUf5vWyTm" },
-      { id: 9, title: "5주차 1차시-세부편집", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/JWFie9eDkGA?si=SR5KlKnALQNkAJ1U" },
-      { id: 10, title: "5주차 2차시-세부편집", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/BPHuUT0zoKI?si=2E8zRt2wzCqVUpap" },
-      { id: 11, title: "5주차 3차시-검,철퇴", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/XvxTYsfnPpI" },
-      { id: 12, title: "6주차 1차시-Allign Pivot", week: "6주차", subject: "게임그래픽 기초", link: "https://youtu.be/KA9KfMoQhTg?si=pnl3XBBT_rgUec8K" },
-      { id: 13, title: "6주차 2차시-Allign Pivot", week: "6주차", subject: "게임그래픽 기초", link: "https://youtu.be/DL9LDpRodEg" },
-      { id: 14, title: "6주차 3차시-Reset X Form", week: "6주차", subject: "게임그래픽 기초", link: "https://youtu.be/l6c1epTtNVk?si=9LZOjTp8TjOGZvCa" },
-      { id: 15, title: "7주차 1차시-캐릭터(몸통)", week: "7주차", subject: "게임그래픽 기초", link: "https://youtu.be/oy9rC6YQwfQ?si=iIa3w4etvMySTjXi" },
-      { id: 16, title: "7주차 2차시-캐릭터(팔)", week: "7주차", subject: "게임그래픽 기초", link: "https://youtu.be/tt-hxXzbWu8?si=zoXrVXOO1LYpQBLW" },
-      { id: 17, title: "7주차 3차시-캐릭터(다리,이빨)", week: "7주차", subject: "게임그래픽 기초", link: "https://youtu.be/n9sNFonoh4g?si=fC5kPi6sG7FPzMVS" },
-      { id: 18, title: "10주차 1차시-인체 캐릭터 특징분석", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/IEzmA-YC7bs?si=AUfPz_gkkBLHrNdx" },
-      { id: 19, title: "10주차 2차시-인체(몸통)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/m-Mxw36Ybjk?si=adOxKKQ5pC4pPPmL" },
-      { id: 20, title: "10주차 3차시-인체(팔,다리)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/TgfCel9AQlI?si=LfxVTI1xvs_B8Gcc" },
-      { id: 21, title: "10주차 3차시-인체(손,발)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/qHTTJ7woLNg" },
-
-      { id: 22, title: "1장 Java 프로그래밍 언어의 특징 및 동작 원리 이해", week: "1주차", subject: "객체 지향 프로그래밍", link: "pdf/Java_프로그래밍_1주차_강의노트.pdf" },
-      { id: 23, title: "2장-자료형", week: "2주차", subject: "객체 지향 프로그래밍", link: "pdf/2장_자료형.pdf" },
-      { id: 24, title: "3장 연산자", week: "3주차", subject: "객체 지향 프로그래밍", link: "pdf/3장_연산자.pdf" },
-      { id: 25, title: "4장-제어문과 제어키워드", week: "4주차", subject: "객체 지향 프로그래밍", link: "pdf/4장_제어문과_제어키워드.pdf" },
-      { id: 26, title: "5장-참조자료형", week: "5주차", subject: "객체 지향 프로그래밍", link: "pdf/5장_참조자료형.pdf" },
-      { id: 27, title: "6장-클래스(class)의_기본_문법", week: "6주차", subject: "객체 지향 프로그래밍", link: "pdf/6장_클래스(class)의_기본_문법.pdf" },
-      { id: 28, title: "7장-클래스 내부 구성요소(필드메서드생성자)", week: "7주차", subject: "객체 지향 프로그래밍", link: "pdf/7장_클래스_내부_구성요소_1_(필드메서드생성자).pdf" },
-
-      { id: 29, title: "OT 자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/OT" },
-      { id: 30, title: "마크다운 작성방법 참고자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "pdf/마크다운_보충자료.pdf" },
-      { id: 31, title: "3주차 수업 자료-HTML Form & UI", week: "3주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week3" },
-      { id: 32, title: "4주차 수업 자료-CSS 스타일링 & GitHub 배포", week: "4주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week4" },
-      { id: 33, title: "5주차 수업 자료-CSS Layout & 팀 협업", week: "5주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week5" },
-      { id: 34, title: "6주차 수업 자료-Flexbox & 반응형 웹", week: "6주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week6" },
-      { id: 35, title: "7주차 수업 자료-Grid 레이아웃 & 동적 애니메이션", week: "7주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week7" },
-      { id: 36, title: "10주차 수업 자료-실전 팀 빌딩 & README 기반 Git 협업", week: "10주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week10" },
-      { id: 37, title: "11주차 수업 자료-개발 착수 & MVP 기반 태스크 관리", week: "11주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week11" },
-      { id: 38, title: "12주차 수업 자료-MVP 통합 및 알파 버전 완성", week: "12주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week12" },
-
-      { id: 39, title: "딥링크 설정법", week: "기타", subject: "기타", link: "pdf/딥링크_설정_가이드.pdf" }
-
-    ];
-
-
-    const defaultDDayList = [{ id: 1001, title: "기말고사 및 종강", date: "2026-06-15" }];
-
+    // ----------------------------------------------------------------------------------
+    // 커뮤니티 데이터 제어 (비속어 원천 차단 및 본인만 삭제)
+    // ----------------------------------------------------------------------------------
     function initGlobalCommunityListeners() {
       database.ref('global_community').on('value', snapshot => {
         const container = document.getElementById('communityPostList');
@@ -635,13 +629,15 @@
         const sortedKeys = Object.keys(posts).sort((a,b) => posts[b].timestamp - posts[a].timestamp);
         sortedKeys.forEach(key => {
           const post = posts[key];
+          
+          // ✨ [권한 부여] 작성한 사람만 수정/삭제 가능
           const isAuthor = currentUser && currentUser.uid === post.uid;
           const isAdmin = currentUser && currentUser.email === ADMIN_EMAIL;
-
+          
           let actions = "";
           if(isAuthor) {
             actions = `
-              <button onclick="editCommunityPost('${key}', \`${post.content.replace(/\`/g, '\\`').replace(/\\/g, '\\\\')}\`)" class="text-[11px] text-primary hover:underline font-semibold">수정</button>
+              <button onclick="editCommunityPost('${key}', \`${post.content.replace(/`/g, '\\`').replace(/\\/g, '\\\\')}\`)" class="text-[11px] text-primary hover:underline font-semibold">수정</button>
               <button onclick="deleteCommunityPost('${key}')" class="text-[11px] text-error hover:underline font-semibold ml-2">삭제</button>`;
           } else if (isAdmin) {
             actions = `<button onclick="deleteCommunityPost('${key}')" class="text-[11px] text-error font-bold hover:underline">강제 삭제 🗑️</button>`;
@@ -689,9 +685,11 @@
           if(scores[rev.subject]) {
             scores[rev.subject].total += Number(rev.rating); scores[rev.subject].count += 1;
           }
+
+          // ✨ [권한 부여] 작성한 사람만 리뷰 삭제 가능
           const isAuthor = currentUser && currentUser.uid === rev.uid;
           const isAdmin = currentUser && currentUser.email === ADMIN_EMAIL;
-
+          
           let deleteBtn = "";
           if(isAuthor) {
             deleteBtn = `<button onclick="deleteLectureReview('${key}')" class="text-[11px] text-error hover:underline font-bold shrink-0">삭제</button>`;
@@ -747,17 +745,18 @@
       document.getElementById('reviewRatingValue').value = rating;
       document.getElementById('reviewRatingText').innerText = `${rating}.0 / 5.0`;
       document.querySelectorAll('.star-icon').forEach((star, idx) => {
-        if(idx < rating) { star.classList.add('text-amber-500'); star.classList.remove('opacity-30'); }
+        if(idx < rating) { star.classList.add('text-amber-500'); star.classList.remove('opacity-30'); } 
         else { star.classList.remove('text-amber-500'); star.classList.add('opacity-30'); }
       });
     }
 
+    // 커뮤니티 글 등록
     function submitCommunityPost() {
       const input = document.getElementById('communityPostInput');
       if(!input || !input.value.trim()) return;
       const content = input.value.trim();
 
-      if (!validateContent(content)) return;
+      if (!validateContent(content)) return; // 비속어 검증 통과 못하면 등록 중단
 
       const nickname = (currentUser && currentUser.displayName) || currentUser.email.split('@')[0] + ' 학우';
       database.ref('global_community').push({
@@ -765,23 +764,26 @@
       }).then(() => { input.value = ''; }).catch(e => alert(e.message));
     }
 
+    // 커뮤니티 글 수정
     function editCommunityPost(key, oldContent) {
       const edited = prompt("글 내용을 수정해 주세요:", oldContent);
       if(edited === null) return;
       const finalEdited = edited.trim();
       if(!finalEdited) { alert("공백은 등록 불가합니다."); return; }
 
-      if (!validateContent(finalEdited)) return;
+      if (!validateContent(finalEdited)) return; // 수정 시에도 비속어 검증
 
       database.ref('global_community/' + key).update({
         content: finalEdited, timestamp: firebase.database.ServerValue.TIMESTAMP
       }).catch(e => alert(e.message));
     }
 
+    // 커뮤니티 글 삭제
     function deleteCommunityPost(key) {
       if(confirm("이 게시글을 삭제하시겠습니까?")) database.ref('global_community/' + key).remove().catch(e => alert(e.message));
     }
 
+    // 강의평가 등록
     function submitLectureReview() {
       const sub = document.getElementById('reviewSubjectSelect').value;
       const textInput = document.getElementById('reviewTextInput');
@@ -790,7 +792,7 @@
       if(!textInput || !textInput.value.trim()) { alert("강의평 내용을 작성해 주세요."); return; }
       const reviewText = textInput.value.trim();
 
-      if (!validateContent(reviewText)) return;
+      if (!validateContent(reviewText)) return; // 강의평 비속어 검증
 
       const nickname = (currentUser && currentUser.displayName) || currentUser.email.split('@')[0] + ' 학우';
       database.ref('global_reviews').push({
@@ -804,6 +806,9 @@
       if(confirm("이 과목 강의평을 삭제하시겠습니까?")) database.ref('global_reviews/' + key).remove().catch(e => alert(e.message));
     }
 
+    // ----------------------------------------------------------------------------------
+    // 대시보드 레이아웃(그리드) 및 기타 스크립트
+    // ----------------------------------------------------------------------------------
     let currentMode = 'subject'; let searchQuery = ''; let calDate = new Date(); let selectedDateStr = '';
 
     function saveCurrentStateToFirebase() {
@@ -850,6 +855,21 @@
     }
     function logout() { if(confirm('안전하게 로그아웃할까요?')) auth.signOut(); }
 
+    function launchTarget(target) {
+      if (!target) return;
+      const cleanTarget = target.trim();
+      if (cleanTarget.startsWith('http://') || cleanTarget.startsWith('https://')) { window.open(cleanTarget, '_blank'); return; }
+      if (cleanTarget.includes('://')) { window.location.href = cleanTarget; return; }
+      let protocolUrl = ""; const lower = cleanTarget.toLowerCase();
+      if (lower.includes("3dsmax.exe")) protocolUrl = "openmax://";
+      else if (lower.includes("devenv.exe")) protocolUrl = "vs2026://";
+      else if (lower.includes("eclipse.exe")) protocolUrl = "eclipse://";
+      else if (lower.includes("code.exe")) protocolUrl = "vscode://";
+      else if (lower.includes("marktext.exe")) protocolUrl = "marktext://";
+      if (protocolUrl) { window.location.href = protocolUrl; return; }
+      window.open('file:///' + cleanTarget.replace(/\\/g, '/'));
+    }
+
     function restoreDefaultData() {
       if(confirm('기본 탑재 고정형 수업자료를 복구하여 추가하시겠습니까? (내 자료 유지)')) {
         defaultSubjects.forEach(s => { if(!subjects.includes(s)) subjects.push(s); });
@@ -863,33 +883,11 @@
       if(!container) return; container.innerHTML = '';
       subjects.forEach(sub => {
         container.innerHTML += `
-          <div data-id="${sub}" class="group flex items-center justify-between gap-1 px-4 py-1.5 rounded hover:bg-secondary-container text-[13px] text-on-surface cursor-move select-none active:bg-surface-c-high transition-colors">
-            <span class="text-on-surface-variant opacity-40 cursor-move mr-1">☰</span>
-            <span onclick="renderSubjectDetail('${sub}')" class="cursor-pointer font-medium truncate flex-1 hover:text-primary">📚 ${sub}</span>
+          <div class="group flex items-center justify-between gap-1 px-4 py-1.5 rounded hover:bg-secondary-container text-[13px] text-on-surface">
+            <span onclick="renderSubjectDetail('${sub}')" class="cursor-pointer font-medium truncate flex-1">📚 ${sub}</span>
             <button onclick="removeSubject('${sub}')" class="opacity-0 group-hover:opacity-100 text-[11px] text-error hover:font-bold px-1 transition">✕</button>
           </div>`;
       });
-
-      // Drag and Drop 기능 초기화
-      if(window.subjectSortable) window.subjectSortable.destroy();
-      if(typeof Sortable !== 'undefined') {
-        window.subjectSortable = new Sortable(container, {
-          animation: 150,
-          ghostClass: 'opacity-50',
-          onEnd: function (evt) {
-            if (evt.oldIndex === evt.newIndex) return;
-            const movedItem = subjects.splice(evt.oldIndex, 1)[0];
-            subjects.splice(evt.newIndex, 0, movedItem);
-            saveCurrentStateToFirebase();
-
-            if (['subject', 'week', 'all'].includes(currentMode)) {
-              render(currentMode);
-            } else if (currentMode !== 'community') {
-              renderSubjectDetail(currentMode);
-            }
-          }
-        });
-      }
     }
 
     function renderDDayList() {
@@ -900,11 +898,9 @@
         const target = new Date(item.date); target.setHours(0,0,0,0);
         const diffDays = Math.ceil((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
         let ddayStr = ""; let styleClass = ""; let textStyle = "";
-
         if (diffDays > 0) { ddayStr = `D-${diffDays}`; styleClass = "bg-primary-fixed border border-primary text-primary font-bold"; textStyle = "text-primary font-bold"; } 
         else if (diffDays === 0) { ddayStr = "D-Day 🔥"; styleClass = "bg-red-100 border-2 border-red-600 animate-pulse"; textStyle = "text-red-600 font-black"; } 
         else { ddayStr = "종료 🎉"; styleClass = "bg-surface-c border border-ol-variant opacity-60"; textStyle = "text-on-surface-variant"; }
-
         container.innerHTML += `
           <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[12px] ${styleClass}">
             <span>${item.title}:</span><span class="${textStyle}">${ddayStr}</span>
@@ -918,6 +914,7 @@
       if(currentMode !== 'community') render(currentMode);
     }
 
+    // 🌟 [변경] 과목명 배지 노출 및 기존 4단 그리드 레이아웃 완벽 복구 
     function render(mode) {
       currentMode = mode;
       const dashView = document.getElementById('mainDashboardContent'); const commView = document.getElementById('mainCommunityContent');
@@ -934,19 +931,13 @@
       const board = document.getElementById('board'); const boardTitle = document.getElementById('boardTitle');
       board.innerHTML = ''; updateActiveMenu(mode);
 
-      let filtered = [...data];
-      if (searchQuery) filtered = filtered.filter(item => item.title.toLowerCase().includes(searchQuery) || item.subject.toLowerCase().includes(searchQuery) || item.week.toLowerCase().includes(searchQuery));
-
-      // 🔥 [자동 정렬 추가] 항상 '주차(Week)' 숫자를 기준으로 오름차순 자동 정렬
-      filtered.sort((a, b) => {
-        const weekA = parseInt(a.week) || 0;
-        const weekB = parseInt(b.week) || 0;
-        if (weekA !== weekB) return weekA - weekB;
-        return a.id - b.id;
-      });
+      let filtered = data;
+      if (searchQuery) filtered = data.filter(item => item.title.toLowerCase().includes(searchQuery) || item.subject.toLowerCase().includes(searchQuery) || item.week.toLowerCase().includes(searchQuery));
 
       if (mode === 'subject' || mode === 'week') {
         boardTitle.innerText = mode === 'week' ? "학사 주차별 타임라인 보드" : "내 과목별 타임라인 보드";
+        
+        // 가로 스크롤 취소 -> 원래 사용하시던 그리드 배열(xl:grid-cols-4) 적용
         let gridWrapperHtml = `<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 w-full items-start">`;
         const loopKeys = mode === 'week' ? ["1주차","2주차","3주차","4주차","5주차","6주차","7주차","8주차","9주차","10주차","11주차","12주차","13주차","14주차","15주차"] : subjects;
 
@@ -958,10 +949,11 @@
             <div class="column flex flex-col w-full bg-surface-c-low border border-ol-variant rounded-xl p-4 shadow-sm">
               <h2 class="text-[15px] font-bold text-primary border-b border-ol-variant pb-2.5 mb-3 text-center">${mode === 'week' ? '📅 ' : '📚 '}${key}</h2>
               <div class="card-list flex flex-col gap-2">`;
-
+          
           if(itemsInKey.length === 0) {
             columnHtml += `<p class="text-[12px] text-on-surface-variant opacity-50 py-2 text-center">자료가 없습니다.</p>`;
           } else {
+            // [수정] 카드 생성 함수를 호출할 때 이제 무조건 과목명이 보이도록 수정했습니다.
             itemsInKey.forEach(item => columnHtml += createCardHtml(item));
           }
           columnHtml += `</div></div>`;
@@ -984,20 +976,13 @@
       board.innerHTML = ''; boardTitle.innerText = `과목 단독 보기: ${subjectName}`;
       let html = `<div class="bg-surface-c-low border border-ol-variant rounded-xl p-5 shadow-sm max-w-3xl mx-auto w-full"><div class="card-list flex flex-col gap-2.5">`;
       const filtered = data.filter(item => item.subject === subjectName && (!searchQuery || item.title.toLowerCase().includes(searchQuery)));
-
-      // 🔥 [자동 정렬 추가] 항상 '주차(Week)' 숫자를 기준으로 오름차순 자동 정렬
-      filtered.sort((a, b) => {
-        const weekA = parseInt(a.week) || 0;
-        const weekB = parseInt(b.week) || 0;
-        if (weekA !== weekB) return weekA - weekB;
-        return a.id - b.id;
-      });
       filtered.forEach(item => html += createCardHtml(item));
       if(filtered.length === 0) html += `<p class="text-center text-[13px] text-on-surface-variant py-4">등록 자료가 존재하지 않습니다.</p>`;
       html += `</div></div>`;
       board.innerHTML = html;
     }
 
+    // 🌟 [변경] 과목명 뱃지가 어느 화면에서나 명확하게 표시되도록 통일
     function createCardHtml(item) {
       const delBtn = `<button onclick="removeMaterial(${item.id}, event)" class="text-[12px] opacity-40 hover:opacity-100 p-1 hover:bg-error-container rounded shrink-0 transition">🗑️</button>`;
       return `
@@ -1062,6 +1047,7 @@
       if(event) event.stopPropagation(); ddayList = ddayList.filter(x => x.id !== id); saveCurrentStateToFirebase(); renderDDayList();
     }
 
+    // 🌟 [추가] 2026년 기준 공휴일 명단 (대체 공휴일 및 달력 표시용)
     const holidays = {
       "01-01": "신정", "03-01": "삼일절", "05-01": "노동절", "05-05": "어린이날", "06-06": "현충일",
       "07-17": "제헌절", "08-15": "광복절", "10-03": "개천절", "10-09": "한글날", "12-25": "성탄절",
@@ -1101,20 +1087,22 @@
         const mdStr = `${String(month+1).padStart(2,'0')}-${String(date).padStart(2,'0')}`;
         const weekday = new Date(year, month, date).getDay();
 
+        // 🌟 공휴일 체크해서 글씨를 빨간색으로 변경
         const isHoliday = holidays[fullDateStr] || holidays[mdStr];
         const activeEvents = fixedCalendarEvents.filter(ev => { const s = new Date(ev.start); const e = new Date(ev.end || ev.start); const c = new Date(fullDateStr); return c >= s && c <= e; });
         const hasCustom = personalEvents.some(x => x.date === fullDateStr);
 
         let colorClass = "text-on-surface"; let bgClass = "bg-surface-c-lowest";
-
+        
         if(weekday === 0 || isHoliday) colorClass = "text-red-500 font-bold";
         else if(weekday === 6) colorClass = "text-blue-500 font-bold";
 
         if(activeEvents.length > 0) bgClass = "bg-primary-fixed/60 font-bold text-primary";
-
+        
         let dot = hasCustom ? `<span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-amber-500 rounded-full"></span>` : '';
         const isSelected = selectedDateStr === fullDateStr ? 'border-2 border-primary shadow-md scale-105 z-5' : 'border border-ol-variant/30';
 
+        // 공휴일이면 날짜 아래에 작은 텍스트로 이름 표시
         let holidayNameHtml = isHoliday ? `<div class="text-[9px] text-red-500 mt-0.5 truncate w-full px-0.5">${isHoliday}</div>` : '';
 
         grid.innerHTML += `
@@ -1131,9 +1119,10 @@
       const box = document.getElementById('calendarDetailsBox');
       const header = document.getElementById('selectedDateHeader');
       const container = document.getElementById('selectedDateDetailsContainer');
-
+      
       box.classList.remove('hidden'); header.innerText = `📌 [${dateStr}] 일정 타임라인`; container.innerHTML = '';
 
+      // 🌟 공휴일이면 상세 정보에도 표시
       const mdStr = dateStr.substring(5);
       const isHoliday = holidays[dateStr] || holidays[mdStr];
       if (isHoliday) {
