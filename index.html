@@ -95,8 +95,6 @@
     .dash-card { transition: transform 0.25s ease, filter 0.25s ease, box-shadow 0.25s ease; }      
     .dash-card:hover { transform: scale(1.03); box-shadow: 0 8px 24px rgba(67, 85, 185, 0.12); }      
     
-    .kanban-card::before { content: ""; display: inline-block; width: 14px; height: 10px; background: #f59e0b; border-radius: 2px; flex-shrink: 0; }   
-    
     .progress-bar { transition: width 0.3s ease; }
     
     .sortable-ghost { opacity: 0.4; transform: scale(0.98); }
@@ -239,7 +237,6 @@
           <h3 class="text-[18px] md:text-[20px] font-semibold text-on-surface">실행할 프로그램</h3>           
           <p class="text-[13px] text-on-surface-variant mt-0.5">개발 도구 및 학습 프로그램 원클릭 실행 (항목 추가를 통해 내 앱을 이곳에 이어붙일 수 있습니다)</p>         
         </div>         
-        <!-- 앱 리스트 공간 -->
         <div id="appListContainer" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4"></div>       
       </section>        
       
@@ -372,7 +369,6 @@
     </div>   
   </div>    
 
-  <!-- 새 항목 추가 모달 UI -->
   <div id="itemModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden backdrop-blur-sm">
     <div class="bg-surface rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-ol-variant mx-4 max-h-[90vh] flex flex-col">
       <div class="flex justify-between items-center mb-4 shrink-0 border-b border-ol-variant pb-3">
@@ -433,7 +429,6 @@
           </div>
         </div>
 
-        <!-- 과목/주차 (앱 추가 시 숨겨짐) -->
         <div id="subjectWeekRow" class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-[13px] font-bold text-on-surface mb-1">과목 *</label>
@@ -451,7 +446,6 @@
           </div>
         </div>
 
-        <!-- 태그 (앱 추가 시 숨겨짐) -->
         <div id="tagsRow">
           <label class="block text-[13px] font-bold text-on-surface mb-1">태그 <span class="text-on-surface-variant font-normal">(쉼표로 구분)</span></label>
           <input type="text" id="newItemTags" placeholder="예: 강의자료, PDF, 중요" class="w-full px-3 py-2 text-[14px] rounded-lg border border-ol-variant bg-surface-c-lowest text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
@@ -582,7 +576,8 @@
       { id: 38, title: "11주차 수업 자료-개발 착수 & MVP 기반 태스크 관리", week: "11주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week11" },
       { id: 39, title: "12주차 수업 자료-MVP 통합 및 알파 버전 완성", week: "12주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week12" }
     ];
-    const defaultDDayList = [{ id: 1001, title: "기말고사", date: "2026-06-15" }];
+
+    const defaultDDayList = [{ id: 1001, title: "기말고사 및 종강", date: "2026-06-15" }];
 
     const defaultApps = [
       { id: 101, title: 'Visual Studio', desc: 'C# / IDE', icon: '💻', link: 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe' },
@@ -868,7 +863,7 @@
     
     function logout() { if(confirm('안전하게 로그아웃할까요?')) auth.signOut(); }      
     
-    // 🔥 앱/웹사이트/파일 클릭 로직 (PDF 라우팅 복구 및 보안 알림 추가)
+    // 🔥 PDF 렌더링 복구 및 로컬 경로(.exe) 입력 시 보안 안내문구 추가
     function launchTarget(target) {       
       if (!target) return;       
       const cleanTarget = target.trim();       
@@ -878,7 +873,6 @@
         return; 
       }       
 
-      // 🔥 기존 Github PDF 자료들을 열어주는 로직 복구
       if (cleanTarget.startsWith('pdf/')) {
         const encodedTarget = cleanTarget.split('/').map(part => encodeURIComponent(part)).join('/');
         window.open("https://2026104274yoonhyukjin.github.io/MyCampusLinks1/" + encodedTarget, '_blank');
@@ -902,7 +896,6 @@
         return; 
       }       
       
-      // 🔥 사용자가 직접 C:\ 드라이브 경로 등을 넣었을 때 에러 방지 및 안내 팝업
       if (cleanTarget.match(/^[a-zA-Z]:\\/)) {
         alert("⚠️ 웹 브라우저 보안 정책상 C드라이브 프로그램(exe)을 직접 실행할 수 없습니다.\n\n해결법: 좌측 [기타 참고 자료] 메뉴의 '딥링크 설정 가이드'를 보고 해당 앱 전용 딥링크를 만들어 입력해 주세요!");
       } else {
