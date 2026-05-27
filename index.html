@@ -97,7 +97,45 @@
     
     .sortable-ghost { opacity: 0.4; transform: scale(0.98); }
     .sortable-drag { cursor: grabbing !important; }
+  
+    .app-logo-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: var(--surface-c);
+      border: 1px solid var(--ol-variant);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 12px rgba(67, 85, 185, 0.08);
+      overflow: hidden;
+    }
+
+    .app-logo-wrap img {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .app-logo-fallback {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
   </style> 
+
+<script src="https://unpkg.com/lucide@latest"></script>
 </head>  
 <body class="font-inter bg-surface text-on-surface min-h-screen">    
 
@@ -154,22 +192,22 @@
     
     <nav class="px-4 flex flex-col gap-1" id="menuGroup">       
       <a href="#" onclick="render('subject')" class="menu-item flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">         
-        <span>🏠</span> 홈 (과목별 보기)       
+        <i data-lucide="house" class="w-5 h-5 text-primary"></i> 홈 (과목별 보기)       
       </a>       
       <a href="#" onclick="render('all')" class="menu-item flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">         
-        <span>📋</span> 전체 보기       
+        <i data-lucide="clipboard-list" class="w-5 h-5 text-primary"></i> 전체 보기       
       </a>       
       <a href="#" onclick="render('week')" class="menu-item flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">         
-        <span>📅</span> 주차별 보기       
+        <i data-lucide="calendar-days" class="w-5 h-5 text-primary"></i> 주차별 보기       
       </a>       
       <a href="#" onclick="render('etc')" class="menu-item flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">         
-        <span>📌</span> 기타 참고 자료       
+        <i data-lucide="pin" class="w-5 h-5 text-primary"></i> 기타 참고 자료       
       </a>
       <a href="#" onclick="render('bookmark')" class="menu-item flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">         
-        <span>⭐️</span> 즐겨찾기 보관함       
+        <i data-lucide="star" class="w-5 h-5 text-primary"></i> 즐겨찾기 보관함       
       </a>
       <a href="#" id="menuCommunityBtn" onclick="render('community')" class="menu-item flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">         
-        <span>💬</span> 캠퍼스 커뮤니티       
+        <i data-lucide="message-circle" class="w-5 h-5 text-primary"></i> 캠퍼스 커뮤니티       
       </a>     
     </nav>     
     
@@ -181,10 +219,10 @@
     <nav id="sidebarSubjectList" class="flex-1 px-4 mt-2 flex flex-col gap-1 overflow-y-auto max-h-[300px]"></nav>      
     
     <div class="px-4 py-4 flex flex-col gap-1.5 border-t border-ol-variant mt-auto">       
-      <button onclick="openSubjectModal()" class="w-full flex items-center justify-center gap-2 px-4 py-[8px] rounded border border-dashed border-ol text-on-surface-variant hover:bg-secondary-container text-[13px] font-medium">         
+      <button onclick="openSubjectModal()" class="w-full flex items-center justify-center gap-3 px-4 py-[8px] rounded border border-dashed border-ol text-on-surface-variant hover:bg-secondary-container text-[13px] font-medium">         
         <span>＋</span> 과목 추가       
       </button>       
-      <button onclick="openItemModal()" class="w-full flex items-center justify-center gap-2 px-4 py-[8px] rounded bg-primary text-white text-[13px] font-medium shadow-sm hover:opacity-90">         
+      <button onclick="openItemModal()" class="w-full flex items-center justify-center gap-3 px-4 py-[8px] rounded bg-primary text-white text-[13px] font-medium shadow-sm hover:opacity-90">         
         <span>＋</span> 새 항목 추가       
       </button>     
     </div>   
@@ -195,7 +233,7 @@
       <div class="flex items-center gap-4 flex-1">         
         <label for="sidebarToggle" class="lg:hidden cursor-pointer text-on-surface text-[24px] leading-none">☰</label>         
         <div class="flex items-center gap-3">           
-          <span class="text-[28px] md:text-[32px]">📅</span>           
+          <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center"><i data-lucide="calendar-days" class="w-7 h-7 text-primary"></i></div>           
           <div class="flex flex-col">             
             <span id="liveDateTime" class="text-[14px] md:text-[18px] font-bold text-on-surface leading-none tracking-tight">----년 --월 --일 (-) 오전 00:00:00</span>             
             <span class="text-[11px] text-on-surface-variant mt-1 hidden md:block">현재 실시간 캠퍼스 타임</span>           
@@ -208,7 +246,7 @@
       
       <div class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto border-t sm:border-t-0 pt-2 sm:pt-0 border-ol-variant">         
         <button onclick="openCalendarModal()" class="bg-primary text-white text-[13px] font-medium px-3 py-1.5 rounded-lg hover:opacity-90 transition shadow-sm">           
-          📅 학사 달력         
+          <i data-lucide="calendar-days" class="w-4 h-4"></i> 학사 달력         
         </button>         
         <div class="flex flex-wrap items-center gap-2 max-w-[400px]">           
           <div id="ddayListContainer" class="flex flex-wrap items-center gap-2"></div>           
@@ -216,7 +254,7 @@
             ＋ D-Day           
           </button>         
         </div>         
-        <label for="darkToggle" class="flex items-center gap-2 cursor-pointer select-none shrink-0 ml-1">           
+        <label for="darkToggle" class="flex items-center gap-3 cursor-pointer select-none shrink-0 ml-1">           
           <span class="text-[16px]">☀️</span>           
           <div class="toggle-track"><div class="toggle-dot"></div></div>           
           <span class="text-[16px]">🌙</span>         
@@ -245,19 +283,19 @@
         </div>         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">           
           <div onclick="launchTarget('https://cyber.mjc.ac.kr/home/mainHome/Form/main')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer">             
-            <span class="text-[22px] block mb-2">🏫</span><h4 class="text-[15px] font-medium text-on-surface">원격강좌/E-Class</h4><p class="text-[12px] text-on-surface-variant mt-1">원격재택수업 사이트</p>           
+            <div class="app-logo-wrap !w-10 !h-10 !rounded-xl !mb-2"><div class="app-logo-fallback !w-7 !h-7 !rounded-lg">M</div></div><h4 class="text-[15px] font-medium text-on-surface">원격강좌/E-Class</h4><p class="text-[12px] text-on-surface-variant mt-1">원격재택수업 사이트</p>           
           </div>           
           <div onclick="launchTarget('https://mjc.factchat.bot/auth/sso?ssoPlatformId=5')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer">             
-            <span class="text-[22px] block mb-2">🏫</span><h4 class="text-[15px] font-medium text-on-surface">AI검색(FactChat)</h4><p class="text-[12px] text-on-surface-variant mt-1">멀티LLM 플랫폼 이동</p>           
+            <div class="app-logo-wrap !w-10 !h-10 !rounded-xl !mb-2"><div class="app-logo-fallback !w-7 !h-7 !rounded-lg">M</div></div><h4 class="text-[15px] font-medium text-on-surface">AI검색(FactChat)</h4><p class="text-[12px] text-on-surface-variant mt-1">멀티LLM 플랫폼 이동</p>           
           </div>           
           <div onclick="launchTarget('https://icampus.mjc.ac.kr')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer">             
-            <span class="text-[22px] block mb-2">🏫</span><h4 class="text-[15px] font-medium text-on-surface">ICampus</h4><p class="text-[12px] text-on-surface-variant mt-1">학습 관리 시스템</p>           
+            <div class="app-logo-wrap !w-10 !h-10 !rounded-xl !mb-2"><div class="app-logo-fallback !w-7 !h-7 !rounded-lg">M</div></div><h4 class="text-[15px] font-medium text-on-surface">ICampus</h4><p class="text-[12px] text-on-surface-variant mt-1">학습 관리 시스템</p>           
           </div>           
           <div onclick="launchTarget('https://mail.mjc.ac.kr')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer">             
-            <span class="text-[22px] block mb-2">🏫</span><h4 class="text-[15px] font-medium text-on-surface">MJC Mail</h4><p class="text-[12px] text-on-surface-variant mt-1">명지전문대 웹 메일</p>           
+            <div class="app-logo-wrap !w-10 !h-10 !rounded-xl !mb-2"><div class="app-logo-fallback !w-7 !h-7 !rounded-lg">M</div></div><h4 class="text-[15px] font-medium text-on-surface">MJC Mail</h4><p class="text-[12px] text-on-surface-variant mt-1">명지전문대 웹 메일</p>           
           </div>           
           <div onclick="launchTarget('https://mpu.mjc.ac.kr/')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer">             
-            <span class="text-[22px] block mb-2">🏫</span><h4 class="text-[15px] font-medium text-on-surface">SmartCare</h4><p class="text-[12px] text-on-surface-variant mt-1">학생 역량 이력 관리</p>           
+            <div class="app-logo-wrap !w-10 !h-10 !rounded-xl !mb-2"><div class="app-logo-fallback !w-7 !h-7 !rounded-lg">M</div></div><h4 class="text-[15px] font-medium text-on-surface">SmartCare</h4><p class="text-[12px] text-on-surface-variant mt-1">학생 역량 이력 관리</p>           
           </div>         
         </div>       
       </section>        
@@ -371,7 +409,7 @@
     <div class="bg-surface rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-ol-variant mx-4 max-h-[90vh] flex flex-col">
       <div class="flex justify-between items-center mb-4 shrink-0 border-b border-ol-variant pb-3">
         <h3 class="text-[18px] font-bold text-on-surface">새 항목 추가</h3>
-        <button onclick="closeItemModal()" class="text-[24px] font-medium text-on-surface-variant hover:text-on-surface">&times;</button>
+        <button onclick="closeItemModal()" class="text-on-surface-variant hover:text-on-surface p-1 rounded-lg hover:bg-surface-c transition-colors"><i data-lucide="x" class="w-6 h-6"></i></button>
       </div>
       
       <div class="flex-1 overflow-y-auto pr-2 flex flex-col gap-4">
@@ -379,19 +417,19 @@
           <label class="block text-[13px] font-bold text-on-surface mb-2">유형 선택</label>
           <div class="grid grid-cols-2 gap-2">
             <button id="typeBtn_web" onclick="selectItemType('web')" class="flex flex-col items-start justify-center p-3 rounded-xl border-2 border-primary bg-primary text-white transition-all text-left">
-              <div class="flex items-center gap-2 mb-1"><span class="text-[18px]">🌐</span><span class="text-[14px] font-bold">웹사이트</span></div>
+              <div class="flex items-center gap-3 mb-1"><i data-lucide="globe" class="w-5 h-5"></i><span class="text-[14px] font-bold">웹사이트</span></div>
               <span class="text-[11px] opacity-80">웹사이트 URL 링크</span>
             </button>
             <button id="typeBtn_file" onclick="selectItemType('file')" class="flex flex-col items-start justify-center p-3 rounded-xl border-2 border-surface-c bg-surface-c-lowest text-on-surface-variant hover:border-primary hover:text-primary transition-all text-left">
-              <div class="flex items-center gap-2 mb-1"><span class="text-[18px]">📄</span><span class="text-[14px] font-bold">파일</span></div>
+              <div class="flex items-center gap-3 mb-1"><i data-lucide="file-text" class="w-5 h-5"></i><span class="text-[14px] font-bold">파일</span></div>
               <span class="text-[11px] opacity-80">파일 정보 기록</span>
             </button>
             <button id="typeBtn_app" onclick="selectItemType('app')" class="flex flex-col items-start justify-center p-3 rounded-xl border-2 border-surface-c bg-surface-c-lowest text-on-surface-variant hover:border-primary hover:text-primary transition-all text-left">
-              <div class="flex items-center gap-2 mb-1"><span class="text-[18px]">💻</span><span class="text-[14px] font-bold">앱</span></div>
+              <div class="flex items-center gap-3 mb-1"><i data-lucide="monitor" class="w-5 h-5"></i><span class="text-[14px] font-bold">앱</span></div>
               <span class="text-[11px] opacity-80">프로그램 바로가기</span>
             </button>
             <button id="typeBtn_video" onclick="selectItemType('video')" class="flex flex-col items-start justify-center p-3 rounded-xl border-2 border-surface-c bg-surface-c-lowest text-on-surface-variant hover:border-primary hover:text-primary transition-all text-left">
-              <div class="flex items-center gap-2 mb-1"><span class="text-[18px]">▶️</span><span class="text-[14px] font-bold">영상</span></div>
+              <div class="flex items-center gap-3 mb-1"><i data-lucide="play-square" class="w-5 h-5"></i><span class="text-[14px] font-bold">영상</span></div>
               <span class="text-[11px] opacity-80">영상 URL 링크</span>
             </button>
           </div>
@@ -483,7 +521,7 @@
   <div id="calendarModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden">     
     <div class="bg-surface rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-ol-variant mx-4 flex flex-col max-h-[90vh]">       
       <div class="flex justify-between items-center border-b border-ol-variant pb-3 mb-4">         
-        <div class="flex items-center gap-2">           
+        <div class="flex items-center gap-3">           
           <button onclick="moveCalendarMonth(-1)" class="px-2 py-1 border border-ol-variant rounded bg-surface-c hover:bg-secondary-container text-[12px]">◀</button>           
           <h3 id="calendarMonthTitle" class="text-[16px] font-bold text-on-surface min-w-[90px] text-center">----년 --월</h3>           
           <button onclick="moveCalendarMonth(1)" class="px-2 py-1 border border-ol-variant rounded bg-surface-c hover:bg-secondary-container text-[12px]">▶</button>         
@@ -578,13 +616,13 @@
     const defaultDDayList = [{ id: 1001, title: "기말고사 및 종강", date: "2026-06-15" }];
 
     const defaultApps = [
-      { id: 101, title: 'Visual Studio', desc: 'C# / IDE', icon: '💻', link: 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe' },
-      { id: 102, title: '3ds Max', desc: 'Graphic Tool', icon: '☕', link: 'openmax://' },
-      { id: 103, title: 'Eclipse', desc: 'Java IDE', icon: '🌑', link: 'C:\\eclipse\\eclipse.exe' },
-      { id: 104, title: 'VS Code', desc: 'Web / Editor', icon: '🐬', link: 'C:\\Users\\User\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe' },
-      { id: 105, title: 'MarkText', desc: 'Markdown', icon: '🎨', link: 'C:\\Program Files\\MarkText\\MarkText.exe' },
-      { id: 106, title: 'QuizN', desc: 'Quiz Platform', icon: '🐙', link: 'https://www.quizn.show/' },
-      { id: 107, title: 'GitHub', desc: 'Git Repo', icon: '📝', link: 'https://github.com/' }
+      { id: 101, title: 'Visual Studio', desc: 'C# / IDE', icon: 'visualstudio', link: 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe' },
+      { id: 102, title: '3ds Max', desc: 'Graphic Tool', icon: '3dsmax', link: 'openmax://' },
+      { id: 103, title: 'Eclipse', desc: 'Java IDE', icon: 'eclipse', link: 'C:\\eclipse\\eclipse.exe' },
+      { id: 104, title: 'VS Code', desc: 'Web / Editor', icon: 'vscode', link: 'C:\\Users\\User\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe' },
+      { id: 105, title: 'MarkText', desc: 'Markdown', icon: 'marktext', link: 'C:\\Program Files\\MarkText\\MarkText.exe' },
+      { id: 106, title: 'QuizN', desc: 'Quiz Platform', icon: 'quizn', link: 'https://www.quizn.show/' },
+      { id: 107, title: 'GitHub', desc: 'Git Repo', icon: 'github', link: 'https://github.com/' }
     ];
 
     auth.onAuthStateChanged(user => {       
@@ -622,6 +660,66 @@
       }     
     });      
     
+    
+    function getAppLogoHTML(app) {
+      const title = (app.title || '').toLowerCase();
+
+      const logoMap = [
+        {
+          match: ['visual studio'],
+          src: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/visualstudio/visualstudio-plain.svg',
+          alt: 'Visual Studio'
+        },
+        {
+          match: ['vs code', 'vscode', 'visual studio code'],
+          src: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg',
+          alt: 'VS Code'
+        },
+        {
+          match: ['eclipse'],
+          src: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/eclipse/eclipse-original.svg',
+          alt: 'Eclipse'
+        },
+        {
+          match: ['github'],
+          src: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg',
+          alt: 'GitHub'
+        },
+        {
+          match: ['3ds max', '3dsmax', 'max'],
+          src: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/autodesk.svg',
+          alt: 'Autodesk 3ds Max'
+        },
+        {
+          match: ['marktext', 'markdown'],
+          src: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/markdown.svg',
+          alt: 'Markdown'
+        },
+        {
+          match: ['quizn', 'quiz'],
+          src: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/quizlet.svg',
+          alt: 'Quiz'
+        }
+      ];
+
+      const found = logoMap.find(item => item.match.some(keyword => title.includes(keyword)));
+
+      if (found) {
+        return `
+          <div class="app-logo-wrap">
+            <img src="${found.src}" alt="${found.alt}" onerror="this.outerHTML='<div class=&quot;app-logo-fallback&quot;>${(app.title || 'A').charAt(0).toUpperCase()}</div>'">
+          </div>
+        `;
+      }
+
+      return `
+        <div class="app-logo-wrap">
+          <div class="app-logo-fallback">${(app.title || 'A').charAt(0).toUpperCase()}</div>
+        </div>
+      `;
+    }
+
+
     function renderApps() {
       const container = document.getElementById('appListContainer');
       if(!container) return;
@@ -632,7 +730,7 @@
           <div class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer flex flex-col items-center text-center relative group">
             <button onclick="removeApp(${app.id}, event)" class="absolute top-1 right-2 opacity-0 group-hover:opacity-100 text-error text-[12px] font-bold p-1 hover:scale-125 transition-all">✕</button>
             <div onclick="launchTarget('${safeLink}')" class="w-full flex flex-col items-center">
-              <span class="text-[24px] mb-2">${app.icon || '🖥️'}</span>
+              ${getAppLogoHTML(app)}
               <h4 class="text-[14px] font-medium text-on-surface">${app.title}</h4>
               <p class="text-[12px] text-on-surface-variant mt-0.5">${app.desc || 'App'}</p>
             </div>
@@ -676,7 +774,7 @@
           container.innerHTML += `             
             <div class="bg-surface-c-lowest border border-ol-variant rounded-xl p-4 flex flex-col gap-2 shadow-2sm">               
               <div class="flex justify-between items-center border-b border-ol-variant/40 pb-1.5">                 
-                <div class="flex items-center gap-2">                   
+                <div class="flex items-center gap-3">                   
                   <span class="text-[13px] font-bold text-primary">👤 ${post.nickname}</span>                   
                   <span class="text-[10px] text-on-surface-variant opacity-60">${timeStr}</span>                 
                 </div>                 
@@ -1029,7 +1127,7 @@
             <div onclick="launchTarget('${item.link || ''}')" class="kanban-card flex items-start gap-3 p-4 rounded-xl bg-surface-c-lowest border border-ol-variant hover:border-primary hover:-translate-y-1 shadow-sm transition duration-200 cursor-pointer">
               <div class="flex-1 min-w-0 flex flex-col gap-1.5">
                 <span class="text-[14px] font-bold text-on-surface break-words leading-snug">${item.title}</span>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-3">
                   <span class="text-[11px] px-2 py-0.5 rounded bg-primary-fixed text-primary font-bold">${item.subject}</span>
                   <span class="text-[11px] text-on-surface-variant opacity-80">${item.week}</span>
                 </div>
@@ -1175,7 +1273,7 @@
       return `         
         <div data-id="${item.id}" onclick="launchTarget('${item.link || ''}')" class="kanban-card flex items-start gap-3 p-3.5 rounded-xl bg-surface-c-lowest border border-ol-variant hover:border-primary hover:-translate-y-1 shadow-sm transition duration-200 cursor-pointer">           
           <div class="flex-1 min-w-0 flex flex-col">             
-            <div class="flex items-center gap-2 mb-1">
+            <div class="flex items-center gap-3 mb-1">
               <span class="text-[16px]">${typeIcon}</span>
               <span class="text-[14px] font-bold text-on-surface break-words leading-snug">${item.title}</span>             
             </div>
@@ -1319,7 +1417,7 @@
       const isHoliday = holidays[dateStr] || holidays[mdStr];       
       if (isHoliday) {         
         container.innerHTML += `           
-          <div class="flex items-center gap-2 p-1.5 rounded bg-red-50 border border-red-200">             
+          <div class="flex items-center gap-3 p-1.5 rounded bg-red-50 border border-red-200">             
             <span class="text-[10px] px-1 py-0.5 rounded bg-red-500 text-white font-bold">휴일</span>             
             <span class="font-bold text-red-600">${isHoliday}</span>           
           </div>`;       
@@ -1327,15 +1425,15 @@
       const matchedFixed = fixedCalendarEvents.filter(ev => { const s = new Date(ev.start); const e = new Date(ev.end || ev.start); const c = new Date(dateStr); return c >= s && c <= e; });       
       matchedFixed.forEach(ev => {         
         container.innerHTML += `           
-          <div class="flex items-center gap-2 p-1.5 rounded bg-primary-fixed text-primary border border-primary/20">             
+          <div class="flex items-center gap-3 p-1.5 rounded bg-primary-fixed text-primary border border-primary/20">             
             <span class="text-[10px] px-1 py-0.5 rounded bg-primary text-white font-bold">학사</span><span class="font-medium">${ev.title}</span>           
           </div>`;       
       });        
       const matchedPersonal = personalEvents.filter(x => x.date === dateStr);       
       matchedPersonal.forEach(ev => {         
         container.innerHTML += `           
-          <div class="flex items-center justify-between gap-2 p-1.5 rounded bg-amber-50 border border-amber-200">             
-            <div class="flex items-center gap-2"><span class="text-[10px] px-1 py-0.5 rounded bg-amber-500 text-white font-bold">개인</span><span class="font-medium text-amber-900">${ev.title}</span></div>             
+          <div class="flex items-center justify-between gap-3 p-1.5 rounded bg-amber-50 border border-amber-200">             
+            <div class="flex items-center gap-3"><span class="text-[10px] px-1 py-0.5 rounded bg-amber-500 text-white font-bold">개인</span><span class="font-medium text-amber-900">${ev.title}</span></div>             
             <button onclick="deletePersonalEvent(${ev.id}, event)" class="text-red-500 text-[10px] px-1.5 hover:bg-red-100 rounded">삭제</button>           
           </div>`;       
       });        
@@ -1376,6 +1474,7 @@
         const btn = document.getElementById('typeBtn_' + t);
         if (t === type) btn.className = "flex flex-col items-start justify-center p-3 rounded-xl border-2 border-primary bg-primary text-white transition-all text-left";
         else btn.className = "flex flex-col items-start justify-center p-3 rounded-xl border-2 border-surface-c bg-surface-c-lowest text-on-surface-variant hover:border-primary hover:text-primary transition-all text-left";
+      if (window.lucide) lucide.createIcons();
       });
 
       if (type === 'file') {
@@ -1489,5 +1588,12 @@
       closeItemModal();
     }
   </script> 
-</body> 
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+});
+</script>
+</body>
+ 
 </html>
