@@ -202,9 +202,6 @@
       <a href="#" onclick="render('all')" class="menu-item flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">         
         <i data-lucide="clipboard-list" class="w-5 h-5 text-primary"></i> 전체 보기       
       </a>       
-      <a href="#" onclick="render('week')" class="menu-item flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">         
-        <i data-lucide="calendar-days" class="w-5 h-5 text-primary"></i> 주차별 보기       
-      </a>       
       <a href="#" onclick="render('etc')" class="menu-item flex items-center gap-4 px-4 py-[10px] rounded text-on-surface-variant hover:bg-secondary-container text-[14px]">         
         <i data-lucide="pin" class="w-5 h-5 text-primary"></i> 기타 참고 자료       
       </a>
@@ -312,10 +309,25 @@
             <p class="text-[13px] text-on-surface-variant mt-0.5">클라우드 계정 연동 학습 자료 보드 (꾹 눌러서 이동)</p>           
           </div>           
           
-          <div class="flex items-center gap-2">             
-            <select id="tagFilterSelect" onchange="handleTagFilter()" class="px-3 py-1.5 text-[13px] rounded-lg border border-ol-variant bg-surface-c-lowest text-on-surface focus:outline-none focus:border-primary max-w-[150px] sm:max-w-[200px] truncate">
-              <option value="">모든 태그 (전체)</option>
-            </select>
+          <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">             
+            <div id="categorySearchBar" class="hidden flex items-center gap-2">
+              <select id="filterSubject" onchange="render(currentMode)" class="px-3 py-1.5 text-[13px] rounded-lg border border-ol-variant bg-surface-c-lowest text-on-surface focus:outline-none focus:border-primary max-w-[150px] truncate">
+                <option value="all">모든 과목</option>
+              </select>
+              <select id="filterWeek" onchange="render(currentMode)" class="px-3 py-1.5 text-[13px] rounded-lg border border-ol-variant bg-surface-c-lowest text-on-surface focus:outline-none focus:border-primary max-w-[120px] truncate">
+                <option value="all">모든 주차</option>
+                <option value="상시">상시</option>
+                <option value="1주차">1주차</option><option value="2주차">2주차</option><option value="3주차">3주차</option><option value="4주차">4주차</option>
+                <option value="5주차">5주차</option><option value="6주차">6주차</option><option value="7주차">7주차</option><option value="8주차">8주차</option>
+                <option value="9주차">9주차</option><option value="10주차">10주차</option><option value="11주차">11주차</option><option value="12주차">12주차</option>
+                <option value="13주차">13주차</option><option value="14주차">14주차</option><option value="15주차">15주차</option>
+              </select>
+              <select id="filterSort" onchange="render(currentMode)" class="px-3 py-1.5 text-[13px] rounded-lg border border-ol-variant bg-surface-c-lowest text-on-surface focus:outline-none focus:border-primary max-w-[120px] truncate">
+                <option value="newest">최신순</option>
+                <option value="oldest">오래된 순</option>
+              </select>
+            </div>
+            
             <button onclick="restoreDefaultData()" class="px-3 py-1.5 text-[12px] font-bold rounded-lg border border-primary text-primary bg-primary-fixed hover:bg-primary hover:text-white transition-all shadow-sm shrink-0">               
               🔄 기본 자료 복구             
             </button>           
@@ -491,11 +503,6 @@
             </select>
           </div>
         </div>
-
-        <div id="tagsRow">
-          <label class="block text-[13px] font-bold text-on-surface mb-1">태그 <span class="text-on-surface-variant font-normal">(쉼표로 구분)</span></label>
-          <input type="text" id="newItemTags" placeholder="예: 강의자료, PDF, 중요" class="w-full px-3 py-2 text-[14px] rounded-lg border border-ol-variant bg-surface-c-lowest text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
-        </div>
       </div>
 
       <div class="flex gap-2 justify-end mt-4 pt-4 border-t border-ol-variant shrink-0">
@@ -584,67 +591,53 @@
     let calDate = new Date(); 
     let selectedDateStr = '';
     let activeReviewFilter = null;      
-    let activeTagFilter = '';
     
+    // UI 포커스 상태 유지 관리 변수
+    let activeInputId = null;
+    let activeInputValue = "";
+    let activeInputCursor = 0;
+    const openSections = new Set();
+    
+    document.addEventListener('focusin', e => { 
+        if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+            activeInputId = e.target.id; 
+            activeInputValue = e.target.value; 
+        }
+    });
+    document.addEventListener('input', e => { 
+        if(e.target.id === activeInputId) {
+            activeInputValue = e.target.value; 
+            try { activeInputCursor = e.target.selectionStart; } catch(err){}
+        }
+    });
+    document.addEventListener('focusout', e => { 
+        if(e.target.id === activeInputId) activeInputId = null; 
+    });
+
+    function restoreFocus() {
+        if(activeInputId) { 
+            const el = document.getElementById(activeInputId); 
+            if(el) { 
+                el.focus(); 
+                el.value = activeInputValue; 
+                try { el.setSelectionRange(activeInputCursor, activeInputCursor); } catch(err){}
+            } 
+        }
+    }
+
     const defaultSubjects = ["게임프로그래밍","게임그래픽 기초","객체 지향 프로그래밍", "프론트엔드프로그래밍"];
     const defaultData = [
       { id: 1, title: "C# 프로그래밍 첫걸음 (Chapter 01)", week: "1주차", subject: "게임프로그래밍", link: "pdf/ch01.pdf", type: "file", tags: "기초, 이론, PDF" },
       { id: 2, title: "기본 문법 (Chapter 02)", week: "2주차", subject: "게임프로그래밍", link: "pdf/ch02.pdf", type: "file", tags: "문법, PDF" },
-      { id: 3, title: "조건문 (Chapter 03)", week: "3주차", subject: "게임프로그래밍", link: "pdf/ch03.pdf", type: "file", tags: "제어문, PDF" },
-      { id: 4, title: "반복문 (Chapter 04)", week: "4주차", subject: "게임프로그래밍", link: "pdf/ch04.pdf", type: "file", tags: "제어문, PDF" },
-      { id: 5, title: "클래스 기본 (Chapter 05)", week: "5주차", subject: "게임프로그래밍", link: "pdf/ch05.pdf", type: "file", tags: "객체지향, PDF" },
-      { id: 6, title: "메서드 (Chapter 06)", week: "6주차", subject: "게임프로그래밍", link: "pdf/ch06.pdf", type: "file", tags: "객체지향, PDF" },
-      { id: 7, title: "상속과 다형성 (Chapter 07)", week: "7주차", subject: "게임프로그래밍", link: "pdf/ch07.pdf", type: "file", tags: "객체지향, 심화, PDF" },
-      
-      { id: 8, title: "3주차-컵", week: "3주차", subject: "게임그래픽 기초", link: "https://youtu.be/0V7-B76oDb0?si=PeFMPxFw7EPmTvIX", type: "video", tags: "모델링, 유튜브" },
-      { id: 9, title: "4주차 2차시-접시,스푼", week: "4주차", subject: "게임그래픽 기초", link: "https://youtu.be/v0lMKBo34ds?si=vzMUhstLUf5vWyTm", type: "video", tags: "모델링, 유튜브" },
-      { id: 10, title: "5주차 1차시-세부편집", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/JWFie9eDkGA?si=SR5KlKnALQNkAJ1U", type: "video", tags: "편집, 유튜브" },
-      { id: 11, title: "5주차 2차시-세부편집", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/BPHuUT0zoKI?si=2E8zRt2wzCqVUpap", type: "video", tags: "편집, 유튜브" },
-      { id: 12, title: "5주차 3차시-검,철퇴", week: "5주차", subject: "게임그래픽 기초", link: "https://youtu.be/XvxTYsfnPpI", type: "video", tags: "무기제작, 유튜브" },
-      { id: 13, title: "6주차 1차시-Allign Pivot", week: "6주차", subject: "게임그래픽 기초", link: "https://youtu.be/KA9KfMoQhTg?si=pnl3XBBT_rgUec8K", type: "video", tags: "축정렬, 유튜브" },
-      { id: 14, title: "6주차 2차시-Allign Pivot", week: "6주차", subject: "게임그래픽 기초", link: "https://youtu.be/DL9LDpRodEg", type: "video", tags: "축정렬, 유튜브" },
-      { id: 15, title: "6주차 3차시-Reset X Form", week: "6주차", subject: "게임그래픽 기초", link: "https://youtu.be/l6c1epTtNVk?si=9LZOjTp8TjOGZvCa", type: "video", tags: "축정렬, 유튜브" },
-      { id: 16, title: "7주차 1차시-캐릭터(몸통)", week: "7주차", subject: "게임그래픽 기초", link: "https://youtu.be/oy9rC6YQwfQ?si=iIa3w4etvMySTjXi", type: "video", tags: "캐릭터, 유튜브" },
-      { id: 17, title: "7주차 2차시-캐릭터(팔)", week: "7주차", subject: "게임그래픽 기초", link: "https://youtu.be/tt-hxXzbWu8?si=zoXrVXOO1LYpQBLW", type: "video", tags: "캐릭터, 유튜브" },
-      { id: 18, title: "7주차 3차시-캐릭터(다리,이빨)", week: "7주차", subject: "게임그래픽 기초", link: "https://youtu.be/n9sNFonoh4g?si=fC5kPi6sG7FPzMVS", type: "video", tags: "캐릭터, 유튜브" },
-      { id: 19, title: "10주차 1차시-인체 캐릭터 특징분석", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/IEzmA-YC7bs?si=AUfPz_gkkBLHrNdx", type: "video", tags: "인체, 이론, 유튜브" },
-      { id: 20, title: "10주차 2차시-인체(몸통)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/m-Mxw36Ybjk?si=adOxKKQ5pC4pPPmL", type: "video", tags: "인체, 유튜브" },
-      { id: 21, title: "10주차 3차시-인체(팔,다리)", week: "10주차", subject: "게임그래픽 기초", link: "https://youtu.be/TgfCel9AQlI?si=LfxVTI1xvs_B8Gcc", type: "video", tags: "인체, 유튜브" },
-      { id: 22, title: "12주차 1차시-인체(손,발)", week: "12주차", subject: "게임그래픽 기초", link: "https://youtu.be/qHTTJ7woLNg", type: "video", tags: "인체, 유튜브" },
-      
-      { id: 23, title: "1장 Java 프로그래밍 언어의 특징", week: "1주차", subject: "객체 지향 프로그래밍", link: "pdf/Java_프로그래밍_1주차_강의노트.pdf", type: "file", tags: "Java, 기초, PDF" },
-      { id: 24, title: "2장-자료형", week: "2주차", subject: "객체 지향 프로그래밍", link: "pdf/2장_자료형.pdf", type: "file", tags: "Java, 자료형, PDF" },
-      { id: 25, title: "3장 연산자", week: "3주차", subject: "객체 지향 프로그래밍", link: "pdf/3장_연산자.pdf", type: "file", tags: "Java, 기초, PDF" },
-      { id: 26, title: "4장-제어문과 제어키워드", week: "4주차", subject: "객체 지향 프로그래밍", link: "pdf/4장_제어문과_제어키워드.pdf", type: "file", tags: "Java, 제어문, PDF" },
-      { id: 27, title: "5장-참조자료형", week: "5주차", subject: "객체 지향 프로그래밍", link: "pdf/5장_참조자료형.pdf", type: "file", tags: "Java, 참조, PDF" },
-      { id: 28, title: "6장-클래스(class)의_기본_문법", week: "6주차", subject: "객체 지향 프로그래밍", link: "pdf/6장_클래스(class)의_기본_문법.pdf", type: "file", tags: "Java, 클래스, PDF" },
-      { id: 29, title: "7장-클래스 내부 구성요소", week: "7주차", subject: "객체 지향 프로그래밍", link: "pdf/7장_클래스_내부_구성요소_1_(필드메서드생성자).pdf", type: "file", tags: "Java, 클래스, PDF" },
-      { id: 30, title: "8장-클래스의 외부 구성요소", week: "8주차", subject: "객체 지향 프로그래밍", link: "pdf/8장_클래스의_외부_구성요소_(package_import_외부클래스).pdf", type: "file", tags: "Java, 패키지, PDF" },
-      { id: 31, title: "9장-자바제어자(modifier)_1", week: "9주차", subject: "객체 지향 프로그래밍", link: "pdf/9장__자바제어자(modifier)_1._(접근지정자_static).pdf", type: "file", tags: "Java, 제어자, PDF" },
-      
-      { id: 32, title: "OT 자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/OT", type: "web", tags: "오리엔테이션" },
-      { id: 33, title: "마크다운 작성방법 참고자료", week: "1주차", subject: "프론트엔드프로그래밍", link: "pdf/마크다운_보충자료.pdf", type: "file", tags: "마크다운, PDF" },
-      { id: 34, title: "3주차 수업 자료-HTML Form & UI", week: "3주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week3", type: "web", tags: "HTML, UI" },
-      { id: 35, title: "4주차 수업 자료-CSS 스타일링 & GitHub 배포", week: "4주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week4", type: "web", tags: "CSS, GitHub" },
-      { id: 36, title: "5주차 수업 자료-CSS Layout & 팀 협업", week: "5주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week5", type: "web", tags: "CSS, Layout" },
-      { id: 37, title: "6주차 수업 자료-Flexbox & 반응형 웹", week: "6주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week6", type: "web", tags: "CSS, 반응형" },
-      { id: 38, title: "7주차 수업 자료-Grid 레이아웃 & 동적 애니메이션", week: "7주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week7", type: "web", tags: "CSS, 애니메이션" },
-      { id: 39, title: "10주차 수업 자료-실전 팀 빌딩 & README 기반 Git 협업", week: "10주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week10", type: "web", tags: "Git, 팀프로젝트" },
-      { id: 40, title: "11주차 수업 자료-개발 착수 & MVP 기반 태스크 관리", week: "11주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week11", type: "web", tags: "MVP, 프로젝트" },
-      { id: 41, title: "12주차 수업 자료-MVP 통합 및 알파 버전 완성", week: "12주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week12", type: "web", tags: "MVP, 프로젝트" },
-      { id: 42, title: "13주차 수업 자료-알파 테스트 피드백 보드", week: "13주차", subject: "프론트엔드프로그래밍", link: "https://www.figma.com/board/XTQk7MT9MuRqokMwAeNRS2/%ED%94%BC%EB%93%9C%EB%B0%B1%EB%B3%B4%EB%93%9C-103-?node-id=0-1&p=f&t=4exAxS5NEkhzxOV3-02", type: "web", tags: "Figma, 피드백" }
+      { id: 3, title: "조건문 (Chapter 03)", week: "3주차", subject: "게임프로그래밍", link: "pdf/ch03.pdf", type: "file", tags: "제어문, PDF" }
     ];
 
     const defaultDDayList = [{ id: 1001, title: "기말고사 및 종강", date: "2026-06-15" }];
-
     const defaultApps = [
       { id: 101, title: 'Visual Studio', desc: 'C# / IDE', icon: 'visualstudio', link: 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe' },
       { id: 102, title: '3ds Max', desc: 'Graphic Tool', icon: '3dsmax', link: 'openmax://' },
       { id: 103, title: 'Eclipse', desc: 'Java IDE', icon: 'eclipse', link: 'C:\\eclipse\\eclipse.exe' },
-      { id: 104, title: 'VS Code', desc: 'Web / Editor', icon: 'vscode', link: 'C:\\Users\\User\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe' },
-      { id: 105, title: 'MarkText', desc: 'Markdown', icon: 'marktext', link: 'C:\\Program Files\\MarkText\\MarkText.exe' },
-      { id: 106, title: 'QuizN', desc: 'Quiz Platform', icon: 'quizn', link: 'https://www.quizn.show/' },
-      { id: 107, title: 'GitHub', desc: 'Git Repo', icon: 'github', link: 'https://github.com/' }
+      { id: 104, title: 'VS Code', desc: 'Web / Editor', icon: 'vscode', link: 'C:\\Users\\User\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe' }
     ];
 
     auth.onAuthStateChanged(user => {       
@@ -673,6 +666,7 @@
           }           
           updateSidebarSubjects(); renderDDayList(); renderApps(); render(currentMode);           
           initGlobalCommunityListeners();         
+          initGlobalReviewListeners();
         });       
       } else {         
         currentUser = null;         
@@ -728,8 +722,6 @@
       }
     }
 
-    const _postListeners = {}; 
-
     function _relTime(ts) {
       if (!ts) return '';
       const diff = Date.now() - ts;
@@ -742,173 +734,316 @@
       return new Date(ts).toLocaleDateString('ko-KR');
     }
 
-    function toggleLike(postKey) {
-      if (!currentUser) { alert('좋아요는 로그인 후 이용 가능합니다.'); return; }
-      const ref = database.ref('global_community/' + postKey + '/likes/' + currentUser.uid);
-      ref.once('value').then(snap => {
-        if (snap.exists()) ref.remove();
-        else ref.set(true);
-      });
+    // ==========================================
+    // 공통 커뮤니티 함수 (강의평가, 소통 피드 통합)
+    // ==========================================
+    
+    function toggleLikeGen(path) {
+        if (!currentUser) { alert('로그인 후 이용 가능합니다.'); return; }
+        const ref = database.ref(path + '/likes/' + currentUser.uid);
+        ref.once('value').then(snap => { if(snap.exists()) ref.remove(); else ref.set(true); });
     }
 
-    function submitReply(postKey) {
-      if (!currentUser) { alert('댓글 작성은 로그인 후 이용 가능합니다.'); return; }
-      const input = document.getElementById('replyInput_' + postKey);
-      if (!input || !input.value.trim()) return;
-      const text = input.value.trim();
-      if (!validateContent(text)) return;
-      const nickname = (currentUser.displayName) || currentUser.email.split('@')[0] + ' 학우';
-      database.ref('global_community/' + postKey + '/replies').push({
-        uid: currentUser.uid, nickname: nickname, text: text,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-      }).then(() => { input.value = ''; });
+    function editNode(path, oldText) {
+        const edited = prompt("내용을 수정해 주세요:", oldText);
+        if(edited === null) return;
+        const finalEdited = edited.trim();
+        if(!finalEdited) { alert("공백은 등록 불가합니다."); return; }
+        if(!validateContent(finalEdited)) return;
+        database.ref(path).set(finalEdited);
     }
 
-    function deleteReply(postKey, replyKey) {
-      if (confirm('이 댓글을 삭제하시겠습니까?')) {
-        database.ref('global_community/' + postKey + '/replies/' + replyKey).remove();
-      }
+    function deleteNode(path) {
+        if(confirm("이 항목을 삭제하시겠습니까?")) database.ref(path).remove();
     }
 
-    function toggleReplies(postKey) {
-      const area = document.getElementById('repliesArea_' + postKey);
-      if (!area) return;
-      area.classList.toggle('hidden');
+    function toggleNestedInput(id) {
+        if(openSections.has(id)) openSections.delete(id);
+        else openSections.add(id);
+        const el = document.getElementById('nested_input_' + id);
+        if(el) {
+            if(openSections.has(id)) el.classList.remove('hidden');
+            else el.classList.add('hidden');
+        }
     }
 
-    function _renderRepliesSection(postKey, repliesData) {
-      const repliesListEl = document.getElementById('repliesList_' + postKey);
-      const replyToggleBtn = document.getElementById('replyToggleBtn_' + postKey);
-      if (!repliesListEl) return;
-      const replies = repliesData ? Object.entries(repliesData).sort((a, b) => (a[1].timestamp||0) - (b[1].timestamp||0)) : [];
-      const count = replies.length;
-      if (replyToggleBtn) {
-        replyToggleBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/></svg> 댓글 ${count}개`;
-      }
-      repliesListEl.innerHTML = '';
-      if (count === 0) {
-        repliesListEl.innerHTML = '<p class="text-[12px] text-on-surface-variant opacity-60 py-1 text-center">아직 댓글이 없습니다. 첫 댓글을 남겨보세요!</p>';
-      } else {
-        replies.forEach(function(entry) {
-          const rKey = entry[0]; const r = entry[1];
-          const isReplyAuthor = currentUser && currentUser.uid === r.uid;
-          const isAdmin2 = currentUser && currentUser.email === ADMIN_EMAIL;
-          let delBtn = '';
-          if (isReplyAuthor) delBtn = '<button onclick="deleteReply(\'' + postKey + '\',\'' + rKey + '\')" class="text-[10px] text-error hover:underline ml-2 shrink-0 font-semibold">삭제</button>';
-          else if (isAdmin2) delBtn = '<button onclick="deleteReply(\'' + postKey + '\',\'' + rKey + '\')" class="text-[10px] text-error hover:underline ml-2 shrink-0 font-bold">강제삭제🗑️</button>';
-          repliesListEl.innerHTML += '<div class="flex items-start gap-2 py-1.5 border-b border-ol-variant/20 last:border-0"><span class="text-[11px] font-bold text-primary shrink-0">💬 ' + r.nickname + '</span><span class="text-[12px] text-on-surface flex-1 break-words">' + r.text + '</span><span class="text-[10px] text-on-surface-variant opacity-50 shrink-0">' + _relTime(r.timestamp) + '</span>' + delBtn + '</div>';
+    function submitNestedReply(parentPath, inputId) {
+        if (!currentUser) { alert('로그인 후 이용 가능합니다.'); return; }
+        const input = document.getElementById('nested_input_val_' + inputId);
+        if(!input || !input.value.trim()) return;
+        const text = input.value.trim();
+        if(!validateContent(text)) return;
+        const nickname = (currentUser.displayName) || currentUser.email.split('@')[0] + ' 학우';
+        database.ref(parentPath + '/nested').push({
+            uid: currentUser.uid, nickname: nickname, text: text, timestamp: firebase.database.ServerValue.TIMESTAMP
+        }).then(() => { input.value = ''; });
+    }
+
+    function submitMainReply(basePath, inputId) {
+         if (!currentUser) { alert('로그인 후 이용 가능합니다.'); return; }
+         const input = document.getElementById(inputId);
+         if(!input || !input.value.trim()) return;
+         const text = input.value.trim();
+         if(!validateContent(text)) return;
+         const nickname = (currentUser.displayName) || currentUser.email.split('@')[0] + ' 학우';
+         database.ref(basePath + '/replies').push({
+             uid: currentUser.uid, nickname: nickname, text: text, timestamp: firebase.database.ServerValue.TIMESTAMP
+         }).then(() => { input.value = ''; });
+    }
+
+    // 댓글 및 대댓글 렌더링 HTML 생성 헬퍼
+    function renderReplies(basePath, repliesObj, parentKey) {
+        let html = '';
+        const entries = repliesObj ? Object.entries(repliesObj).sort((a,b) => a[1].timestamp - b[1].timestamp) : [];
+        entries.forEach(([rKey, r]) => {
+            const isAuthor = currentUser && currentUser.uid === r.uid;
+            const isAdmin = currentUser && currentUser.email === ADMIN_EMAIL;
+            const rPath = `${basePath}/replies/${rKey}`;
+
+            const likeCount = r.likes ? Object.keys(r.likes).length : 0;
+            const liked = currentUser && r.likes && r.likes[currentUser.uid];
+            const likeColor = liked ? 'text-rose-500 font-black' : 'text-on-surface-variant font-medium';
+
+            let nestedHtml = '';
+            const nestedEntries = r.nested ? Object.entries(r.nested).sort((a,b) => a[1].timestamp - b[1].timestamp) : [];
+            nestedEntries.forEach(([nKey, n]) => {
+                const isNAuthor = currentUser && currentUser.uid === n.uid;
+                const isNAdmin = currentUser && currentUser.email === ADMIN_EMAIL;
+                const nPath = `${rPath}/nested/${nKey}`;
+                
+                const nLikeCount = n.likes ? Object.keys(n.likes).length : 0;
+                const nLiked = currentUser && n.likes && n.likes[currentUser.uid];
+                const nLikeColor = nLiked ? 'text-rose-500 font-black' : 'text-on-surface-variant font-medium';
+
+                nestedHtml += `
+                    <div class="flex items-start gap-2 py-1.5 pl-6 border-t border-ol-variant/20 mt-1 bg-surface-c/10">
+                        <span class="text-[11px] font-bold text-primary shrink-0">↳ ${n.nickname}</span>
+                        <span class="text-[12px] text-on-surface flex-1 break-words leading-relaxed">${n.text}</span>
+                        <div class="flex flex-col items-end gap-1 shrink-0 ml-2">
+                            <span class="text-[10px] text-on-surface-variant opacity-50">${_relTime(n.timestamp)}</span>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="toggleLikeGen('${nPath}')" class="text-[10px] ${nLikeColor} hover:scale-110 transition-transform">❤️ ${nLikeCount}</button>
+                                ${(isNAuthor) ? `<button onclick="editNode('${nPath}/text', \`${n.text.replace(/`/g,'\\`')}\`)" class="text-[10px] text-primary hover:underline">수정</button>` : ''}
+                                ${(isNAuthor || isNAdmin) ? `<button onclick="deleteNode('${nPath}')" class="text-[10px] text-error hover:underline">삭제</button>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                <div class="flex flex-col py-2 border-b border-ol-variant/20 last:border-0">
+                    <div class="flex items-start gap-2">
+                        <span class="text-[11px] font-bold text-primary shrink-0">💬 ${r.nickname}</span>
+                        <span class="text-[12px] text-on-surface flex-1 break-words leading-relaxed">${r.text}</span>
+                        <div class="flex flex-col items-end gap-1 shrink-0 ml-2">
+                            <span class="text-[10px] text-on-surface-variant opacity-50">${_relTime(r.timestamp)}</span>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="toggleLikeGen('${rPath}')" class="text-[10px] ${likeColor} hover:scale-110 transition-transform">❤️ ${likeCount}</button>
+                                <button onclick="toggleNestedInput('${parentKey}_${rKey}')" class="text-[10px] text-on-surface-variant hover:text-primary font-bold">답글</button>
+                                ${(isAuthor) ? `<button onclick="editNode('${rPath}/text', \`${r.text.replace(/`/g,'\\`')}\`)" class="text-[10px] text-primary hover:underline">수정</button>` : ''}
+                                ${(isAuthor || isAdmin) ? `<button onclick="deleteNode('${rPath}')" class="text-[10px] text-error hover:underline">삭제</button>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    <div id="nested_input_${parentKey}_${rKey}" class="${openSections.has(parentKey+'_'+rKey) ? 'flex' : 'hidden'} items-center gap-2 mt-1 pl-6">
+                        <input id="nested_input_val_${parentKey}_${rKey}" type="text" placeholder="대댓글 입력..." class="flex-1 px-2 py-1 text-[11px] rounded border border-ol-variant bg-surface-c-lowest text-on-surface focus:outline-none focus:border-primary" onkeydown="if(event.key==='Enter'){submitNestedReply('${rPath}', '${parentKey}_${rKey}');}">
+                        <button onclick="submitNestedReply('${rPath}', '${parentKey}_${rKey}')" class="px-2 py-1 text-[11px] font-bold rounded bg-surface-dim hover:bg-surface-c transition shrink-0">등록</button>
+                    </div>
+                    ${nestedHtml}
+                </div>
+            `;
         });
-      }
+        return html || '<p class="text-[12px] text-on-surface-variant opacity-60 py-2 text-center">아직 댓글이 없습니다. 첫 댓글을 남겨보세요!</p>';
     }
 
+    // 커뮤니티 피드 렌더링
+    let globalCommunityData = null;
     function initGlobalCommunityListeners() {
-      database.ref('global_community').on('value', function(snapshot) {
-        Object.keys(_postListeners).forEach(function(k) {
-          if (_postListeners[k].likesOff) _postListeners[k].likesOff();
-          if (_postListeners[k].repliesOff) _postListeners[k].repliesOff();
-          delete _postListeners[k];
+        database.ref('global_community').on('value', snap => {
+            globalCommunityData = snap.val();
+            renderCommunityUI();
         });
+    }
 
+    function renderCommunityUI() {
         const container = document.getElementById('communityPostList');
         if(!container) return;
         container.innerHTML = '';
-        const posts = snapshot.val();
+        
+        const posts = globalCommunityData;
         if(!posts) {
-          container.innerHTML = '<p class="text-center text-[13px] text-on-surface-variant py-10 bg-surface-c-lowest border border-dashed border-ol-variant rounded-xl">캠퍼스 광장이 비어있습니다. 첫 글을 등록해보세요! 🚀</p>';
-          return;
+            container.innerHTML = '<p class="text-center text-[13px] text-on-surface-variant py-10 bg-surface-c-lowest border border-dashed border-ol-variant rounded-xl">캠퍼스 광장이 비어있습니다. 첫 글을 등록해보세요! 🚀</p>';
+            return;
         }
-        const sortedKeys = Object.keys(posts).sort(function(a,b){ return posts[b].timestamp - posts[a].timestamp; });
-        sortedKeys.forEach(function(key) {
-          const post = posts[key];
-          const isAuthor = currentUser && currentUser.uid === post.uid;
-          const isAdmin = currentUser && currentUser.email === ADMIN_EMAIL;
-          let actions = '';
-          if(isAuthor) {
-            const safeContent = post.content.replace(/\\/g,'\\\\').replace(/`/g,'\\`');
-            actions = '<button onclick="editCommunityPost(\'' + key + '\', `' + safeContent + '`)" class="text-[11px] text-primary hover:underline font-semibold">수정</button><button onclick="deleteCommunityPost(\'' + key + '\')" class="text-[11px] text-error hover:underline font-semibold ml-2">삭제</button>';
-          } else if (isAdmin) {
-            actions = '<button onclick="deleteCommunityPost(\'' + key + '\')" class="text-[11px] text-error font-bold hover:underline">강제 삭제 🗑️</button>';
-          }
-          const timeStr = new Date(post.timestamp).toLocaleString();
-          const likesData = post.likes || null;
-          const repliesData = post.replies || null;
-          const likeCount = likesData ? Object.keys(likesData).length : 0;
-          const replyCount = repliesData ? Object.keys(repliesData).length : 0;
-          const liked = !!(currentUser && likesData && likesData[currentUser.uid] === true);
-          const likeActiveClass = liked ? 'text-rose-500' : 'text-on-surface-variant';
-          const likeTitle = liked ? '좋아요 취소' : '좋아요';
-          const svgFilled = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 inline" viewBox="0 0 24 24" fill="currentColor"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/></svg>';
-          const svgOutline = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>';
-          const likeSvg = liked ? svgFilled : svgOutline;
-          const replyInputDisabled = currentUser ? '' : 'disabled';
-          const replyInputPlaceholder = currentUser ? '댓글을 입력하세요...' : '로그인 후 댓글 작성 가능';
-          const replyBtnAction = currentUser ? 'submitReply(\'' + key + '\')' : 'alert(\'로그인 후 이용 가능합니다.\')';
-          const replyBtnDisabledClass = currentUser ? '' : 'opacity-50 cursor-not-allowed';
+        const sortedKeys = Object.keys(posts).sort((a,b) => posts[b].timestamp - posts[a].timestamp);
+        
+        let htmlBuffer = '';
+        sortedKeys.forEach(key => {
+            const post = posts[key];
+            const basePath = 'global_community/' + key;
+            const isAuthor = currentUser && currentUser.uid === post.uid;
+            const isAdmin = currentUser && currentUser.email === ADMIN_EMAIL;
+            
+            let actions = '';
+            if (isAuthor) {
+                actions = `<button onclick="editCommunityPost('${key}', \`${post.content.replace(/`/g,'\\`')}\`)" class="text-[11px] text-primary hover:underline font-semibold">수정</button><button onclick="deleteCommunityPost('${key}')" class="text-[11px] text-error hover:underline font-semibold ml-2">삭제</button>`;
+            } else if (isAdmin) {
+                actions = `<button onclick="deleteCommunityPost('${key}')" class="text-[11px] text-error font-bold hover:underline">강제 삭제 🗑️</button>`;
+            }
 
-          container.innerHTML += '<div class="bg-surface-c-lowest border border-ol-variant rounded-xl p-4 flex flex-col gap-2 shadow-2sm">'
-            + '<div class="flex justify-between items-center border-b border-ol-variant/40 pb-1.5">'
-            + '<div class="flex items-center gap-3">'
-            + '<span class="text-[13px] font-bold text-primary">👤 ' + post.nickname + '</span>'
-            + '<span class="text-[10px] text-on-surface-variant opacity-60">' + timeStr + '</span>'
-            + '</div>'
-            + '<div>' + actions + '</div>'
-            + '</div>'
-            + '<p class="text-[14px] text-on-surface font-medium whitespace-pre-wrap leading-relaxed mt-0.5">' + post.content + '</p>'
-            + '<div class="flex items-center gap-3 pt-1 border-t border-ol-variant/20 mt-1">'
-            + '<button id="likeBtn_' + key + '" onclick="toggleLike(\'' + key + '\')" title="' + likeTitle + '" class="flex items-center gap-1 text-[12px] font-semibold px-2 py-1 rounded-lg hover:bg-surface-c transition-colors ' + likeActiveClass + '">'
-            + likeSvg + '<span class="ml-1">' + likeCount + '</span>'
-            + '</button>'
-            + '<button id="replyToggleBtn_' + key + '" onclick="toggleReplies(\'' + key + '\')" class="flex items-center gap-1 text-[12px] font-semibold px-2 py-1 rounded-lg text-on-surface-variant hover:bg-surface-c hover:text-primary transition-colors">'
-            + '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/></svg>'
-            + ' 댓글 ' + replyCount + '개'
-            + '</button>'
-            + '</div>'
-            + '<div id="repliesArea_' + key + '" class="hidden flex flex-col gap-2 pt-2 border-t border-ol-variant/20 mt-1">'
-            + '<div id="repliesList_' + key + '" class="flex flex-col gap-0.5 max-h-60 overflow-y-auto"></div>'
-            + '<div class="flex items-center gap-2 mt-1">'
-            + '<input id="replyInput_' + key + '" type="text" placeholder="' + replyInputPlaceholder + '" ' + replyInputDisabled
-            + ' class="flex-1 px-3 py-1.5 text-[13px] rounded-lg border border-ol-variant bg-surface-c-low text-on-surface focus:outline-none focus:border-primary disabled:opacity-50"'
-            + ' onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();' + replyBtnAction + ';}">'
-            + '<button onclick="' + replyBtnAction + '" class="px-3 py-1.5 text-[12px] font-bold rounded-lg bg-primary text-white hover:opacity-90 transition shrink-0 ' + replyBtnDisabledClass + '">전송</button>'
-            + '</div>'
-            + '</div>'
-            + '</div>';
+            const likeCount = post.likes ? Object.keys(post.likes).length : 0;
+            const liked = currentUser && post.likes && post.likes[currentUser.uid];
+            const likeColor = liked ? 'text-rose-500' : 'text-on-surface-variant';
+            const replyCount = post.replies ? Object.keys(post.replies).length : 0;
+            const timeStr = new Date(post.timestamp).toLocaleString();
+            
+            const repliesHtml = renderReplies(basePath, post.replies, key);
 
-          _postListeners[key] = {};
-
-          const likesRef = database.ref('global_community/' + key + '/likes');
-          function makeLikesHandler(k) {
-            const handler = likesRef.on('value', function(snap) {
-              const lData = snap.val();
-              const btn = document.getElementById('likeBtn_' + k);
-              if (!btn) { likesRef.off('value', handler); return; }
-              const cnt = lData ? Object.keys(lData).length : 0;
-              const lkd = !!(currentUser && lData && lData[currentUser.uid] === true);
-              btn.className = 'flex items-center gap-1 text-[12px] font-semibold px-2 py-1 rounded-lg hover:bg-surface-c transition-colors ' + (lkd ? 'text-rose-500' : 'text-on-surface-variant');
-              btn.title = lkd ? '좋아요 취소' : '좋아요';
-              const sv = lkd
-                ? '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 inline" viewBox="0 0 24 24" fill="currentColor"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/></svg>'
-                : '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>';
-              btn.innerHTML = sv + '<span class="ml-1">' + cnt + '</span>';
-            });
-            return handler;
-          }
-          const likesHandler = makeLikesHandler(key);
-          _postListeners[key].likesOff = function() { likesRef.off('value', likesHandler); };
-
-          const repliesRef = database.ref('global_community/' + key + '/replies');
-          function makeRepliesHandler(k) {
-            const handler = repliesRef.on('value', function(snap) {
-              _renderRepliesSection(k, snap.val());
-            });
-            return handler;
-          }
-          const repliesHandler = makeRepliesHandler(key);
-          _postListeners[key].repliesOff = function() { repliesRef.off('value', repliesHandler); };
+            htmlBuffer += `
+                <div class="bg-surface-c-lowest border border-ol-variant rounded-xl p-4 flex flex-col gap-2 shadow-2sm">
+                    <div class="flex justify-between items-center border-b border-ol-variant/40 pb-1.5">
+                        <div class="flex items-center gap-3">
+                            <span class="text-[13px] font-bold text-primary">👤 ${post.nickname}</span>
+                            <span class="text-[10px] text-on-surface-variant opacity-60">${timeStr}</span>
+                        </div>
+                        <div>${actions}</div>
+                    </div>
+                    <p class="text-[14px] text-on-surface font-medium whitespace-pre-wrap leading-relaxed mt-0.5">${post.content}</p>
+                    
+                    <div class="flex items-center gap-3 pt-1 border-t border-ol-variant/20 mt-1">
+                        <button onclick="toggleLikeGen('${basePath}')" class="flex items-center gap-1 text-[12px] font-semibold px-2 py-1 rounded-lg hover:bg-surface-c transition-colors ${likeColor}">
+                            ❤️ ${likeCount}
+                        </button>
+                        <button onclick="toggleNestedInput('post_replies_${key}')" class="flex items-center gap-1 text-[12px] font-semibold px-2 py-1 rounded-lg text-on-surface-variant hover:bg-surface-c hover:text-primary transition-colors">
+                            💬 댓글 ${replyCount}개
+                        </button>
+                    </div>
+                    
+                    <div id="nested_input_post_replies_${key}" class="${openSections.has('post_replies_'+key) ? 'flex' : 'hidden'} flex-col gap-2 pt-2 border-t border-ol-variant/20 mt-1">
+                        <div class="flex flex-col gap-0.5 max-h-60 overflow-y-auto custom-scrollbar pr-1">${repliesHtml}</div>
+                        <div class="flex items-center gap-2 mt-1">
+                            <input id="reply_in_${key}" type="text" placeholder="댓글을 남겨주세요..." class="flex-1 px-3 py-1.5 text-[13px] rounded-lg border border-ol-variant bg-surface-c-low text-on-surface focus:outline-none focus:border-primary" onkeydown="if(event.key==='Enter'){submitMainReply('${basePath}', 'reply_in_${key}');}">
+                            <button onclick="submitMainReply('${basePath}', 'reply_in_${key}')" class="px-3 py-1.5 text-[12px] font-bold rounded-lg bg-primary text-white hover:opacity-90 transition shrink-0">등록</button>
+                        </div>
+                    </div>
+                </div>
+            `;
         });
-      });   
+        container.innerHTML = htmlBuffer;
+        restoreFocus(); // 포커스 복원
     }
-    
+
+    // 강의평가 보드 렌더링
+    let globalReviewsData = null;
+    function initGlobalReviewListeners() {
+        database.ref('global_reviews').on('value', snap => {
+            globalReviewsData = snap.val();
+            renderReviewsUI();
+        });
+    }
+
+    function renderReviewsUI() {
+        const listContainer = document.getElementById('lectureReviewList');
+        const summaryContainer = document.getElementById('subjectRatingSummary');
+        if (!listContainer || !summaryContainer) return;
+        
+        listContainer.innerHTML = ''; summaryContainer.innerHTML = '';
+        const reviews = globalReviewsData;
+        const scores = {}; 
+        subjects.forEach(sub => scores[sub] = { total: 0, count: 0 });
+        
+        if (!reviews) {
+            listContainer.innerHTML = `<p class="text-center text-[13px] text-on-surface-variant py-10 bg-surface-c-lowest border border-dashed border-ol-variant rounded-xl">과목 강의평가가 존재하지 않습니다. 첫 평가를 남겨보세요! ⭐️</p>`;
+        } else {
+            const allKeys = Object.keys(reviews).sort((a,b) => reviews[b].timestamp - reviews[a].timestamp);
+            
+            allKeys.forEach(key => {
+                const rev = reviews[key];
+                if (!scores[rev.subject]) { scores[rev.subject] = { total: 0, count: 0 }; }
+                scores[rev.subject].total += Number(rev.rating); 
+                scores[rev.subject].count += 1; 
+            });
+
+            const fKeys = activeReviewFilter ? allKeys.filter(k => reviews[k].subject === activeReviewFilter) : allKeys;
+            if (activeReviewFilter && fKeys.length === 0) {
+                listContainer.innerHTML = `<p class="text-center text-[13px] text-on-surface-variant py-10 bg-surface-c-lowest border border-dashed border-ol-variant rounded-xl">선택한 과목에 등록된 강의평이 없습니다. ⭐️</p>`;
+            }
+            
+            let htmlBuffer = '';
+            fKeys.forEach(key => {
+                const rev = reviews[key];
+                const basePath = 'global_reviews/' + key;
+                const isAuthor = currentUser && currentUser.uid === rev.uid;
+                const isAdmin = currentUser && currentUser.email === ADMIN_EMAIL;
+                
+                let actions = '';
+                if (isAuthor) {
+                    actions = `<button onclick="editReview('${key}', \`${rev.reviewText.replace(/`/g,'\\`')}\`)" class="text-[11px] text-primary hover:underline font-semibold">수정</button><button onclick="deleteLectureReview('${key}')" class="text-[11px] text-error hover:underline font-semibold ml-2">삭제</button>`;
+                } else if (isAdmin) {
+                    actions = `<button onclick="deleteLectureReview('${key}')" class="text-[11px] text-error font-bold hover:underline">강제 삭제 🗑️</button>`;
+                }
+
+                const likeCount = rev.likes ? Object.keys(rev.likes).length : 0;
+                const liked = currentUser && rev.likes && rev.likes[currentUser.uid];
+                const likeColor = liked ? 'text-rose-500' : 'text-on-surface-variant';
+                const replyCount = rev.replies ? Object.keys(rev.replies).length : 0;
+                
+                const st = "★".repeat(rev.rating) + "☆".repeat(5 - rev.rating);
+                const timeStr = new Date(rev.timestamp).toLocaleString();
+                const repliesHtml = renderReplies(basePath, rev.replies, key);
+
+                htmlBuffer += `
+                    <div class="bg-surface-c-lowest border border-ol-variant rounded-xl p-4 flex flex-col gap-2 shadow-2sm">
+                        <div class="flex justify-between items-start border-b border-ol-variant/40 pb-2 mb-1">
+                            <div class="flex flex-col gap-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[11px] px-2 py-0.5 rounded bg-primary-fixed text-primary font-black">${rev.subject}</span>
+                                    <span class="text-amber-500 font-bold text-[14px] tracking-tight">${st} (${rev.rating}.0)</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[12px] font-bold text-on-surface">👤 ${rev.nickname}</span>
+                                    <span class="text-[10px] text-on-surface-variant opacity-60">${timeStr}</span>
+                                </div>
+                            </div>
+                            <div>${actions}</div>
+                        </div>
+                        <p class="text-[14px] text-on-surface font-medium whitespace-pre-wrap leading-relaxed">${rev.reviewText}</p>
+                        
+                        <div class="flex items-center gap-3 pt-2 border-t border-ol-variant/20 mt-1">
+                            <button onclick="toggleLikeGen('${basePath}')" class="flex items-center gap-1 text-[12px] font-semibold px-2 py-1 rounded-lg hover:bg-surface-c transition-colors ${likeColor}">
+                                ❤️ ${likeCount}
+                            </button>
+                            <button onclick="toggleNestedInput('review_replies_${key}')" class="flex items-center gap-1 text-[12px] font-semibold px-2 py-1 rounded-lg text-on-surface-variant hover:bg-surface-c hover:text-primary transition-colors">
+                                💬 댓글 ${replyCount}개
+                            </button>
+                        </div>
+
+                        <div id="nested_input_review_replies_${key}" class="${openSections.has('review_replies_'+key) ? 'flex' : 'hidden'} flex-col gap-2 pt-2 border-t border-ol-variant/20 mt-1">
+                            <div class="flex flex-col gap-0.5 max-h-60 overflow-y-auto custom-scrollbar pr-1">${repliesHtml}</div>
+                            <div class="flex items-center gap-2 mt-1">
+                                <input id="reply_in_${key}" type="text" placeholder="의견을 남겨주세요..." class="flex-1 px-3 py-1.5 text-[13px] rounded-lg border border-ol-variant bg-surface-c-low text-on-surface focus:outline-none focus:border-primary" onkeydown="if(event.key==='Enter'){submitMainReply('${basePath}', 'reply_in_${key}');}">
+                                <button onclick="submitMainReply('${basePath}', 'reply_in_${key}')" class="px-3 py-1.5 text-[12px] font-bold rounded-lg bg-primary text-white hover:opacity-90 transition shrink-0">등록</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            listContainer.innerHTML = htmlBuffer;
+        }
+        
+        Object.keys(scores).sort().forEach(sub => {
+            const m = scores[sub];
+            const avg = m && m.count > 0 ? (m.total / m.count).toFixed(1) : "평가 없음";
+            const sT = m && m.count > 0 ? "★".repeat(Math.round(avg)) : "😶";
+            const iA = activeReviewFilter === sub;
+            const aC2 = iA ? "ring-2 ring-primary border-primary bg-primary-fixed/80 cursor-pointer" : "border-ol-variant/60 hover:border-primary hover:bg-surface-c cursor-pointer";
+            summaryContainer.innerHTML += `<div onclick="toggleReviewFilter('${sub}')" class="flex justify-between items-center bg-surface-c-lowest border rounded-lg p-2.5 transition-all ${aC2}" title="${sub} 리뷰만 보기 (재클릭 시 해제)"><span class="font-semibold text-on-surface truncate max-w-[140px]">${sub}</span><span class="flex items-center gap-1 shrink-0"><span class="text-amber-500 font-bold">${sT}</span><span class="text-on-surface-variant font-medium text-[11px]">(${avg})</span>${iA ? '<span class="text-[10px] font-black text-primary ml-1">✕</span>' : ''}</span></div>`;
+        });
+
+        restoreFocus(); // 포커스 복원
+    }
+
     function switchCommunityTab(tab) {       
       const bSec = document.getElementById('communityBoardSection'); const rSec = document.getElementById('communityReviewSection');       
       const bBtn = document.getElementById('tabBtnBoard'); const rBtn = document.getElementById('tabBtnReview');       
@@ -973,13 +1108,21 @@
         uid: currentUser.uid, email: currentUser.email, nickname: nickname, subject: sub, rating: parseInt(score), reviewText: reviewText, timestamp: firebase.database.ServerValue.TIMESTAMP       
       }).then(() => {         
         textInput.value = ''; alert("⭐️ 강의평가가 등록되었습니다.");       
-        toggleReviewFilter();
       }).catch(e => alert(e.message));     
     }      
     
+    function editReview(key, oldText) {
+        const edited = prompt("강의평을 수정해 주세요:", oldText);
+        if(edited === null) return;
+        const finalEdited = edited.trim();
+        if(!finalEdited) { alert("공백은 등록 불가합니다."); return; }
+        if (!validateContent(finalEdited)) return;
+        database.ref('global_reviews/' + key).update({ reviewText: finalEdited });
+    }
+
     function deleteLectureReview(key) {       
       if(confirm("이 과목 강의평을 삭제하시겠습니까?")) {
-        database.ref('global_reviews/' + key).remove().then(() => toggleReviewFilter()).catch(e => alert(e.message));
+        database.ref('global_reviews/' + key).remove().catch(e => alert(e.message));
       }     
     }
 
@@ -987,54 +1130,7 @@
       if (subjectName !== undefined) {
         activeReviewFilter = activeReviewFilter === subjectName ? null : subjectName;
       }
-      database.ref('global_reviews').once('value').then(snapshot => {
-        const listContainer = document.getElementById('lectureReviewList');
-        const summaryContainer = document.getElementById('subjectRatingSummary');
-        if (!listContainer || !summaryContainer) return;
-        listContainer.innerHTML = ''; summaryContainer.innerHTML = '';
-        const reviews = snapshot.val();
-        
-        const scores = {}; 
-        subjects.forEach(sub => scores[sub] = { total: 0, count: 0 });
-        
-        if (!reviews) {
-          listContainer.innerHTML = `<p class="text-center text-[13px] text-on-surface-variant py-10 bg-surface-c-lowest border border-dashed border-ol-variant rounded-xl">과목 강의평가가 존재하지 않습니다. 첫 평가를 남겨보세요! ⭐️</p>`;
-        } else {
-          const allKeys = Object.keys(reviews).sort((a,b) => reviews[b].timestamp - reviews[a].timestamp);
-          
-          allKeys.forEach(key => {
-            const rev = reviews[key];
-            if (!scores[rev.subject]) { scores[rev.subject] = { total: 0, count: 0 }; }
-            scores[rev.subject].total += Number(rev.rating); 
-            scores[rev.subject].count += 1; 
-          });
-
-          const fKeys = activeReviewFilter ? allKeys.filter(k => reviews[k].subject === activeReviewFilter) : allKeys;
-          if (activeReviewFilter && fKeys.length === 0) {
-            listContainer.innerHTML = `<p class="text-center text-[13px] text-on-surface-variant py-10 bg-surface-c-lowest border border-dashed border-ol-variant rounded-xl">선택한 과목에 등록된 강의평이 없습니다. ⭐️</p>`;
-          }
-          
-          fKeys.forEach(key => {
-            const rev = reviews[key];
-            const isAuthorF = currentUser && currentUser.uid === rev.uid;
-            const isAdminF = currentUser && currentUser.email === ADMIN_EMAIL;
-            let dBtn = "";
-            if (isAuthorF) dBtn = `<button onclick="deleteLectureReview('${key}')" class="text-[11px] text-error hover:underline font-bold shrink-0">삭제</button>`;
-            else if (isAdminF) dBtn = `<button onclick="deleteLectureReview('${key}')" class="text-[11px] text-error hover:underline font-bold shrink-0">강제 삭제 🗑️</button>`;
-            const st = "★".repeat(rev.rating) + "☆".repeat(5 - rev.rating);
-            listContainer.innerHTML += `<div class="bg-surface-c-lowest border border-ol-variant rounded-xl p-3.5 flex items-start justify-between gap-4 shadow-2sm"><div class="flex flex-col gap-1 min-w-0"><div class="flex flex-wrap items-center gap-2"><span class="text-[11px] px-2 py-0.5 rounded bg-primary-fixed text-primary font-black">${rev.subject}</span><span class="text-amber-500 font-bold text-[14px] tracking-tight">${st} (${rev.rating}.0)</span><span class="text-[11px] text-on-surface-variant">by ${rev.nickname}</span></div><p class="text-[13px] text-on-surface font-medium break-words mt-1">${rev.reviewText}</p></div>${dBtn}</div>`;
-          });
-        }
-        
-        Object.keys(scores).sort().forEach(sub => {
-          const m = scores[sub];
-          const avg = m && m.count > 0 ? (m.total / m.count).toFixed(1) : "평가 없음";
-          const sT = m && m.count > 0 ? "★".repeat(Math.round(avg)) : "😶";
-          const iA = activeReviewFilter === sub;
-          const aC2 = iA ? "ring-2 ring-primary border-primary bg-primary-fixed/80 cursor-pointer" : "border-ol-variant/60 hover:border-primary hover:bg-surface-c cursor-pointer";
-          summaryContainer.innerHTML += `<div onclick="toggleReviewFilter('${sub}')" class="flex justify-between items-center bg-surface-c-lowest border rounded-lg p-2.5 transition-all ${aC2}" title="${sub} 리뷰만 보기 (재클릭 시 해제)"><span class="font-semibold text-on-surface truncate max-w-[140px]">${sub}</span><span class="flex items-center gap-1 shrink-0"><span class="text-amber-500 font-bold">${sT}</span><span class="text-on-surface-variant font-medium text-[11px]">(${avg})</span>${iA ? '<span class="text-[10px] font-black text-primary ml-1">✕</span>' : ''}</span></div>`;
-        });
-      });
+      renderReviewsUI();
     }      
     
     function saveCurrentStateToFirebase() {       
@@ -1165,7 +1261,7 @@
             subjects.splice(evt.newIndex, 0, movedItem);
             saveCurrentStateToFirebase();
             
-            if (['subject', 'week', 'all', 'etc', 'bookmark'].includes(currentMode)) {
+            if (['subject', 'all', 'etc', 'bookmark'].includes(currentMode)) {
               render(currentMode);
             } else if (currentMode !== 'community') {
               renderSubjectDetail(currentMode);
@@ -1201,52 +1297,35 @@
       searchQuery = document.getElementById(isMobile ? 'mobileSearchInput' : 'searchInput').value.toLowerCase().trim();       
       if(currentMode !== 'community' && currentMode !== 'etc' && currentMode !== 'bookmark') render(currentMode);     
     }      
-    
-    function handleTagFilter() {
-      activeTagFilter = document.getElementById('tagFilterSelect').value;
-      render(currentMode);
-    }
 
-    function updateTagFilterOptions() {
-      const select = document.getElementById('tagFilterSelect');
+    function updateFilterSubjectOptions() {
+      const select = document.getElementById('filterSubject');
       if (!select) return;
-      
-      const allTags = new Set();
-      data.forEach(item => {
-        if (item.tags) {
-          item.tags.split(',').forEach(tag => {
-            const t = tag.trim();
-            if (t) allTags.add(t);
-          });
-        }
+      const currentVal = select.value;
+      select.innerHTML = '<option value="all">모든 과목</option>';
+      subjects.forEach(s => {
+        select.innerHTML += `<option value="${s}">${s}</option>`;
       });
-
-      select.innerHTML = '<option value="">모든 태그 (전체)</option>';
-      [...allTags].sort().forEach(tag => {
-        const isSelected = tag === activeTagFilter ? 'selected' : '';
-        select.innerHTML += `<option value="${tag}" ${isSelected}># ${tag}</option>`;
-      });
+      if (subjects.includes(currentVal) || currentVal === 'all') {
+        select.value = currentVal;
+      }
     }
 
-    // ✅ 북마크 토글 로직 (부분 업데이트 방식 - 전체 렌더링 없음)
+    // 북마크 토글 로직 
     function toggleBookmark(id, event) {
       if(event) {
         event.stopPropagation();
         event.preventDefault();
       }
-      
       const item = data.find(x => x.id === id);
       if(!item) return;
       
-      // 북마크 상태 토글
       item.bookmark = !item.bookmark;
       saveCurrentStateToFirebase();
       
-      // 해당 카드 요소 찾기 (data-id 속성으로)
       const cardElement = document.querySelector('[data-id="' + id + '"]');
       if(!cardElement) return;
       
-      // 카드 내의 북마크 버튼만 업데이트 (부분 렌더링)
       const bookmarkBtn = cardElement.querySelector('button[title="즐겨찾기"]');
       if(bookmarkBtn) {
         const starIcon = item.bookmark ? '⭐️' : '☆';
@@ -1255,7 +1334,6 @@
         bookmarkBtn.className = 'relative z-10 text-[14px] p-1 rounded transition-transform ' + starClass;
       }
       
-      // 북마크 보관함 모드일 때만 전체 렌더링
       if(currentMode === 'bookmark') {
         render('bookmark');
       }
@@ -1267,11 +1345,9 @@
         event.preventDefault();
       }       
       if(confirm('이 자료집 항목을 삭제할까요?')) { 
-        // 데이터에서 삭제
         data = data.filter(x => x.id !== id); 
         saveCurrentStateToFirebase(); 
         
-        // 카드 요소 제거 (부분 렌더링)
         const cardElement = document.querySelector('[data-id="' + id + '"]');
         if(cardElement) {
           cardElement.style.opacity = '0';
@@ -1285,21 +1361,7 @@
       }     
     }
 
-        // requestAnimationFrame을 사용하여 렌더링 완료 후 스크롤 복구
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            window.scrollTo(0, windowScroll);
-            const newBoard = document.getElementById('board');
-            if (newBoard) newBoard.scrollTop = boardScroll;
-            document.querySelectorAll('.card-list').forEach(list => {
-              const key = list.getAttribute('data-filter-key');
-              if(key && scrollMap[key] !== undefined) list.scrollTop = scrollMap[key];
-            });
-          });
-        });
-
-
-    // ✅ 원본 가로형 레이아웃 복구 + 아이콘 겹침 방지(z-10) 추가
+    // 카드 생성 HTML
     function createCardHtml(item) {       
       const isBookmarked = item.bookmark;
       const starIcon = isBookmarked ? '⭐️' : '☆';
@@ -1318,12 +1380,6 @@
         else if((item.link || '').includes('youtu')) typeIcon = '▶️';
       }
 
-      let tagsHtml = '';
-      if(item.tags) {
-         const tagArr = item.tags.split(',').map(t => t.trim()).filter(t => t);
-         tagsHtml = tagArr.map(t => `<span class="text-[9px] px-1.5 py-0.5 rounded bg-surface-dim text-on-surface-variant border border-ol-variant">#${t}</span>`).join('');
-      }
-
       let descHtml = '';
       if(item.desc) descHtml = `<p class="text-[12px] text-on-surface-variant mt-1 line-clamp-2 leading-relaxed">${item.desc}</p>`;
 
@@ -1339,7 +1395,6 @@
               <span class="text-[10px] px-1.5 py-0.5 rounded bg-surface-c text-on-surface-variant font-bold border border-ol-variant/50">${item.subject}</span>               
               <span class="text-[10px] font-bold text-on-surface-variant opacity-60">${item.week}</span>             
             </div>           
-            ${tagsHtml ? `<div class="flex flex-wrap gap-1 mt-1.5">${tagsHtml}</div>` : ''}
           </div>           
           <div class="flex flex-col items-center gap-1 shrink-0 ml-1">
             ${bookmarkBtn}
@@ -1354,7 +1409,8 @@
       const commView = document.getElementById('mainCommunityContent');       
       const hSearch = document.getElementById('headerSearchWrapper'); 
       const mSearch = document.getElementById('mobileSearchWrapper');        
-      
+      const searchBar = document.getElementById('categorySearchBar');
+
       if (mode === 'community') {         
         dashView.classList.add('hidden'); commView.classList.remove('hidden');         
         if(hSearch) hSearch.classList.add('invisible'); if(mSearch) mSearch.classList.add('hidden');         
@@ -1368,7 +1424,37 @@
       const boardTitle = document.getElementById('boardTitle');       
       board.innerHTML = ''; 
       updateActiveMenu(mode);        
-      updateTagFilterOptions(); 
+
+      let filtered = data;       
+      
+      if (searchQuery) {
+        filtered = filtered.filter(item => 
+          (item.title && item.title.toLowerCase().includes(searchQuery)) || 
+          (item.subject && item.subject.toLowerCase().includes(searchQuery)) || 
+          (item.week && item.week.toLowerCase().includes(searchQuery)) ||
+          (item.desc && item.desc.toLowerCase().includes(searchQuery))
+        );        
+      }
+
+      if (mode === 'all') {
+        searchBar.classList.remove('hidden');
+        updateFilterSubjectOptions();
+
+        const sSubj = document.getElementById('filterSubject').value;
+        const sWeek = document.getElementById('filterWeek').value;
+        const sSort = document.getElementById('filterSort').value;
+
+        if (sSubj !== 'all') filtered = filtered.filter(item => item.subject === sSubj);
+        if (sWeek !== 'all') filtered = filtered.filter(item => item.week === sWeek);
+
+        if (sSort === 'newest') {
+          filtered.sort((a,b) => b.id - a.id);
+        } else {
+          filtered.sort((a,b) => a.id - b.id);
+        }
+      } else {
+        searchBar.classList.add('hidden');
+      }
 
       if (mode === 'etc') {
         boardTitle.innerText = "기타 참고 자료 보관함";
@@ -1395,32 +1481,14 @@
         html += `</div>`;
         board.innerHTML = html;
 
-        // 카드 클릭 이벤트 리스너 추가 (data-link 기반)
         document.querySelectorAll('.kanban-card').forEach(card => {
           card.addEventListener('click', function(e) {
-            // 버튼 클릭이 아닌 경우만 처리
             if(e.target.closest('button')) return;
             const link = this.getAttribute('data-link');
             if(link) launchTarget(link);
           });
         });
         return;
-      }
-
-      let filtered = data;       
-      
-      if (searchQuery) {
-        filtered = filtered.filter(item => 
-          (item.title && item.title.toLowerCase().includes(searchQuery)) || 
-          (item.subject && item.subject.toLowerCase().includes(searchQuery)) || 
-          (item.week && item.week.toLowerCase().includes(searchQuery)) ||
-          (item.desc && item.desc.toLowerCase().includes(searchQuery)) ||
-          (item.tags && item.tags.toLowerCase().includes(searchQuery))
-        );        
-      }
-      
-      if (activeTagFilter) {
-        filtered = filtered.filter(item => item.tags && item.tags.split(',').map(t => t.trim()).includes(activeTagFilter));
       }
 
       if (mode === 'bookmark') {
@@ -1432,10 +1500,8 @@
         html += `</div>`;
         board.innerHTML = html;
 
-        // 카드 클릭 이벤트 리스너 추가 (data-link 기반)
         document.querySelectorAll('.kanban-card').forEach(card => {
           card.addEventListener('click', function(e) {
-            // 버튼 클릭이 아닌 경우만 처리
             if(e.target.closest('button')) return;
             const link = this.getAttribute('data-link');
             if(link) launchTarget(link);
@@ -1444,20 +1510,21 @@
         return;
       }
 
-      if (mode === 'subject' || mode === 'week') {         
-        boardTitle.innerText = mode === 'week' ? "학사 주차별 타임라인 보드" : "내 과목별 타임라인 보드";                  
+      if (mode === 'subject') {         
+        boardTitle.innerText = "내 과목별 타임라인 보드";                  
         let gridWrapperHtml = `<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 w-full items-start">`;         
-        const loopKeys = mode === 'week' ? ["1주차","2주차","3주차","4주차","5주차","6주차","7주차","8주차","9주차","10주차","11주차","12주차","13주차","14주차","15주차"] : subjects;          
         
-        loopKeys.forEach(key => {           
-          const itemsInKey = filtered.filter(x => x[mode] === key);           
-          if(mode === 'week' && itemsInKey.length === 0 && !searchQuery && !activeTagFilter) return;            
-          if(mode === 'subject' && itemsInKey.length === 0 && (searchQuery || activeTagFilter)) return;
+        subjects.forEach(key => {           
+          const itemsInKey = filtered.filter(x => x.subject === key);           
+          if(itemsInKey.length === 0 && searchQuery) return;
+          
+          // ✅ 핵심 수정 부분: 홈 화면 과목 보드에서 생성된 순서대로(id 오름차순) 정렬 
+          itemsInKey.sort((a, b) => a.id - b.id);
           
           let columnHtml = `             
             <div class="column flex flex-col w-full bg-surface-c-low border border-ol-variant rounded-xl p-4 shadow-sm">               
-              <h2 class="text-[15px] font-bold text-primary border-b border-ol-variant pb-2.5 mb-3 text-center">${mode === 'week' ? '📅 ' : '📚 '}${key}</h2>               
-              <div class="card-list flex flex-col gap-2 min-h-[50px] max-h-[400px] overflow-y-auto custom-scrollbar pr-1" data-filter-key="${key}" data-filter-mode="${mode}">`;                      
+              <h2 class="text-[15px] font-bold text-primary border-b border-ol-variant pb-2.5 mb-3 text-center">📚 ${key}</h2>               
+              <div class="card-list flex flex-col gap-2 min-h-[50px] max-h-[400px] overflow-y-auto custom-scrollbar pr-1" data-filter-key="${key}" data-filter-mode="subject">`;                      
           if(itemsInKey.length === 0) {             
             columnHtml += `<p class="text-[12px] text-on-surface-variant opacity-50 py-2 text-center">자료가 없습니다.</p>`;           
           } else {             
@@ -1469,19 +1536,8 @@
         gridWrapperHtml += `</div>`;         
         board.innerHTML = gridWrapperHtml;
 
-        // 카드 클릭 이벤트 리스너 추가 (data-link 기반)
         document.querySelectorAll('.kanban-card').forEach(card => {
           card.addEventListener('click', function(e) {
-            // 버튼 클릭이 아닌 경우만 처리
-            if(e.target.closest('button')) return;
-            const link = this.getAttribute('data-link');
-            if(link) launchTarget(link);
-          });
-        });
-        // 카드 클릭 이벤트 리스너 추가 (data-link 기반)
-        document.querySelectorAll('.kanban-card').forEach(card => {
-          card.addEventListener('click', function(e) {
-            // 버튼 클릭이 아닌 경우만 처리
             if(e.target.closest('button')) return;
             const link = this.getAttribute('data-link');
             if(link) launchTarget(link);
@@ -1505,11 +1561,10 @@
                 const itemId = Number(itemEl.getAttribute('data-id'));
                 const fromKey = evt.from.getAttribute('data-filter-key');
                 const toKey = evt.to.getAttribute('data-filter-key');
-                const filterMode = evt.to.getAttribute('data-filter-mode');
 
                 const itemIndex = data.findIndex(x => x.id === itemId);
                 if(itemIndex > -1 && fromKey !== toKey) {
-                  data[itemIndex][filterMode] = toKey;
+                  data[itemIndex].subject = toKey;
                 }
 
                 const allVisibleIds = [];
@@ -1538,12 +1593,14 @@
         let html = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">`;         
         filtered.forEach(item => html += createCardHtml(item));         
         html += `</div>`;         
-        board.innerHTML = html;       
+        if (filtered.length === 0) {
+          board.innerHTML = `<p class="text-center text-[13px] text-on-surface-variant py-8 bg-surface-c-lowest border border-dashed border-ol-variant rounded-xl w-full">조건에 맞는 자료가 없습니다.</p>`;
+        } else {
+          board.innerHTML = html;       
+        }
 
-        // 카드 클릭 이벤트 리스너 추가 (data-link 기반)
         document.querySelectorAll('.kanban-card').forEach(card => {
           card.addEventListener('click', function(e) {
-            // 버튼 클릭이 아닌 경우만 처리
             if(e.target.closest('button')) return;
             const link = this.getAttribute('data-link');
             if(link) launchTarget(link);
@@ -1563,17 +1620,22 @@
       currentMode = subjectName; updateActiveMenu('');       
       const board = document.getElementById('board'); const boardTitle = document.getElementById('boardTitle');       
       board.innerHTML = ''; boardTitle.innerText = `과목 단독 보기: ${subjectName}`;       
+      
+      document.getElementById('categorySearchBar').classList.add('hidden');
+
       let html = `<div class="bg-surface-c-low border border-ol-variant rounded-xl p-5 shadow-sm max-w-3xl mx-auto w-full"><div class="card-list flex flex-col gap-2.5">`;       
       const filtered = data.filter(item => item.subject === subjectName && (!searchQuery || item.title.toLowerCase().includes(searchQuery)));       
+      
+      // 단독 보기에서도 원래 순서(오름차순)대로 나오도록 정렬 추가
+      filtered.sort((a,b) => a.id - b.id);
+      
       filtered.forEach(item => html += createCardHtml(item));       
       if(filtered.length === 0) html += `<p class="text-center text-[13px] text-on-surface-variant py-4">등록 자료가 존재하지 않습니다.</p>`;       
       html += `</div></div>`;       
       board.innerHTML = html;     
 
-        // 카드 클릭 이벤트 리스너 추가 (data-link 기반)
         document.querySelectorAll('.kanban-card').forEach(card => {
           card.addEventListener('click', function(e) {
-            // 버튼 클릭이 아닌 경우만 처리
             if(e.target.closest('button')) return;
             const link = this.getAttribute('data-link');
             if(link) launchTarget(link);
@@ -1587,10 +1649,9 @@
       
       if(mode === 'subject') items[0].classList.add('bg-primary-fixed', 'text-primary', 'font-bold');       
       if(mode === 'all') items[1].classList.add('bg-primary-fixed', 'text-primary', 'font-bold');       
-      if(mode === 'week') items[2].classList.add('bg-primary-fixed', 'text-primary', 'font-bold');       
-      if(mode === 'etc') items[3].classList.add('bg-primary-fixed', 'text-primary', 'font-bold'); 
-      if(mode === 'bookmark') items[4].classList.add('bg-primary-fixed', 'text-primary', 'font-bold'); 
-      if(mode === 'community') items[5].classList.add('bg-primary-fixed', 'text-primary', 'font-bold');     
+      if(mode === 'etc') items[2].classList.add('bg-primary-fixed', 'text-primary', 'font-bold'); 
+      if(mode === 'bookmark') items[3].classList.add('bg-primary-fixed', 'text-primary', 'font-bold'); 
+      if(mode === 'community') items[4].classList.add('bg-primary-fixed', 'text-primary', 'font-bold');     
     }      
     
     function openSubjectModal() { document.getElementById('subjectModal').classList.remove('hidden'); }     
@@ -1776,10 +1837,8 @@
 
       if (type === 'app') {
         document.getElementById('subjectWeekRow').classList.add('hidden');
-        document.getElementById('tagsRow').classList.add('hidden');
       } else {
         document.getElementById('subjectWeekRow').classList.remove('hidden');
-        document.getElementById('tagsRow').classList.remove('hidden');
       }
     }
 
@@ -1788,7 +1847,6 @@
       document.getElementById('newItemTitle').value = ''; 
       document.getElementById('newItemDesc').value = ''; 
       document.getElementById('newItemLink').value = ''; 
-      document.getElementById('newItemTags').value = ''; 
       document.getElementById('newItemFile').value = '';
       document.getElementById('uploadProgressWrapper').classList.add('hidden');
       document.getElementById('uploadProgressBar').style.width = '0%';
@@ -1800,7 +1858,6 @@
       let link = document.getElementById('newItemLink').value.trim();
       const subject = document.getElementById('newItemSubject').value;
       const week = document.getElementById('newItemWeek').value;
-      const tags = document.getElementById('newItemTags').value.trim();
       const fileInput = document.getElementById('newItemFile');
 
       if(!title) { alert('제목을 입력하세요.'); return; }
@@ -1820,7 +1877,6 @@
         desc: desc,
         subject: subject,
         week: week,
-        tags: tags,
         bookmark: false
       };
 
