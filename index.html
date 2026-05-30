@@ -678,12 +678,14 @@
     ];
 
     const defaultDDayList = [{ id: 1001, title: "기말고사 및 종강", date: "2026-06-15" }];
-    const defaultApps = [
-      { id: 101, title: 'Visual Studio', desc: 'C# / IDE', icon: 'visualstudio', link: 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe' },
-      { id: 102, title: '3ds Max', desc: 'Graphic Tool', icon: '3dsmax', link: 'openmax://' },
-      { id: 103, title: 'Eclipse', desc: 'Java IDE', icon: 'eclipse', link: 'C:\\eclipse\\eclipse.exe' },
-      { id: 104, title: 'VS Code', desc: 'Web / Editor', icon: 'vscode', link: 'C:\\Users\\User\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe' }
-    ];
+   const defaultApps = [
+  { id: 101, title: 'Visual Studio', desc: 'C# / IDE', icon: 'visualstudio', link: 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe' },
+  { id: 102, title: '3ds Max', desc: 'Graphic Tool', icon: '3dsmax', link: 'openmax://' },
+  { id: 103, title: 'Eclipse', desc: 'Java IDE', icon: 'eclipse', link: 'C:\\eclipse\\eclipse.exe' },
+  { id: 104, title: 'VS Code', desc: 'Web / Editor', icon: 'vscode', link: 'C:\\Users\\User\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe' },
+  { id: 105, title: 'MarkText', desc: 'Markdown Editor', icon: 'marktext', link: 'marktext://' },
+  { id: 106, title: 'QuizN', desc: 'Quiz', icon: 'quiz', link: 'https://quizn.show/' }
+];
 
     auth.onAuthStateChanged(user => {       
       const authContainer = document.getElementById('authContainer');       
