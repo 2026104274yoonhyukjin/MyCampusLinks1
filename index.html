@@ -95,7 +95,7 @@
     
     .progress-bar { transition: width 0.3s ease; }
     
-    .sortable-ghost { opacity: 0.4; transform: scale(0.98); }
+    .sortable-ghost { opacity: 0.4; transform: scale(0.98); background-color: var(--surface-c); border: 2px dashed var(--primary); }
     .sortable-drag { cursor: grabbing !important; }
   
     .app-logo-wrap {
@@ -306,7 +306,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">           
           <div>            
             <h3 id="boardTitle" class="text-[18px] md:text-[20px] font-semibold text-on-surface">저장 자료</h3>             
-            <p class="text-[13px] text-on-surface-variant mt-0.5">클라우드 계정 연동 학습 자료 보드 (꾹 눌러서 이동)</p>           
+            <p class="text-[13px] text-on-surface-variant mt-0.5">클라우드 계정 연동 학습 자료 보드</p>           
           </div>           
           
           <div class="flex flex-col sm:flex-row items-end sm:items-center gap-2">             
@@ -323,6 +323,7 @@
                 <option value="13주차">13주차</option><option value="14주차">14주차</option><option value="15주차">15주차</option>
               </select>
               <select id="filterSort" onchange="render(currentMode)" class="px-3 py-1.5 text-[13px] rounded-lg border border-ol-variant bg-surface-c-lowest text-on-surface focus:outline-none focus:border-primary max-w-[120px] truncate">
+                <option value="custom">수동 정렬 (기본)</option>
                 <option value="newest">최신순</option>
                 <option value="oldest">오래된 순</option>
               </select>
@@ -586,6 +587,10 @@
     let ddayList = [];     
     let personalEvents = [];
     let apps = [];      
+    let bookmarkOrder = []; 
+    let allOrder = []; 
+    let etcOrder = [];
+
     let currentMode = 'subject'; 
     let searchQuery = ''; 
     let calDate = new Date(); 
@@ -658,8 +663,6 @@
       { id: 27, title: "5장-참조자료형", week: "5주차", subject: "객체 지향 프로그래밍", link: "pdf/5장_참조자료형.pdf", type: "file" },
       { id: 28, title: "6장-클래스(class)의_기본_문법", week: "6주차", subject: "객체 지향 프로그래밍", link: "pdf/6장_클래스(class)의_기본_문법.pdf", type: "file" },
       { id: 29, title: "7장-클래스 내부 구성요소", week: "7주차", subject: "객체 지향 프로그래밍", link: "pdf/7장_클래스_내부_구성요소_1_(필드메서드생성자).pdf", type: "file" },
-      { id: 28, title: "6장-클래스(class)의_기본_문법", week: "6주차", subject: "객체 지향 프로그래밍", link: "pdf/6장_클래스(class)의_기본_문법.pdf", type: "file" },
-      { id: 29, title: "7장-클래스 내부 구성요소", week: "7주차", subject: "객체 지향 프로그래밍", link: "pdf/7장_클래스_내부_구성요소_1_(필드메서드생성자).pdf", type: "file" },
       { id: 30, title: "8장-클래스의 외부 구성요소", week: "8주차", subject: "객체 지향 프로그래밍", link: "pdf/8장_클래스의_외부_구성요소_(package_import_외부클래스).pdf", type: "file" },
       { id: 31, title: "9장-자바제어자(modifier)_1", week: "9주차", subject: "객체 지향 프로그래밍", link: "pdf/9장__자바제어자(modifier)_1._(접근지정자_static).pdf", type: "file" },
       
@@ -674,18 +677,23 @@
       { id: 40, title: "11주차 수업 자료-개발 착수 & MVP 기반 태스크 관리", week: "11주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week11", type: "web" },
       { id: 41, title: "12주차 수업 자료-MVP 통합 및 알파 버전 완성", week: "12주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week12", type: "web" },
       { id: 42, title: "13주차 수업 자료-알파 테스트 피드백 보드", week: "13주차", subject: "프론트엔드프로그래밍", link: "https://www.figma.com/board/XTQk7MT9MuRqokMwAeNRS2/%ED%94%BC%EB%93%9C%EB%B0%B1%EB%B3%B4%EB%93%9C-103-?node-id=0-1&p=f&t=4exAxS5NEkhzxOV3-02", type: "web" }
-      
+    ];
+
+    let globalEtcData = [
+      { id: 9001, title: "딥링크 설정 가이드 (프로그램 원클릭 실행법)", subject: "가이드", week: "상시", link: "pdf/딥링크_설정_가이드.pdf", type: 'file' },
+      { id: 9002, title: "프론트엔드프로그래밍 OT 자료", subject: "수업자료", week: "1주차", link: "https://dayoung-univ.github.io/Frontend2026-01/OT", type: 'web' },
+      { id: 9003, title: "마크다운 작성방법 참고자료", subject: "수업자료", week: "1주차", link: "pdf/마크다운_보충자료.pdf", type: 'file' }
     ];
 
     const defaultDDayList = [{ id: 1001, title: "기말고사 및 종강", date: "2026-06-15" }];
-   const defaultApps = [
-  { id: 101, title: 'Visual Studio', desc: 'C# / IDE', icon: 'visualstudio', link: 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe' },
-  { id: 102, title: '3ds Max', desc: 'Graphic Tool', icon: '3dsmax', link: 'openmax://' },
-  { id: 103, title: 'Eclipse', desc: 'Java IDE', icon: 'eclipse', link: 'C:\\eclipse\\eclipse.exe' },
-  { id: 104, title: 'VS Code', desc: 'Web / Editor', icon: 'vscode', link: 'C:\\Users\\User\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe' },
-  { id: 105, title: 'MarkText', desc: 'Markdown Editor', icon: 'marktext', link: 'marktext://' },
-  { id: 106, title: 'QuizN', desc: 'Quiz', icon: 'quiz', link: 'https://quizn.show/' }
-];
+    const defaultApps = [
+      { id: 101, title: 'Visual Studio', desc: 'C# / IDE', icon: 'visualstudio', link: 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe' },
+      { id: 102, title: '3ds Max', desc: 'Graphic Tool', icon: '3dsmax', link: 'openmax://' },
+      { id: 103, title: 'Eclipse', desc: 'Java IDE', icon: 'eclipse', link: 'C:\\eclipse\\eclipse.exe' },
+      { id: 104, title: 'VS Code', desc: 'Web / Editor', icon: 'vscode', link: 'C:\\Users\\User\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe' },
+      { id: 105, title: 'MarkText', desc: 'Markdown Editor', icon: 'marktext', link: 'marktext://' },
+      { id: 106, title: 'QuizN', desc: 'Quiz', icon: 'quiz', link: 'https://quizn.show/' }
+    ];
 
     auth.onAuthStateChanged(user => {       
       const authContainer = document.getElementById('authContainer');       
@@ -705,10 +713,13 @@
             subjects = val.subjects || []; data = val.data || [];             
             ddayList = val.ddayList || []; personalEvents = val.personalEvents || [];           
             apps = val.apps || [...defaultApps];
+            bookmarkOrder = val.bookmarkOrder || [];
+            allOrder = val.allOrder || []; 
+            etcOrder = val.etcOrder || [];
           } else {             
             subjects = [...defaultSubjects]; data = [...defaultData];             
             ddayList = [...defaultDDayList]; personalEvents = [];             
-            apps = [...defaultApps];
+            apps = [...defaultApps]; bookmarkOrder = []; allOrder = []; etcOrder = [];
             saveCurrentStateToFirebase();           
           }           
           updateSidebarSubjects(); renderDDayList(); renderApps(); render(currentMode);           
@@ -723,6 +734,114 @@
       }     
     });      
     
+    // --- ✅ 딜레이 없는 손잡이(Handle) 전용 드래그 & 완벽한 뷰별 독립 정렬 함수 ---
+    function initCardSortable() {
+      if (typeof Sortable === 'undefined') return;
+      if (currentMode === 'community') return;
+
+      document.querySelectorAll('.card-list').forEach(el => {
+        new Sortable(el, {
+          // 모드별로 완전히 그룹을 분리하여 다른 뷰의 정렬 상태가 서로 섞이는 것을 차단
+          group: currentMode, 
+          handle: '.drag-handle', // 꾹 누를 필요 없이 좌측 점선 핸들을 잡고 즉시 이동
+          animation: 150,
+          fallbackTolerance: 5,
+          ghostClass: 'sortable-ghost',
+          dragClass: 'sortable-drag',
+          onEnd: function (evt) {
+            if (evt.oldIndex === evt.newIndex && evt.from === evt.to) return;
+
+            // 드래그된 이후 보이는 요소들의 ID 추출
+            const visibleIds = Array.from(evt.to.children).map(child => Number(child.getAttribute('data-id'))).filter(Boolean);
+
+            // 1. 즐겨찾기 보관함일 경우: 즐겨찾기 전용 배열(bookmarkOrder)만 업데이트
+            if (currentMode === 'bookmark') {
+                updateIndependentOrder(bookmarkOrder, visibleIds);
+                saveCurrentStateToFirebase();
+                return;
+            }
+
+            // 2. 전체 보기일 경우: 전체보기 전용 배열(allOrder)만 업데이트 (홈 배열은 보호됨)
+            if (currentMode === 'all') {
+                const filterSortEl = document.getElementById('filterSort');
+                if (filterSortEl && filterSortEl.value !== 'custom') filterSortEl.value = 'custom';
+                
+                updateIndependentOrder(allOrder, visibleIds);
+                saveCurrentStateToFirebase();
+                return; 
+            }
+
+            // 3. 기타 참고 자료일 경우: 기타 전용 배열(etcOrder)만 업데이트
+            if (currentMode === 'etc') {
+                updateIndependentOrder(etcOrder, visibleIds);
+                saveCurrentStateToFirebase();
+                return;
+            }
+
+            // 4. 홈(과목별 보기) 및 과목 단독 보기일 경우: 홈 전용 글로벌 데이터(data) 업데이트
+            const itemEl = evt.item;
+            const itemId = Number(itemEl.getAttribute('data-id'));
+            const fromKey = evt.from.getAttribute('data-filter-key');
+            const toKey = evt.to.getAttribute('data-filter-key');
+            
+            const itemIndex = data.findIndex(x => x.id === itemId);
+            if (itemIndex === -1) return;
+
+            if (fromKey && toKey && fromKey !== toKey) {
+              data[itemIndex].subject = toKey;
+            }
+
+            // 화면에 있는 모든 과목 기둥의 카드 순서를 읽어 글로벌 data 배열에 반영
+            const allVisibleIds = [];
+            document.querySelectorAll('.card-list').forEach(list => {
+              Array.from(list.children).forEach(child => {
+                const id = Number(child.getAttribute('data-id'));
+                if(id) allVisibleIds.push(id);
+              });
+            });
+
+            const originalIndices = [];
+            allVisibleIds.forEach(id => {
+              const idx = data.findIndex(d => d.id === id);
+              if (idx !== -1) originalIndices.push(idx);
+            });
+            originalIndices.sort((a, b) => a - b);
+
+            const itemsToReorder = allVisibleIds.map(id => data.find(d => d.id === id)).filter(Boolean);
+
+            itemsToReorder.forEach((item, i) => {
+              data[originalIndices[i]] = item;
+            });
+
+            saveCurrentStateToFirebase();
+            
+            if (['subject'].includes(currentMode)) {
+              render(currentMode); 
+            } else if (currentMode !== 'community' && currentMode !== 'etc' && currentMode !== 'all' && currentMode !== 'bookmark') {
+              renderSubjectDetail(currentMode);
+            }
+          }
+        });
+      });
+    }
+
+    // 독립 배열 순서 업데이트 헬퍼 함수
+    function updateIndependentOrder(targetArray, visibleIds) {
+        // 기존 배열에 없는 새로운 ID가 있다면 추가
+        visibleIds.forEach(id => {
+            if (!targetArray.includes(id)) targetArray.push(id);
+        });
+
+        // 현재 화면에 보이는 아이템들이 targetArray 내에서 차지하던 인덱스들
+        const originalPositions = visibleIds.map(id => targetArray.indexOf(id));
+        originalPositions.sort((a, b) => a - b);
+
+        // 드래그해서 바뀐 새로운 순서대로, targetArray의 원래 인덱스 위치에 덮어쓰기
+        visibleIds.forEach((id, index) => {
+            targetArray[originalPositions[index]] = id;
+        });
+    }
+
     function getAppLogoHTML(app) {
       const title = (app.title || '').toLowerCase();
       const logoMap = [
@@ -978,7 +1097,7 @@
             `;
         });
         container.innerHTML = htmlBuffer;
-        restoreFocus(); // 포커스 복원
+        restoreFocus(); 
     }
 
     // 강의평가 보드 렌더링
@@ -1088,7 +1207,7 @@
             summaryContainer.innerHTML += `<div onclick="toggleReviewFilter('${sub}')" class="flex justify-between items-center bg-surface-c-lowest border rounded-lg p-2.5 transition-all ${aC2}" title="${sub} 리뷰만 보기 (재클릭 시 해제)"><span class="font-semibold text-on-surface truncate max-w-[140px]">${sub}</span><span class="flex items-center gap-1 shrink-0"><span class="text-amber-500 font-bold">${sT}</span><span class="text-on-surface-variant font-medium text-[11px]">(${avg})</span>${iA ? '<span class="text-[10px] font-black text-primary ml-1">✕</span>' : ''}</span></div>`;
         });
 
-        restoreFocus(); // 포커스 복원
+        restoreFocus(); 
     }
 
     function switchCommunityTab(tab) {       
@@ -1182,7 +1301,16 @@
     
     function saveCurrentStateToFirebase() {       
       if (!currentUser) return;       
-      database.ref('users/' + currentUser.uid).set({ subjects: subjects, data: data, ddayList: ddayList, personalEvents: personalEvents, apps: apps });     
+      database.ref('users/' + currentUser.uid).set({ 
+        subjects: subjects, 
+        data: data, 
+        ddayList: ddayList, 
+        personalEvents: personalEvents, 
+        apps: apps,
+        bookmarkOrder: bookmarkOrder,
+        allOrder: allOrder,
+        etcOrder: etcOrder
+      });     
     }      
     
     function handleAuth() {       
@@ -1289,7 +1417,7 @@
       subjects.forEach(sub => {         
         container.innerHTML += `           
           <div data-id="${sub}" class="group flex items-center justify-between gap-1 px-4 py-1.5 rounded hover:bg-secondary-container text-[13px] text-on-surface select-none active:bg-surface-c-high transition-colors">             
-            <span class="text-on-surface-variant opacity-40 mr-1 cursor-grab active:cursor-grabbing">☰</span>
+            <span class="sidebar-drag-handle text-on-surface-variant opacity-40 mr-1 cursor-grab active:cursor-grabbing">☰</span>
             <span onclick="renderSubjectDetail('${sub}')" class="cursor-pointer font-medium truncate flex-1 hover:text-primary">📚 ${sub}</span>             
             <button onclick="removeSubject('${sub}')" class="opacity-0 group-hover:opacity-100 text-[11px] text-error hover:font-bold px-1 transition">✕</button>           
           </div>`;       
@@ -1298,9 +1426,8 @@
       if(window.subjectSortable) window.subjectSortable.destroy();
       if(typeof Sortable !== 'undefined') {
         window.subjectSortable = new Sortable(container, {
+          handle: '.sidebar-drag-handle',
           animation: 150,
-          delay: 150, 
-          delayOnTouchOnly: false, 
           ghostClass: 'opacity-50',
           onEnd: function (evt) {
             if (evt.oldIndex === evt.newIndex) return;
@@ -1360,29 +1487,36 @@
 
     // 북마크 토글 로직 
     function toggleBookmark(id, event) {
-      if(event) {
+      if (event) {
         event.stopPropagation();
         event.preventDefault();
       }
-      const item = data.find(x => x.id === id);
-      if(!item) return;
+      const itemIndex = data.findIndex(x => x.id == id);
+      if (itemIndex === -1) return;
+
+      data[itemIndex].bookmark = !data[itemIndex].bookmark;
       
-      item.bookmark = !item.bookmark;
+      if (data[itemIndex].bookmark) {
+        if (!bookmarkOrder.includes(id)) bookmarkOrder.push(id);
+      } else {
+        bookmarkOrder = bookmarkOrder.filter(x => x != id);
+      }
       saveCurrentStateToFirebase();
-      
-      const cardElement = document.querySelector('[data-id="' + id + '"]');
-      if(!cardElement) return;
-      
+
+      if (currentMode === 'bookmark') {
+        render('bookmark');
+        return; 
+      }
+
+      const cardElement = document.querySelector(`[data-id="${id}"]`);
+      if (!cardElement) return;
+
       const bookmarkBtn = cardElement.querySelector('button[title="즐겨찾기"]');
-      if(bookmarkBtn) {
-        const starIcon = item.bookmark ? '⭐️' : '☆';
-        const starClass = item.bookmark ? 'text-yellow-500 opacity-100 hover:scale-110' : 'text-on-surface-variant opacity-40 hover:opacity-100 hover:scale-110';
+      if (bookmarkBtn) {
+        const starIcon = data[itemIndex].bookmark ? '⭐️' : '☆';
+        const starClass = data[itemIndex].bookmark ? 'text-yellow-500 opacity-100 hover:scale-110' : 'text-on-surface-variant opacity-40 hover:opacity-100 hover:scale-110';
         bookmarkBtn.innerHTML = starIcon;
         bookmarkBtn.className = 'relative z-10 text-[14px] p-1 rounded transition-transform ' + starClass;
-      }
-      
-      if(currentMode === 'bookmark') {
-        render('bookmark');
       }
     }
 
@@ -1392,10 +1526,12 @@
         event.preventDefault();
       }       
       if(confirm('이 자료집 항목을 삭제할까요?')) { 
-        data = data.filter(x => x.id !== id); 
+        data = data.filter(x => x.id != id);
+        bookmarkOrder = bookmarkOrder.filter(x => x != id); 
+        allOrder = allOrder.filter(x => x != id); 
         saveCurrentStateToFirebase(); 
         
-        const cardElement = document.querySelector('[data-id="' + id + '"]');
+        const cardElement = document.querySelector(`[data-id="${id}"]`);
         if(cardElement) {
           cardElement.style.opacity = '0';
           cardElement.style.transform = 'scale(0.95)';
@@ -1408,14 +1544,22 @@
       }     
     }
 
+    // 주차 텍스트를 숫자로 변환하여 정렬하기 위한 헬퍼 함수
+    function parseWeekNumber(weekStr) {
+      if (!weekStr || weekStr === '상시') return 0;
+      return parseInt(weekStr.replace(/[^0-9]/g, '')) || 0;
+    }
+
     // 카드 생성 HTML
-    function createCardHtml(item) {       
+    function createCardHtml(item, showDragHandle = true) {       
       const isBookmarked = item.bookmark;
       const starIcon = isBookmarked ? '⭐️' : '☆';
       const starClass = isBookmarked ? 'text-yellow-500 opacity-100 hover:scale-110' : 'text-on-surface-variant opacity-40 hover:opacity-100 hover:scale-110';
       
       const bookmarkBtn = `<button onclick="toggleBookmark(${item.id}, event)" class="relative z-10 text-[14px] p-1 rounded transition-transform ${starClass}" title="즐겨찾기">${starIcon}</button>`;
-      const delBtn = `<button onclick="removeMaterial(${item.id}, event)" class="relative z-10 text-[12px] opacity-40 hover:opacity-100 p-1 hover:bg-error-container rounded transition" title="삭제">🗑️</button>`;       
+      
+      // etc 자료는 내장 기본값이므로 휴지통 삭제버튼 가림
+      const delBtn = currentMode === 'etc' ? '' : `<button onclick="removeMaterial(${item.id}, event)" class="relative z-10 text-[12px] opacity-40 hover:opacity-100 p-1 hover:bg-error-container rounded transition" title="삭제">🗑️</button>`;       
       
       let typeIcon = '🌐';
       if(item.type === 'file') typeIcon = '📄';
@@ -1430,8 +1574,14 @@
       let descHtml = '';
       if(item.desc) descHtml = `<p class="text-[12px] text-on-surface-variant mt-1 line-clamp-2 leading-relaxed">${item.desc}</p>`;
 
+      const dragHandleHtml = showDragHandle ? `
+        <div class="drag-handle cursor-grab active:cursor-grabbing text-on-surface-variant opacity-30 hover:opacity-100 flex items-center justify-center shrink-0 pt-0.5 px-1" title="손잡이를 드래그하여 순서 변경">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
+        </div>` : '';
+
       return `         
-        <div data-id="${item.id}" data-link="${(item.link || '').replace(/\\/g, '\\\\')}" class="kanban-card flex items-start gap-3 p-3.5 rounded-xl bg-surface-c-lowest border border-ol-variant hover:border-primary hover:-translate-y-1 shadow-sm transition duration-200 cursor-pointer">           
+        <div data-id="${item.id}" data-link="${(item.link || '').replace(/\\/g, '\\\\')}" class="kanban-card flex items-start gap-2 p-3.5 rounded-xl bg-surface-c-lowest border border-ol-variant hover:border-primary hover:-translate-y-1 shadow-sm transition duration-200 cursor-pointer">           
+          ${dragHandleHtml}
           <div class="flex-1 min-w-0 flex flex-col">             
             <div class="flex items-center gap-3 mb-1">
               <span class="text-[16px]">${typeIcon}</span>
@@ -1472,7 +1622,7 @@
       board.innerHTML = ''; 
       updateActiveMenu(mode);        
 
-      let filtered = data;       
+      let filtered = [...data];       
       
       if (searchQuery) {
         filtered = filtered.filter(item => 
@@ -1485,6 +1635,7 @@
 
       if (mode === 'all') {
         searchBar.classList.remove('hidden');
+        searchBar.classList.add('flex');
         updateFilterSubjectOptions();
 
         const sSubj = document.getElementById('filterSubject').value;
@@ -1494,79 +1645,177 @@
         if (sSubj !== 'all') filtered = filtered.filter(item => item.subject === sSubj);
         if (sWeek !== 'all') filtered = filtered.filter(item => item.week === sWeek);
 
+        // ✅ 최신순/오래된순 주차 정렬 & 과목 그룹화 제거하고 플랫(Flat)하게 나열
         if (sSort === 'newest') {
-          filtered.sort((a,b) => b.id - a.id);
+          filtered.sort((a, b) => {
+            const wA = parseWeekNumber(a.week);
+            const wB = parseWeekNumber(b.week);
+            if (wA !== wB) return wB - wA; // 15주차 -> 1주차
+            return b.id - a.id; 
+          });
+        } else if (sSort === 'oldest') {
+          filtered.sort((a, b) => {
+            const wA = parseWeekNumber(a.week);
+            const wB = parseWeekNumber(b.week);
+            if (wA !== wB) return wA - wB; // 1주차 -> 15주차
+            return a.id - b.id;
+          });
         } else {
-          filtered.sort((a,b) => a.id - b.id);
+          // 수동 정렬
+          filtered.sort((a, b) => {
+              let idxA = allOrder.indexOf(a.id);
+              let idxB = allOrder.indexOf(b.id);
+              if (idxA === -1) idxA = 999999 + a.id; 
+              if (idxB === -1) idxB = 999999 + b.id;
+              return idxA - idxB;
+          });
         }
       } else {
         searchBar.classList.add('hidden');
+        searchBar.classList.remove('flex');
       }
 
       if (mode === 'etc') {
-        boardTitle.innerText = "기타 참고 자료 보관함";
-        let html = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full items-start">`;
+        boardTitle.innerText = "기타 참고 자료 보관함 (좌측 ≡ 핸들을 드래그하여 이동)";
+        let html = `<div class="card-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full items-start" data-filter-mode="etc">`;
         
-        const etcData = [
-          { title: "딥링크 설정 가이드 (프로그램 원클릭 실행법)", subject: "가이드", week: "상시", link: "pdf/딥링크_설정_가이드.pdf" },
-          { title: "프론트엔드프로그래밍 OT 자료", subject: "수업자료", week: "1주차", link: "https://dayoung-univ.github.io/Frontend2026-01/OT" },
-          { title: "마크다운 작성방법 참고자료", subject: "수업자료", week: "1주차", link: "pdf/마크다운_보충자료.pdf" }
-        ];
+        let localEtc = [...globalEtcData];
+        if (searchQuery) {
+          localEtc = localEtc.filter(item => item.title.toLowerCase().includes(searchQuery));
+        }
 
-        etcData.forEach(item => {
-          html += `
-            <div onclick="launchTarget('${item.link || ''}')" class="kanban-card flex items-start gap-3 p-4 rounded-xl bg-surface-c-lowest border border-ol-variant hover:border-primary hover:-translate-y-1 shadow-sm transition duration-200 cursor-pointer">
-              <div class="flex-1 min-w-0 flex flex-col gap-1.5">
-                <span class="text-[14px] font-bold text-on-surface break-words leading-snug">${item.title}</span>
-                <div class="flex items-center gap-3">
-                  <span class="text-[11px] px-2 py-0.5 rounded bg-primary-fixed text-primary font-bold">${item.subject}</span>
-                  <span class="text-[11px] text-on-surface-variant opacity-80">${item.week}</span>
-                </div>
-              </div>
-            </div>`;
+        // etc 자료 순서 반영
+        localEtc.sort((a, b) => {
+            let idxA = etcOrder.indexOf(a.id);
+            let idxB = etcOrder.indexOf(b.id);
+            if (idxA === -1) idxA = 999999 + a.id; 
+            if (idxB === -1) idxB = 999999 + b.id;
+            return idxA - idxB;
+        });
+
+        localEtc.forEach(item => {
+          // 북마크 상태 매핑용 가짜 오브젝트 (실제 data 배열엔 없으므로)
+          const dummyItem = { ...item, bookmark: false };
+          html += createCardHtml(dummyItem, true);
         });
         html += `</div>`;
         board.innerHTML = html;
 
         document.querySelectorAll('.kanban-card').forEach(card => {
           card.addEventListener('click', function(e) {
-            if(e.target.closest('button')) return;
+            if(e.target.closest('button') || e.target.closest('.drag-handle')) return;
             const link = this.getAttribute('data-link');
             if(link) launchTarget(link);
           });
         });
+        
+        initCardSortable(); // 기타 보기 드래그 활성화
         return;
       }
 
       if (mode === 'bookmark') {
-        boardTitle.innerText = "⭐️ 즐겨찾기 보관함";
-        let html = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">`;
-        const bookmarkedOnly = filtered.filter(item => item.bookmark); 
-        bookmarkedOnly.forEach(item => html += createCardHtml(item));
-        if(bookmarkedOnly.length === 0) html += `<p class="text-[13px] text-on-surface-variant py-4 col-span-full">표시할 즐겨찾기 자료가 없습니다.</p>`;
+        // 즐겨찾기 전용 필터 안전하게 초기화
+        if (typeof window.currentBookmarkSubject === 'undefined') window.currentBookmarkSubject = 'all';
+        if (typeof window.currentBookmarkWeek === 'undefined') window.currentBookmarkWeek = 'all';
+
+        boardTitle.innerText = "⭐ 즐겨찾기 보관함 (좌측 ≡ 핸들을 드래그하여 이동)";
+        
+        const bookmarkedOnly = filtered.filter(item => item.bookmark);
+
+        if (window.currentBookmarkSubject !== 'all' && !bookmarkedOnly.some(item => item.subject === window.currentBookmarkSubject)) {
+            window.currentBookmarkSubject = 'all';
+        }
+        if (window.currentBookmarkWeek !== 'all' && !bookmarkedOnly.some(item => item.week === window.currentBookmarkWeek)) {
+            window.currentBookmarkWeek = 'all';
+        }
+
+        const subjectSource = (window.currentBookmarkWeek !== 'all') 
+            ? bookmarkedOnly.filter(item => item.week === window.currentBookmarkWeek) : bookmarkedOnly;
+        const weekSource = (window.currentBookmarkSubject !== 'all') 
+            ? bookmarkedOnly.filter(item => item.subject === window.currentBookmarkSubject) : bookmarkedOnly;
+
+        const dynamicSubjects = [...new Set(subjectSource.map(item => item.subject))].filter(Boolean);
+        const dynamicWeeks = [...new Set(weekSource.map(item => item.week))].filter(Boolean);
+        
+        const sortedWeeks = [...dynamicWeeks].sort((a, b) => {
+            const numA = parseInt(a);
+            const numB = parseInt(b);
+            if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+            return String(a).localeCompare(String(b));
+        });
+
+        // ✅ 카테고리 (분류) UI 동적 삽입
+        let html = `
+          <div class="flex flex-col gap-3 p-4 bg-[var(--surface-c-low)] rounded-xl border border-ol-variant mb-6 w-full text-left shadow-sm">
+            <div class="flex items-center gap-4 flex-wrap">
+              <div class="flex items-center gap-2">
+                <span class="text-[12px] font-bold text-on-surface-variant">과목:</span>
+                <select onchange="window.currentBookmarkSubject=this.value; render('bookmark')" 
+                        class="text-[12px] px-3 py-1.5 rounded-lg border border-ol-variant bg-surface-c-lowest text-on-surface focus:ring-2 focus:ring-primary outline-none font-medium">
+                  <option value="all" ${window.currentBookmarkSubject === 'all' ? 'selected' : ''}>전체 과목</option>
+                  ${dynamicSubjects.map(sub => `<option value="${sub}" ${window.currentBookmarkSubject === sub ? 'selected' : ''}>${sub}</option>`).join('')}
+                </select>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[12px] font-bold text-on-surface-variant">주차:</span>
+                <select onchange="window.currentBookmarkWeek=this.value; render('bookmark')" 
+                        class="text-[12px] px-3 py-1.5 rounded-lg border border-ol-variant bg-surface-c-lowest text-on-surface focus:ring-2 focus:ring-primary outline-none font-medium">
+                  <option value="all" ${window.currentBookmarkWeek === 'all' ? 'selected' : ''}>전체 주차</option>
+                  ${sortedWeeks.map(wk => `<option value="${wk}" ${window.currentBookmarkWeek === wk ? 'selected' : ''}>${wk}</option>`).join('')}
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="card-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full" data-filter-mode="bookmark">
+        `;
+
+        let displayData = bookmarkedOnly;
+        if (window.currentBookmarkSubject !== 'all') {
+            displayData = displayData.filter(item => item.subject === window.currentBookmarkSubject);
+        }
+        if (window.currentBookmarkWeek !== 'all') {
+            displayData = displayData.filter(item => item.week === window.currentBookmarkWeek);
+        }
+
+        // 북마크 전용 독립 정렬 반영
+        displayData.sort((a, b) => {
+            let idxA = bookmarkOrder.indexOf(a.id);
+            let idxB = bookmarkOrder.indexOf(b.id);
+            if (idxA === -1) idxA = 999999 + a.id; 
+            if (idxB === -1) idxB = 999999 + b.id;
+            return idxA - idxB;
+        });
+
+        displayData.forEach(item => {
+            html += createCardHtml(item, true); // 드래그 핸들 허용
+        });
+
+        if (displayData.length === 0) {
+            html += `<p class="text-[13px] text-on-surface-variant py-4 col-span-full text-center">표시할 즐겨찾기 자료가 없습니다.</p>`;
+        }
+        
         html += `</div>`;
         board.innerHTML = html;
 
         document.querySelectorAll('.kanban-card').forEach(card => {
-          card.addEventListener('click', function(e) {
-            if(e.target.closest('button')) return;
-            const link = this.getAttribute('data-link');
-            if(link) launchTarget(link);
-          });
+            card.addEventListener('click', function(e) {
+                if (e.target.closest('button') || e.target.closest('.drag-handle')) return;
+                const link = this.getAttribute('data-link');
+                if (link) launchTarget(link);
+            });
         });
+        
+        initCardSortable(); // 즐겨찾기 드래그 앤 드롭 활성화
         return;
       }
 
       if (mode === 'subject') {         
-        boardTitle.innerText = "내 과목별 타임라인 보드";                  
+        boardTitle.innerText = "내 과목별 타임라인 보드 (좌측 ≡ 핸들을 드래그하여 이동)";                  
         let gridWrapperHtml = `<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 w-full items-start">`;         
         
         subjects.forEach(key => {           
           const itemsInKey = filtered.filter(x => x.subject === key);           
           if(itemsInKey.length === 0 && searchQuery) return;
-          
-          // ✅ 핵심 수정 부분: 홈 화면 과목 보드에서 생성된 순서대로(id 오름차순) 정렬 
-          itemsInKey.sort((a, b) => a.id - b.id);
           
           let columnHtml = `             
             <div class="column flex flex-col w-full bg-surface-c-low border border-ol-variant rounded-xl p-4 shadow-sm">               
@@ -1575,7 +1824,7 @@
           if(itemsInKey.length === 0) {             
             columnHtml += `<p class="text-[12px] text-on-surface-variant opacity-50 py-2 text-center">자료가 없습니다.</p>`;           
           } else {             
-            itemsInKey.forEach(item => columnHtml += createCardHtml(item));           
+            itemsInKey.forEach(item => columnHtml += createCardHtml(item, true));           
           }           
           columnHtml += `</div></div>`;           
           gridWrapperHtml += columnHtml;         
@@ -1585,61 +1834,21 @@
 
         document.querySelectorAll('.kanban-card').forEach(card => {
           card.addEventListener('click', function(e) {
-            if(e.target.closest('button')) return;
+            if(e.target.closest('button') || e.target.closest('.drag-handle')) return;
             const link = this.getAttribute('data-link');
             if(link) launchTarget(link);
           });
         });       
 
-        if (typeof Sortable !== 'undefined') {
-          document.querySelectorAll('.card-list').forEach(el => {
-            new Sortable(el, {
-              group: 'shared', 
-              animation: 150,
-              delay: 150, 
-              delayOnTouchOnly: false, 
-              fallbackTolerance: 5,
-              ghostClass: 'sortable-ghost',
-              dragClass: 'sortable-drag',
-              onEnd: function (evt) {
-                if (evt.oldIndex === evt.newIndex && evt.from === evt.to) return;
-                
-                const itemEl = evt.item;
-                const itemId = Number(itemEl.getAttribute('data-id'));
-                const fromKey = evt.from.getAttribute('data-filter-key');
-                const toKey = evt.to.getAttribute('data-filter-key');
-
-                const itemIndex = data.findIndex(x => x.id === itemId);
-                if(itemIndex > -1 && fromKey !== toKey) {
-                  data[itemIndex].subject = toKey;
-                }
-
-                const allVisibleIds = [];
-                document.querySelectorAll('.card-list').forEach(list => {
-                  Array.from(list.children).forEach(child => {
-                    const id = Number(child.getAttribute('data-id'));
-                    if(id) allVisibleIds.push(id);
-                  });
-                });
-
-                const visibleItems = data.filter(d => allVisibleIds.includes(d.id));
-                const hiddenItems = data.filter(d => !allVisibleIds.includes(d.id));
-
-                visibleItems.sort((a, b) => allVisibleIds.indexOf(a.id) - allVisibleIds.indexOf(b.id));
-                data = [...visibleItems, ...hiddenItems]; 
-
-                saveCurrentStateToFirebase();
-                render(currentMode); 
-              }
-            });
-          });
-        }
+        initCardSortable(); 
 
       } else if (mode === 'all') {         
-        boardTitle.innerText = "전체 리스트 대시보드";         
-        let html = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">`;         
-        filtered.forEach(item => html += createCardHtml(item));         
+        boardTitle.innerText = "전체 리스트 대시보드 (좌측 ≡ 핸들을 드래그하여 이동)";         
+        let html = `<div class="card-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full" data-filter-mode="all">`;         
+        
+        filtered.forEach(item => html += createCardHtml(item, true)); // 핸들 허용
         html += `</div>`;         
+        
         if (filtered.length === 0) {
           board.innerHTML = `<p class="text-center text-[13px] text-on-surface-variant py-8 bg-surface-c-lowest border border-dashed border-ol-variant rounded-xl w-full">조건에 맞는 자료가 없습니다.</p>`;
         } else {
@@ -1648,12 +1857,17 @@
 
         document.querySelectorAll('.kanban-card').forEach(card => {
           card.addEventListener('click', function(e) {
-            if(e.target.closest('button')) return;
+            if(e.target.closest('button') || e.target.closest('.drag-handle')) return;
             const link = this.getAttribute('data-link');
             if(link) launchTarget(link);
           });
         });
+
+        initCardSortable(); // ✅ 전체보기 드래그 앤 드롭 활성화
       }     
+      
+      // lucide 아이콘 동적 렌더링 호출
+      if (typeof lucide !== 'undefined') lucide.createIcons();
     }      
     
     function renderSubjectDetail(subjectName) {
@@ -1670,24 +1884,24 @@
       
       document.getElementById('categorySearchBar').classList.add('hidden');
 
-      let html = `<div class="bg-surface-c-low border border-ol-variant rounded-xl p-5 shadow-sm max-w-3xl mx-auto w-full"><div class="card-list flex flex-col gap-2.5">`;       
+      let html = `<div class="bg-surface-c-low border border-ol-variant rounded-xl p-5 shadow-sm max-w-3xl mx-auto w-full"><div class="card-list flex flex-col gap-2.5" data-filter-key="${subjectName}">`;       
       const filtered = data.filter(item => item.subject === subjectName && (!searchQuery || item.title.toLowerCase().includes(searchQuery)));       
       
-      // 단독 보기에서도 원래 순서(오름차순)대로 나오도록 정렬 추가
-      filtered.sort((a,b) => a.id - b.id);
-      
-      filtered.forEach(item => html += createCardHtml(item));       
+      filtered.forEach(item => html += createCardHtml(item, true));       
       if(filtered.length === 0) html += `<p class="text-center text-[13px] text-on-surface-variant py-4">등록 자료가 존재하지 않습니다.</p>`;       
       html += `</div></div>`;       
       board.innerHTML = html;     
 
-        document.querySelectorAll('.kanban-card').forEach(card => {
-          card.addEventListener('click', function(e) {
-            if(e.target.closest('button')) return;
-            const link = this.getAttribute('data-link');
-            if(link) launchTarget(link);
-          });
+      document.querySelectorAll('.kanban-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+          if(e.target.closest('button') || e.target.closest('.drag-handle')) return;
+          const link = this.getAttribute('data-link');
+          if(link) launchTarget(link);
         });
+      });
+
+      initCardSortable(); 
+      if (typeof lucide !== 'undefined') lucide.createIcons();
     }      
     
     function updateActiveMenu(mode) {       
@@ -1720,7 +1934,13 @@
     }     
     
     function removeSubject(name) {       
-      if(confirm(`[${name}] 과목을 삭제할까요?`)) { subjects = subjects.filter(x => x !== name); saveCurrentStateToFirebase(); updateSidebarSubjects(); render(currentMode); }     
+      if(confirm(`[${name}] 과목을 삭제할까요?`)) { 
+        subjects = subjects.filter(x => x !== name); 
+        data = data.filter(item => item.subject !== name); 
+        saveCurrentStateToFirebase();  
+        updateSidebarSubjects(); 
+        render(currentMode); 
+      }     
     }     
     
     function addDDayEvent() {       
@@ -1977,9 +2197,9 @@
     }
   </script> 
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  lucide.createIcons();
+ <script>
+  document.addEventListener('DOMContentLoaded', () => {
+  if (typeof lucide !== 'undefined') lucide.createIcons();
 });
 </script>
 </body>
