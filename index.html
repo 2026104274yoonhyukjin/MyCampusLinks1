@@ -555,9 +555,34 @@
           <button onclick="openAddPersonalEventPrompt()" class="text-[11px] px-2 py-1 bg-primary text-white rounded hover:opacity-90 font-medium">＋ 개인 일정 등록</button>         
         </div>         
         <div id="selectedDateDetailsContainer" class="flex flex-col gap-1.5 max-h-[120px] overflow-y-auto text-[12px]"></div>       
-      </div>     
-    </div>   
-  </div>    
+      </div> 
+      
+      <!-- 수정본 05-30 -->
+<div class="mt-8">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-lg font-semibold flex items-center gap-2">
+      <span>⭐</span> 즐겨찾기 보관함
+    </h2>
+    <button class="text-sm bg-primary text-on-primary px-4 py-2 rounded-lg">기본 자료 복구</button>
+  </div>
+
+  <div class="flex flex-col gap-4 mb-6 items-end">
+    <div class="flex items-center gap-2 flex-wrap justify-end">
+      <span class="text-[12px] font-semibold text-on-surface-variant uppercase tracking-[0.05em]">과목별 분류:</span>
+      <button class="bg-primary text-on-primary text-[13px] px-3 py-1 rounded-full">전체</button>
+      <button class="bg-surface-c text-on-surface text-[13px] px-3 py-1 rounded-full hover:bg-surface-c-high">프론트엔드</button>
+    </div>
+    
+    <div class="flex items-center gap-2 flex-wrap justify-end">
+      <span class="text-[12px] font-semibold text-on-surface-variant uppercase tracking-[0.05em]">주차별 분류:</span>
+      <button class="bg-primary text-on-primary text-[13px] px-3 py-1 rounded-full">전체</button>
+      <button class="bg-surface-c text-on-surface text-[13px] px-3 py-1 rounded-full hover:bg-surface-c-high">1주차</button>
+    </div>
+  </div>
+
+
+
+  
 
   <script>     
     const ADMIN_EMAIL = '2026104274yoonhyukjin@gmail.com'; 
@@ -1359,32 +1384,36 @@
     }
 
     // 북마크 토글 로직 
-    function toggleBookmark(id, event) {
-      if(event) {
-        event.stopPropagation();
-        event.preventDefault();
-      }
-      const item = data.find(x => x.id === id);
-      if(!item) return;
-      
-      item.bookmark = !item.bookmark;
-      saveCurrentStateToFirebase();
-      
-      const cardElement = document.querySelector('[data-id="' + id + '"]');
-      if(!cardElement) return;
-      
-      const bookmarkBtn = cardElement.querySelector('button[title="즐겨찾기"]');
-      if(bookmarkBtn) {
-        const starIcon = item.bookmark ? '⭐️' : '☆';
-        const starClass = item.bookmark ? 'text-yellow-500 opacity-100 hover:scale-110' : 'text-on-surface-variant opacity-40 hover:opacity-100 hover:scale-110';
-        bookmarkBtn.innerHTML = starIcon;
-        bookmarkBtn.className = 'relative z-10 text-[14px] p-1 rounded transition-transform ' + starClass;
-      }
-      
-      if(currentMode === 'bookmark') {
-        render('bookmark');
-      }
-    }
+    //05-31 const item = data.find(x => x.id === id); 를 data.findIndex(x => x.id == id); 로 변경
+function toggleBookmark(id, event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+  const item = data.find(x => x.id == id);
+  if (!item) return;
+
+  item.bookmark = !item.bookmark;
+  saveCurrentStateToFirebase();
+
+  // 디자인을 직접 바꾸지 말고 바로 render('bookmark')를 실행해 화면을 갱신
+  if (currentMode === 'bookmark') {
+    render('bookmark');
+    return; 
+  }
+
+
+  const cardElement = document.querySelector('[data-id="' + id + '"]');
+  if (!cardElement) return;
+
+  const bookmarkBtn = cardElement.querySelector('button[title="즐겨찾기"]');
+  if (bookmarkBtn) {
+    const starIcon = item.bookmark ? '⭐️' : '☆';
+    const starClass = item.bookmark ? 'text-yellow-500 opacity-100 hover:scale-110' : 'text-on-surface-variant opacity-40 hover:opacity-100 hover:scale-110';
+    bookmarkBtn.innerHTML = starIcon;
+    bookmarkBtn.className = 'relative z-10 text-[14px] p-1 rounded transition-transform ' + starClass;
+  }
+}
 
     function removeMaterial(id, event) {       
       if(event) {
@@ -1538,24 +1567,102 @@
         return;
       }
 
-      if (mode === 'bookmark') {
-        boardTitle.innerText = "⭐️ 즐겨찾기 보관함";
-        let html = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">`;
-        const bookmarkedOnly = filtered.filter(item => item.bookmark); 
-        bookmarkedOnly.forEach(item => html += createCardHtml(item));
-        if(bookmarkedOnly.length === 0) html += `<p class="text-[13px] text-on-surface-variant py-4 col-span-full">표시할 즐겨찾기 자료가 없습니다.</p>`;
-        html += `</div>`;
-        board.innerHTML = html;
+      ////05-30
+if (mode === 'bookmark') {
+    // 1. 즐겨찾기 전용 필터 기본값 안전하게 초기화
+    if (typeof window.currentBookmarkSubject === 'undefined') window.currentBookmarkSubject = 'all';
+    if (typeof window.currentBookmarkWeek === 'undefined') window.currentBookmarkWeek = 'all';
 
-        document.querySelectorAll('.kanban-card').forEach(card => {
-          card.addEventListener('click', function(e) {
-            if(e.target.closest('button')) return;
+    boardTitle.innerText = "⭐️ 즐겨찾기 보관함";
+    
+    // 2. 메인 화면의 filtered 영향을 받지 않도록 전체 원본 데이터에서 즐겨찾기만 추출
+    const bookmarkedOnly = data.filter(item => item.bookmark);
+
+    // 3. 안전장치: 즐겨찾기 해제로 인해 현재 선택된 필터 카테고리의 데이터가 아예 사라지면 필터를 'all'로 리셋
+    if (window.currentBookmarkSubject !== 'all' && !bookmarkedOnly.some(item => item.subject === window.currentBookmarkSubject)) {
+        window.currentBookmarkSubject = 'all';
+    }
+    if (window.currentBookmarkWeek !== 'all' && !bookmarkedOnly.some(item => item.week === window.currentBookmarkWeek)) {
+        window.currentBookmarkWeek = 'all';
+    }
+
+    // 4. 동적 필터링을 위한 소스 추출 (과목 선택 시 주차가, 주차 선택 시 과목 필터가 정상적으로 좁혀짐)
+    const subjectSource = (window.currentBookmarkWeek !== 'all') 
+        ? bookmarkedOnly.filter(item => item.week === window.currentBookmarkWeek) 
+        : bookmarkedOnly;
+        
+    const weekSource = (window.currentBookmarkSubject !== 'all') 
+        ? bookmarkedOnly.filter(item => item.subject === window.currentBookmarkSubject) 
+        : bookmarkedOnly;
+
+    const dynamicSubjects = [...new Set(subjectSource.map(item => item.subject))].filter(Boolean);
+    const dynamicWeeks = [...new Set(weekSource.map(item => item.week))].filter(Boolean);
+    
+    // 주차 정렬 ('상시' 같은 문자열이 섞여있어도 안전하게 정렬)
+    const sortedWeeks = [...dynamicWeeks].sort((a, b) => {
+        const numA = parseInt(a);
+        const numB = parseInt(b);
+        if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+        return String(a).localeCompare(String(b));
+    });
+
+    // 5. 동적 필터 UI 조립 
+    let html = `
+      <div class="flex flex-col gap-3 p-4 bg-[var(--surface-c-low)] rounded-xl border border-ol-variant mb-6 w-full text-left">
+        <div class="flex items-center gap-4 flex-wrap">
+          <div class="flex items-center gap-2">
+            <span class="text-[12px] font-bold text-on-surface-variant">과목:</span>
+            <select onchange="window.currentBookmarkSubject=this.value; render('bookmark')" 
+                    class="text-[12px] px-3 py-1.5 rounded-lg border border-ol-variant bg-[var(--surface-c-high)] text-on-surface focus:ring-2 focus:ring-primary outline-none font-medium">
+              <option value="all" ${window.currentBookmarkSubject === 'all' ? 'selected' : ''} class="bg-[var(--surface-c-high)] text-on-surface">전체 과목</option>
+              ${dynamicSubjects.map(sub => `<option value="${sub}" ${window.currentBookmarkSubject === sub ? 'selected' : ''} class="bg-[var(--surface-c-high)] text-on-surface">${sub}</option>`).join('')}
+            </select>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[12px] font-bold text-on-surface-variant">주차:</span>
+            <select onchange="window.currentBookmarkWeek=this.value; render('bookmark')" 
+                    class="text-[12px] px-3 py-1.5 rounded-lg border border-ol-variant bg-[var(--surface-c-high)] text-on-surface focus:ring-2 focus:ring-primary outline-none font-medium">
+              <option value="all" ${window.currentBookmarkWeek === 'all' ? 'selected' : ''} class="bg-[var(--surface-c-high)] text-on-surface">전체 주차</option>
+              ${sortedWeeks.map(wk => `<option value="${wk}" ${window.currentBookmarkWeek === wk ? 'selected' : ''} class="bg-[var(--surface-c-high)] text-on-surface">${wk}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+    `;
+
+    // 6. 셀렉트 박스 선택 값에 따른 최종 화면 출력 데이터 필터링
+    let displayData = bookmarkedOnly;
+    if (window.currentBookmarkSubject !== 'all') {
+        displayData = displayData.filter(item => item.subject === window.currentBookmarkSubject);
+    }
+    if (window.currentBookmarkWeek !== 'all') {
+        displayData = displayData.filter(item => item.week === window.currentBookmarkWeek);
+    }
+
+    // 7. 카드 마크업 생성 
+    displayData.forEach(item => {
+        html += createCardHtml(item); 
+    });
+
+    if (displayData.length === 0) {
+        html += `<p class="text-[13px] text-on-surface-variant py-4 col-span-full text-left">표시할 즐겨찾기 자료가 없습니다.</p>`;
+    }
+    
+    html += `</div>`;
+    board.innerHTML = html;
+
+    // 8. 클릭 이벤트 바인딩 
+    document.querySelectorAll('.kanban-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            if (e.target.closest('button')) return;
             const link = this.getAttribute('data-link');
-            if(link) launchTarget(link);
-          });
+            if (link) launchTarget(link);
         });
-        return;
-      }
+    });
+    return;
+}
+      //05-30 end
 
       if (mode === 'subject') {         
         boardTitle.innerText = "내 과목별 타임라인 보드";                  
@@ -1719,9 +1826,19 @@
       subjects.push(name); saveCurrentStateToFirebase(); updateSidebarSubjects(); render(currentMode); closeSubjectModal();     
     }     
     
-    function removeSubject(name) {       
-      if(confirm(`[${name}] 과목을 삭제할까요?`)) { subjects = subjects.filter(x => x !== name); saveCurrentStateToFirebase(); updateSidebarSubjects(); render(currentMode); }     
-    }     
+function removeSubject(name) { 
+  if(confirm(`[${name}] 과목을 삭제할까요?`)) { 
+    // 1. 과목 이름 삭제
+    subjects = subjects.filter(x => x !== name); 
+    
+    // 2. [강제 삭제] 즐겨찾기(bookmark) 상태와 상관없이 
+    // subject가 name인 모든 항목을 무조건 필터링해서 제거
+    data = data.filter(item => item.subject !== name); 
+    
+    // 3. 서버에 상태 저장 (이제 즐겨찾기 정보도 함께 업데이트됨)
+    saveCurrentStateToFirebase();  updateSidebarSubjects(); render(currentMode); 
+  } 
+}
     
     function addDDayEvent() {       
       const title = document.getElementById('newDDayTitle').value.trim(); const date = document.getElementById('newDDayDate').value;       
@@ -1977,8 +2094,8 @@
     }
   </script> 
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
+ <script>
+  document.addEventListener('DOMContentLoaded', () => {
   lucide.createIcons();
 });
 </script>
