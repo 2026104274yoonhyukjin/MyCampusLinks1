@@ -1575,8 +1575,8 @@
       if(item.desc) descHtml = `<p class="text-[12px] text-on-surface-variant mt-1 line-clamp-2 leading-relaxed">${item.desc}</p>`;
 
       const dragHandleHtml = showDragHandle ? `
-        <div class="drag-handle cursor-grab active:cursor-grabbing text-on-surface-variant opacity-30 hover:opacity-100 flex items-center justify-center shrink-0 pt-0.5 px-1" title="손잡이를 드래그하여 순서 변경">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
+        <div class="drag-handle self-center cursor-grab active:cursor-grabbing text-on-surface-variant opacity-40 hover:opacity-100 flex items-center justify-center shrink-0 p-2 -ml-1 mr-1" title="손잡이를 드래그하여 순서 변경">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1.8"/><circle cx="9" cy="5" r="1.8"/><circle cx="9" cy="19" r="1.8"/><circle cx="15" cy="12" r="1.8"/><circle cx="15" cy="5" r="1.8"/><circle cx="15" cy="19" r="1.8"/></svg>
         </div>` : '';
 
       return `         
