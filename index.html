@@ -79,6 +79,12 @@
     .toggle-dot { position:absolute; left:2px; top:2px; width:20px; height:20px; border-radius:9999px; background:var(--surface-c-lowest); transition:transform 0.2s; }     
     :root:has(#darkToggle:checked) .toggle-dot { transform:translateX(20px); }      
     
+    /* 다크모드에서 날짜 선택 아이콘 색상을 흰색으로 반전 */
+    :root:has(#darkToggle:checked) input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      cursor: pointer;
+    }
+
     .sidebar { transform:translateX(-100%); transition:transform 0.3s ease; }     
     :root:has(#sidebarToggle:checked) .sidebar { transform:translateX(0); }      
     
@@ -549,7 +555,7 @@
       <div class="grid grid-cols-7 gap-1 text-center font-bold text-[11px] text-on-surface-variant uppercase mb-2">         
         <div class="text-red-500">일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div class="text-blue-500">토</div>       
       </div>       
-      <div id="calendarGrid" class="grid grid-cols-7 gap-1 flex-1 overflow-y-auto"></div>       
+      <div id="calendarGrid" class="grid grid-cols-7 gap-1 flex-1 overflow-y-auto overflow-x-hidden px-1 pb-2"></div>       
       <div id="calendarDetailsBox" class="border-t border-ol-variant mt-4 pt-3 hidden">         
         <div class="flex justify-between items-center mb-2">           
           <h4 id="selectedDateHeader" class="text-[13px] font-bold text-primary">----년 --월 --일 일정 정보</h4>           
@@ -750,7 +756,16 @@
           fallbackTolerance: 5,
           ghostClass: 'sortable-ghost',
           dragClass: 'sortable-drag',
+          forceFallback: true,        // ✅ 드래그 시 스크롤 버그 해결을 위해 강제 폴백 사용
+          scroll: true,               // ✅ 스크롤 활성화
+          scrollSensitivity: 80,      // ✅ 가장자리 80px 내에서 스크롤 시작
+          bubbleScroll: true,         // ✅ 부모 컨테이너(보드) 스크롤 허용
           onEnd: function (evt) {
+            // ✅ 스크롤 위치 저장 (화면 튕김 방지)
+            const boardEl = document.getElementById('board');
+            const currentScrollTop = boardEl ? boardEl.scrollTop : 0;
+            const currentWindowScroll = window.scrollY || document.documentElement.scrollTop;
+
             if (evt.oldIndex === evt.newIndex && evt.from === evt.to) return;
 
             // 드래그된 이후 보이는 요소들의 ID 추출
@@ -760,68 +775,71 @@
             if (currentMode === 'bookmark') {
                 updateIndependentOrder(bookmarkOrder, visibleIds);
                 saveCurrentStateToFirebase();
-                return;
             }
-
             // 2. 전체 보기일 경우: 전체보기 전용 배열(allOrder)만 업데이트 (홈 배열은 보호됨)
-            if (currentMode === 'all') {
+            else if (currentMode === 'all') {
                 const filterSortEl = document.getElementById('filterSort');
                 if (filterSortEl && filterSortEl.value !== 'custom') filterSortEl.value = 'custom';
                 
                 updateIndependentOrder(allOrder, visibleIds);
                 saveCurrentStateToFirebase();
-                return; 
             }
-
             // 3. 기타 참고 자료일 경우: 기타 전용 배열(etcOrder)만 업데이트
-            if (currentMode === 'etc') {
+            else if (currentMode === 'etc') {
                 updateIndependentOrder(etcOrder, visibleIds);
                 saveCurrentStateToFirebase();
-                return;
             }
-
             // 4. 홈(과목별 보기) 및 과목 단독 보기일 경우: 홈 전용 글로벌 데이터(data) 업데이트
-            const itemEl = evt.item;
-            const itemId = Number(itemEl.getAttribute('data-id'));
-            const fromKey = evt.from.getAttribute('data-filter-key');
-            const toKey = evt.to.getAttribute('data-filter-key');
-            
-            const itemIndex = data.findIndex(x => x.id === itemId);
-            if (itemIndex === -1) return;
+            else {
+                const itemEl = evt.item;
+                const itemId = Number(itemEl.getAttribute('data-id'));
+                const fromKey = evt.from.getAttribute('data-filter-key');
+                const toKey = evt.to.getAttribute('data-filter-key');
+                
+                const itemIndex = data.findIndex(x => x.id === itemId);
+                if (itemIndex > -1) {
+                    if (fromKey && toKey && fromKey !== toKey) {
+                      data[itemIndex].subject = toKey;
+                    }
 
-            if (fromKey && toKey && fromKey !== toKey) {
-              data[itemIndex].subject = toKey;
+                    // 화면에 있는 모든 과목 기둥의 카드 순서를 읽어 글로벌 data 배열에 반영
+                    const allVisibleIds = [];
+                    document.querySelectorAll('.card-list').forEach(list => {
+                      Array.from(list.children).forEach(child => {
+                        const id = Number(child.getAttribute('data-id'));
+                        if(id) allVisibleIds.push(id);
+                      });
+                    });
+
+                    const originalIndices = [];
+                    allVisibleIds.forEach(id => {
+                      const idx = data.findIndex(d => d.id === id);
+                      if (idx !== -1) originalIndices.push(idx);
+                    });
+                    originalIndices.sort((a, b) => a - b);
+
+                    const itemsToReorder = allVisibleIds.map(id => data.find(d => d.id === id)).filter(Boolean);
+
+                    itemsToReorder.forEach((item, i) => {
+                      data[originalIndices[i]] = item;
+                    });
+
+                    saveCurrentStateToFirebase();
+                }
             }
-
-            // 화면에 있는 모든 과목 기둥의 카드 순서를 읽어 글로벌 data 배열에 반영
-            const allVisibleIds = [];
-            document.querySelectorAll('.card-list').forEach(list => {
-              Array.from(list.children).forEach(child => {
-                const id = Number(child.getAttribute('data-id'));
-                if(id) allVisibleIds.push(id);
-              });
-            });
-
-            const originalIndices = [];
-            allVisibleIds.forEach(id => {
-              const idx = data.findIndex(d => d.id === id);
-              if (idx !== -1) originalIndices.push(idx);
-            });
-            originalIndices.sort((a, b) => a - b);
-
-            const itemsToReorder = allVisibleIds.map(id => data.find(d => d.id === id)).filter(Boolean);
-
-            itemsToReorder.forEach((item, i) => {
-              data[originalIndices[i]] = item;
-            });
-
-            saveCurrentStateToFirebase();
             
             if (['subject'].includes(currentMode)) {
               render(currentMode); 
             } else if (currentMode !== 'community' && currentMode !== 'etc' && currentMode !== 'all' && currentMode !== 'bookmark') {
               renderSubjectDetail(currentMode);
             }
+
+            // ✅ 렌더링 후 스크롤 위치 즉시 복구
+            setTimeout(() => {
+                const restoredBoard = document.getElementById('board');
+                if(restoredBoard) restoredBoard.scrollTop = currentScrollTop;
+                window.scrollTo(0, currentWindowScroll);
+            }, 0);
           }
         });
       });
