@@ -99,8 +99,8 @@
     .sortable-drag { cursor: grabbing !important; }
   
     .app-logo-wrap {
-      width: 48px;
-      height: 48px;
+      width: 70px;
+      height: 60px;
       border-radius: 16px;
       background: var(--surface-c);
       border: 1px solid var(--ol-variant);
@@ -113,15 +113,15 @@
     }
 
     .app-logo-wrap img {
-      width: 30px;
-      height: 30px;
+      width: 60px;
+      height: 45px;
       object-fit: contain;
       display: block;
     }
 
     .app-logo-fallback {
-      width: 30px;
-      height: 30px;
+      width: 60px;
+      height: 45px;
       border-radius: 10px;
       background: var(--primary);
       color: white;
@@ -278,29 +278,34 @@
         <div id="appListContainer" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4"></div>       
       </section>        
       
-      <section>         
+    <section>         
         <div class="mb-4">           
           <h3 class="text-[18px] md:text-[20px] font-semibold text-on-surface">연결할 사이트</h3>           
           <p class="text-[13px] text-on-surface-variant mt-0.5">학교 생활에 필요한 사이트 바로가기</p>         
         </div>         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">           
           <div onclick="launchTarget('https://cyber.mjc.ac.kr/home/mainHome/Form/main')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer">             
-            <div class="app-logo-wrap !w-10 !h-10 !rounded-xl !mb-2"><div class="app-logo-fallback !w-7 !h-7 !rounded-lg">M</div></div><h4 class="text-[15px] font-medium text-on-surface">원격강좌/E-Class</h4><p class="text-[12px] text-on-surface-variant mt-1">원격재택수업 사이트</p>           
+            <div class="app-logo-wrap !w-14 !h-14 !rounded-xl !mb-3"><img src="image/eclass.png" class="w-11 h-11 object-contain" alt="E-Class"></div>
+            <h4 class="text-[15px] font-medium text-on-surface">원격강좌/E-Class</h4><p class="text-[12px] text-on-surface-variant mt-1">원격재택수업 사이트</p>           
           </div>           
           <div onclick="launchTarget('https://mjc.factchat.bot/auth/sso?ssoPlatformId=5')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer">             
-            <div class="app-logo-wrap !w-10 !h-10 !rounded-xl !mb-2"><div class="app-logo-fallback !w-7 !h-7 !rounded-lg">M</div></div><h4 class="text-[15px] font-medium text-on-surface">AI검색(FactChat)</h4><p class="text-[12px] text-on-surface-variant mt-1">멀티LLM 플랫폼 이동</p>           
+            <div class="app-logo-wrap !w-14 !h-14 !rounded-xl !mb-3"><img src="image/factchat.png" class="w-11 h-11 object-contain" alt="FactChat"></div>
+            <h4 class="text-[15px] font-medium text-on-surface">AI검색(FactChat)</h4><p class="text-[12px] text-on-surface-variant mt-1">멀티LLM 플랫폼 이동</p>           
           </div>           
           <div onclick="launchTarget('https://icampus.mjc.ac.kr')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer">             
-            <div class="app-logo-wrap !w-10 !h-10 !rounded-xl !mb-2"><div class="app-logo-fallback !w-7 !h-7 !rounded-lg">M</div></div><h4 class="text-[15px] font-medium text-on-surface">ICampus</h4><p class="text-[12px] text-on-surface-variant mt-1">학습 관리 시스템</p>           
+            <div class="app-logo-wrap !w-14 !h-14 !rounded-xl !mb-3"><img src="image/campus.png" class="w-11 h-11 object-contain" alt="ICampus"></div>
+            <h4 class="text-[15px] font-medium text-on-surface">ICampus</h4><p class="text-[12px] text-on-surface-variant mt-1">학습 관리 시스템</p>           
           </div>           
           <div onclick="launchTarget('https://mail.mjc.ac.kr')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer">             
-            <div class="app-logo-wrap !w-10 !h-10 !rounded-xl !mb-2"><div class="app-logo-fallback !w-7 !h-7 !rounded-lg">M</div></div><h4 class="text-[15px] font-medium text-on-surface">MJC Mail</h4><p class="text-[12px] text-on-surface-variant mt-1">명지전문대 웹 메일</p>           
+            <div class="app-logo-wrap !w-14 !h-14 !rounded-xl !mb-3"><img src="image/mail.png" class="w-11 h-11 object-contain" alt="MJC Mail"></div>
+            <h4 class="text-[15px] font-medium text-on-surface">MJC Mail</h4><p class="text-[12px] text-on-surface-variant mt-1">명지전문대 웹 메일</p>           
           </div>           
           <div onclick="launchTarget('https://mpu.mjc.ac.kr/')" class="dash-card bg-surface-c-lowest border border-ol-variant rounded-lg p-4 cursor-pointer">             
-            <div class="app-logo-wrap !w-10 !h-10 !rounded-xl !mb-2"><div class="app-logo-fallback !w-7 !h-7 !rounded-lg">M</div></div><h4 class="text-[15px] font-medium text-on-surface">SmartCare</h4><p class="text-[12px] text-on-surface-variant mt-1">학생 역량 이력 관리</p>           
+            <div class="app-logo-wrap !w-14 !h-14 !rounded-xl !mb-3"><img src="image/smartcare.png" class="w-11 h-11 object-contain" alt="SmartCare"></div>
+            <h4 class="text-[15px] font-medium text-on-surface">SmartCare</h4><p class="text-[12px] text-on-surface-variant mt-1">학생 역량 이력 관리</p>           
           </div>         
         </div>       
-      </section>        
+      </section>
       
       <section class="flex-1 flex flex-col min-h-0">         
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">           
@@ -868,17 +873,20 @@
         });
     }
 
-    function getAppLogoHTML(app) {
+ function getAppLogoHTML(app) {
       const title = (app.title || '').toLowerCase();
+      // 1.txt에 명시된 로컬 이미지 경로로 교체
       const logoMap = [
-        { match: ['visual studio'], src: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/visualstudio/visualstudio-plain.svg', alt: 'Visual Studio' },
-        { match: ['vs code', 'vscode', 'visual studio code'], src: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg', alt: 'VS Code' },
-        { match: ['eclipse'], src: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/eclipse/eclipse-original.svg', alt: 'Eclipse' },
-        { match: ['github'], src: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg', alt: 'GitHub' },
-        { match: ['3ds max', '3dsmax', 'max'], src: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/autodesk.svg', alt: 'Autodesk 3ds Max' },
-        { match: ['marktext', 'markdown'], src: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/markdown.svg', alt: 'Markdown' },
-        { match: ['quizn', 'quiz'], src: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/quizlet.svg', alt: 'Quiz' }
+        { match: ['vs code', 'vscode', 'visual studio code'], src: 'image/vscode.png', alt: 'VS Code' },
+        { match: ['visual studio'], src: 'image/vs.png', alt: 'Visual Studio' },
+        { match: ['eclipse'], src: 'image/eclipse.png', alt: 'Eclipse' },
+        { match: ['github'], src: 'image/github.png', alt: 'GitHub' },
+        { match: ['3ds max', '3dsmax', 'max'], src: 'image/3dsmax.png', alt: 'Autodesk 3ds Max' },
+        { match: ['marktext', 'markdown'], src: 'image/marktext.png', alt: 'Markdown' },
+        { match: ['quizn', 'quiz'], src: 'image/quizn.png', alt: 'QuizN' }
       ];
+      
+      // VS Code가 Visual Studio보다 먼저 매칭되도록 순서를 조정했습니다.
       const found = logoMap.find(item => item.match.some(keyword => title.includes(keyword)));
       if (found) {
         return `<div class="app-logo-wrap"><img src="${found.src}" alt="${found.alt}" onerror="this.outerHTML='<div class=&quot;app-logo-fallback&quot;>${(app.title || 'A').charAt(0).toUpperCase()}</div>'"></div>`;
