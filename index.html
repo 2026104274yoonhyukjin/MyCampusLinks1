@@ -49,7 +49,67 @@
     }   
   </script>   
   
-  <style>     
+  <style> 
+/* 1. 화면 밀림 방지 및 세로 스크롤바 제어 */
+html {
+  background-color: var(--surface);
+  /* 스크롤바가 생겨도 레이아웃이 덜컹거리지 않게 고정 */
+  scrollbar-gutter: stable; 
+}
+
+body {
+  zoom: 0.85; /* 85% 축소 */
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  /* 세로 스크롤바가 강제로 생기는 것을 방지 */
+  overflow-y: auto; 
+  overflow-x: hidden;
+  background-color: transparent;
+}
+
+/* 2. 캘린더 날짜 클릭 시 크기 변화 방지 */
+/* 날짜 셀의 테두리가 생겨서 커지는 것을 막음 */
+.calendar-days {
+  box-sizing: border-box !important;
+  /* 테두리 대신 그림자(box-shadow)를 사용하면 크기가 변하지 않음 */
+  border: 1px solid transparent !important; 
+}
+
+.calendar-days.selected {
+  /* border 대신 outline이나 shadow를 사용하여 크기 고정 */
+  outline: 2px solid var(--primary) !important;
+  outline-offset: -2px;
+}
+
+    /* 2. 메인 콘텐츠 넓이 제한 (3번째 사진처럼 양옆에 예쁜 여백을 주기 위함) */
+    #mainDashboardContent,
+    #mainCommunityContent {
+        max-width: 1450px !important; /* 기존 1800px에서 줄여서 카드가 찢어지듯 늘어나는 것 방지 */
+        margin: 0 auto !important; /* 화면 중앙 정렬 */
+        width: 96% !important; 
+    }
+
+    #board {
+        max-width: none !important;
+    }
+
+    /* 3. 드래그되고 있는 카드(Drag) 스타일 */
+    .sortable-drag {
+      opacity: 1 !important;
+      background: white !important;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important;
+      width: 300px !important; 
+      transform: rotate(0deg) !important;
+    }
+
+    /* 4. 리스트 컨테이너가 드래그 때문에 늘어나지 않게 방지 */
+    .card-list {
+      min-height: 50px;
+      overflow-x: hidden !important; 
+    }
+
+    /* 5. 기타 UI 색상 변수 세팅 */
     :root {       
       --surface: #f8f9ff; --surface-dim: #ccdbf3; --surface-c-lowest: #ffffff;       
       --surface-c-low: #eff4ff; --surface-c: #e6eeff; --surface-c-high: #dce9ff;       
@@ -132,13 +192,18 @@
       font-weight: 800;
       letter-spacing: -0.04em;
     }
+  
+    .overflow-y-auto {
+      will-change: transform;
+      -webkit-overflow-scrolling: touch;
+    }
 
-    /* 커스텀 스크롤바 */
+    /* 커스텀 스크롤바 설정 */
     .custom-scrollbar::-webkit-scrollbar { width: 8px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: transparent; border-radius: 8px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--ol-variant); border-radius: 8px; border: 2px solid var(--surface); }
     .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--primary); }
-  </style> 
+  </style>
 
 <script src="https://unpkg.com/lucide@latest"></script>
 </head>  
@@ -575,10 +640,12 @@
         </div>         
         <button onclick="closeCalendarModal()" class="text-[20px] font-medium text-on-surface-variant hover:text-on-surface">&times;</button>       
       </div>       
-      <div class="grid grid-cols-7 gap-1 text-center font-bold text-[11px] text-on-surface-variant uppercase mb-2">         
-        <div class="text-red-500">일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div class="text-blue-500">토</div>       
-      </div>       
-      <div id="calendarGrid" class="grid grid-cols-7 gap-1 flex-1 overflow-y-auto"></div>       
+     <div class="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar pr-1 flex flex-col">
+        <div class="grid grid-cols-7 gap-1 text-center font-bold text-[11px] text-on-surface-variant uppercase mb-2 shrink-0">         
+          <div class="text-red-500">일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div class="text-blue-500">토</div>       
+        </div>       
+     <div id="calendarGrid" class="grid grid-cols-7 gap-1 pb-3"></div>     
+      </div>     
       <div id="calendarDetailsBox" class="border-t border-ol-variant mt-4 pt-3 hidden">         
         <div class="flex justify-between items-center mb-2">           
           <h4 id="selectedDateHeader" class="text-[13px] font-bold text-primary">----년 --월 --일 일정 정보</h4>           
@@ -765,62 +832,89 @@
       }     
     });      
     
-    // --- ✅ 딜레이 없는 손잡이(Handle) 전용 드래그 & 완벽한 뷰별 독립 정렬 함수 ---
     function initCardSortable() {
       if (typeof Sortable === 'undefined') return;
       if (currentMode === 'community') return;
 
-      document.querySelectorAll('.card-list').forEach(el => {
-        new Sortable(el, {
-          // 모드별로 완전히 그룹을 분리하여 다른 뷰의 정렬 상태가 서로 섞이는 것을 차단
-          group: currentMode, 
-          handle: '.drag-handle', // 꾹 누를 필요 없이 좌측 점선 핸들을 잡고 즉시 이동
-          animation: 150,
-          fallbackTolerance: 5,
-          ghostClass: 'sortable-ghost',
-          dragClass: 'sortable-drag',
-          onEnd: function (evt) {
-            if (evt.oldIndex === evt.newIndex && evt.from === evt.to) return;
-
-            // 드래그된 이후 보이는 요소들의 ID 추출
+     document.querySelectorAll('.card-list').forEach(el => {
+      new Sortable(el, {
+  group: currentMode,
+  handle: '.drag-handle',
+  animation: 150,
+  forceFallback: true,      // 레이아웃 꼬임 방지
+  fallbackOnBody: true,     // 바디 기준으로 드래그 처리
+  ghostClass: 'sortable-ghost',
+  dragClass: 'sortable-drag',
+  
+  onEnd: function (evt) {
+    if (evt.oldIndex === evt.newIndex && evt.from === evt.to) return;
+    
+    // ... 기존 데이터 처리 로직 ...
+    
+    saveCurrentStateToFirebase();
+    // [삭제]: render() 함수를 여기서 부르지 마세요!
+            
+            // ... (기존에 쓰던 배열 위치 변경 로직 유지) ...
+            // [중요] 여기서 render() 함수 호출을 삭제하세요!
+            
+          
+          
             const visibleIds = Array.from(evt.to.children).map(child => Number(child.getAttribute('data-id'))).filter(Boolean);
 
-            // 1. 즐겨찾기 보관함일 경우: 즐겨찾기 전용 배열(bookmarkOrder)만 업데이트
+            // 1, 2, 3. 특정 모드별 순서 업데이트
             if (currentMode === 'bookmark') {
                 updateIndependentOrder(bookmarkOrder, visibleIds);
-                saveCurrentStateToFirebase();
-                return;
-            }
-
-            // 2. 전체 보기일 경우: 전체보기 전용 배열(allOrder)만 업데이트 (홈 배열은 보호됨)
-            if (currentMode === 'all') {
+            } else if (currentMode === 'all') {
                 const filterSortEl = document.getElementById('filterSort');
                 if (filterSortEl && filterSortEl.value !== 'custom') filterSortEl.value = 'custom';
-                
                 updateIndependentOrder(allOrder, visibleIds);
-                saveCurrentStateToFirebase();
-                return; 
-            }
-
-            // 3. 기타 참고 자료일 경우: 기타 전용 배열(etcOrder)만 업데이트
-            if (currentMode === 'etc') {
+            } else if (currentMode === 'etc') {
                 updateIndependentOrder(etcOrder, visibleIds);
-                saveCurrentStateToFirebase();
-                return;
+            } 
+            // 4. 일반 데이터 배열 업데이트
+            else {
+                const itemEl = evt.item;
+                const itemId = Number(itemEl.getAttribute('data-id'));
+                const fromKey = evt.from.getAttribute('data-filter-key');
+                const toKey = evt.to.getAttribute('data-filter-key');
+                
+                const itemIndex = data.findIndex(x => x.id === itemId);
+                if (itemIndex !== -1) {
+                    const [movedItem] = data.splice(itemIndex, 1);
+                    if (fromKey && toKey && fromKey !== toKey) {
+                      movedItem.subject = toKey;
+                    }
+
+                    const nextEl = evt.item.nextElementSibling;
+                    if (nextEl) {
+                      const nextId = Number(nextEl.getAttribute('data-id'));
+                      const nextIndex = data.findIndex(x => x.id === nextId);
+                      if (nextIndex !== -1) data.splice(nextIndex, 0, movedItem);
+                      else data.push(movedItem);
+                    } else {
+                      const prevEl = evt.item.previousElementSibling;
+                      if (prevEl) {
+                        const prevId = Number(prevEl.getAttribute('data-id'));
+                        const prevIndex = data.findIndex(x => x.id === prevId);
+                        if (prevIndex !== -1) data.splice(prevIndex + 1, 0, movedItem);
+                        else data.push(movedItem);
+                      } else {
+                        data.push(movedItem);
+                      }
+                    }
+                }
             }
 
-            // 4. 홈(과목별 보기) 및 과목 단독 보기일 경우: 홈 전용 글로벌 데이터(data) 업데이트
-            const itemEl = evt.item;
-            const itemId = Number(itemEl.getAttribute('data-id'));
-            const fromKey = evt.from.getAttribute('data-filter-key');
-            const toKey = evt.to.getAttribute('data-filter-key');
+            // [핵심] 화면을 다시 그리는 render() 함수를 호출하지 않아야 스크롤이 고정됩니다.
+            saveCurrentStateToFirebase();
+          }
+        });
+      });
+    }
+
             
-            const itemIndex = data.findIndex(x => x.id === itemId);
-            if (itemIndex === -1) return;
 
-            if (fromKey && toKey && fromKey !== toKey) {
-              data[itemIndex].subject = toKey;
-            }
+            saveCurrentStateToFirebase();
 
             // 화면에 있는 모든 과목 기둥의 카드 순서를 읽어 글로벌 data 배열에 반영
             const allVisibleIds = [];
@@ -851,10 +945,6 @@
             } else if (currentMode !== 'community' && currentMode !== 'etc' && currentMode !== 'all' && currentMode !== 'bookmark') {
               renderSubjectDetail(currentMode);
             }
-          }
-        });
-      });
-    }
 
     // 독립 배열 순서 업데이트 헬퍼 함수
     function updateIndependentOrder(targetArray, visibleIds) {
@@ -2133,7 +2223,7 @@
         else if(weekday === 6) colorClass = "text-blue-500 font-bold";          
         if(activeEvents.length > 0) bgClass = "bg-primary-fixed/60 font-bold text-primary";                  
         let dot = hasCustom ? `<span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-amber-500 rounded-full"></span>` : '';         
-        const isSelected = selectedDateStr === fullDateStr ? 'border-2 border-primary shadow-md scale-105 z-5' : 'border border-ol-variant/30';          
+const isSelected = selectedDateStr === fullDateStr ? 'border-transparent ring-2 ring-primary ring-inset shadow-md z-10' : 'border border-ol-variant/30';         
         let holidayNameHtml = isHoliday ? `<div class="text-[9px] text-red-500 mt-0.5 truncate w-full px-0.5">${isHoliday}</div>` : '';          
         grid.innerHTML += `           
           <div onclick="showDateDetails('${fullDateStr}')" class="p-1 rounded-lg text-center text-[12px] relative cursor-pointer min-h-[46px] flex flex-col items-center justify-center ${bgClass} ${colorClass} ${isSelected}">             
@@ -2326,6 +2416,8 @@
   if (typeof lucide !== 'undefined') lucide.createIcons();
 });
 </script>
+
+  <div class="main-wrapper"> </div>
 </body>
  
 </html>
