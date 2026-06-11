@@ -311,6 +311,7 @@ body {
         </div>       
       </div>       
       
+      
       <div class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto border-t sm:border-t-0 pt-2 sm:pt-0 border-ol-variant">         
         <button onclick="openCalendarModal()" class="bg-primary text-white text-[13px] font-medium px-3 py-1.5 rounded-lg hover:opacity-90 transition shadow-sm">           
           <i data-lucide="calendar-days" class="w-4 h-4"></i> 학사 달력         
@@ -762,7 +763,7 @@ body {
       { id: 30, title: "8장-클래스의 외부 구성요소", week: "8주차", subject: "객체 지향 프로그래밍", link: "pdf/8장_클래스의_외부_구성요소_(package_import_외부클래스).pdf", type: "file" },
       { id: 31, title: "9장-자바제어자(modifier)_1", week: "9주차", subject: "객체 지향 프로그래밍", link: "pdf/9장__자바제어자(modifier)_1._(접근지정자_static).pdf", type: "file" },
       
-      { id: 32, title: "OT 자료", week: "상시", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/OT", type: "web" },
+      { id: 32, title: "프론트엔드프로그래밍 OT 자료", week: "상시", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/OT", type: "web" },
       { id: 33, title: "마크다운 작성방법 참고자료", week: "상시", subject: "프론트엔드프로그래밍", link: "pdf/마크다운_보충자료.pdf", type: "file" },
       { id: 34, title: "3주차 수업 자료-HTML Form & UI", week: "3주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week3", type: "web" },
       { id: 35, title: "4주차 수업 자료-CSS 스타일링 & GitHub 배포", week: "4주차", subject: "프론트엔드프로그래밍", link: "https://dayoung-univ.github.io/Frontend2026-01/week4", type: "web" },
@@ -1682,7 +1683,20 @@ body {
       });     
     }      
     
-    function handleSearch(isMobile = false) {       
+    
+      function handleSearch(isMobile = false) {
+    // 1. 검색어 가져오기 및 전역 변수 업데이트
+    const inputId = isMobile ? 'mobileSearchInput' : 'searchInput';
+    const inputElement = document.getElementById(inputId);
+    
+    if (!inputElement) return;
+    
+    searchQuery = inputElement.value.toLowerCase().trim();
+
+    // 2. 검색창에 입력할 때마다 즉시 현재 모드의 화면을 다시 렌더링
+    // (여기서 currentMode가 'bookmark'일 때도 정상적으로 호출되어야 합니다)
+    render(currentMode); 
+
       searchQuery = document.getElementById(isMobile ? 'mobileSearchInput' : 'searchInput').value.toLowerCase().trim();       
       if(currentMode !== 'community' && currentMode !== 'etc' && currentMode !== 'bookmark') render(currentMode);     
     }      
@@ -1700,38 +1714,53 @@ body {
       }
     }
 
-    // 북마크 토글 로직 
+   // 북마크 토글 로직 (링크가 같은 중복 자료 완벽 동기화)
     function toggleBookmark(id, event) {
       if (event) {
         event.stopPropagation();
         event.preventDefault();
       }
-      const itemIndex = data.findIndex(x => x.id == id);
-      if (itemIndex === -1) return;
 
-      data[itemIndex].bookmark = !data[itemIndex].bookmark;
-      
-      if (data[itemIndex].bookmark) {
-        if (!bookmarkOrder.includes(id)) bookmarkOrder.push(id);
-      } else {
-        bookmarkOrder = bookmarkOrder.filter(x => x != id);
-      }
+      // 1. 클릭한 아이템 찾기
+      let clickedItem = data.find(x => x.id == id) || globalEtcData.find(x => x.id == id);
+      if (!clickedItem) return;
+
+      // 2. 현재 즐겨찾기 상태 확인 후 반전
+      const isCurrentlyBookmarked = bookmarkOrder.includes(id);
+      const newState = !isCurrentlyBookmarked;
+
+      // 3. (핵심) 링크가 똑같은 항목들(예: 홈의 OT자료와 기타의 OT자료) 모두 찾기
+      const targetLink = clickedItem.link;
+      const matchingIds = [];
+      data.forEach(x => { if (x.link === targetLink) matchingIds.push(x.id); });
+      globalEtcData.forEach(x => { if (x.link === targetLink) matchingIds.push(x.id); });
+
+      // 4. 찾은 모든 항목의 상태를 한꺼번에 변경하고 화면에 반영
+      matchingIds.forEach(mId => {
+        let mItem = data.find(x => x.id == mId) || globalEtcData.find(x => x.id == mId);
+        if (mItem) mItem.bookmark = newState;
+
+        if (newState) {
+          if (!bookmarkOrder.includes(mId)) bookmarkOrder.push(mId);
+        } else {
+          bookmarkOrder = bookmarkOrder.filter(x => x != mId);
+        }
+
+        // 화면 상의 별 아이콘 즉시 동기화
+        const cardElements = document.querySelectorAll(`[data-id="${mId}"]`);
+        cardElements.forEach(cardEl => {
+          const btn = cardEl.querySelector('button[title="즐겨찾기"]');
+          if (btn) {
+            btn.innerHTML = newState ? '⭐️' : '☆';
+            btn.className = 'relative z-10 text-[14px] p-1 rounded transition-transform ' + (newState ? 'text-yellow-500 opacity-100 hover:scale-110' : 'text-on-surface-variant opacity-40 hover:opacity-100 hover:scale-110');
+          }
+        });
+      });
+
       saveCurrentStateToFirebase();
 
       if (currentMode === 'bookmark') {
         render('bookmark');
-        return; 
-      }
-
-      const cardElement = document.querySelector(`[data-id="${id}"]`);
-      if (!cardElement) return;
-
-      const bookmarkBtn = cardElement.querySelector('button[title="즐겨찾기"]');
-      if (bookmarkBtn) {
-        const starIcon = data[itemIndex].bookmark ? '⭐️' : '☆';
-        const starClass = data[itemIndex].bookmark ? 'text-yellow-500 opacity-100 hover:scale-110' : 'text-on-surface-variant opacity-40 hover:opacity-100 hover:scale-110';
-        bookmarkBtn.innerHTML = starIcon;
-        bookmarkBtn.className = 'relative z-10 text-[14px] p-1 rounded transition-transform ' + starClass;
       }
     }
 
@@ -1817,6 +1846,27 @@ body {
 
     function render(mode) {       
       currentMode = mode;       
+      if (mode === 'bookmark') {
+        // 1. 전체 데이터 중 즐겨찾기 된 데이터만 불러오기 (예시)
+        // bookmarkOrder 배열에 있는 id를 기반으로 데이터를 가져온다고 가정
+        let filteredData = bookmarkOrder.map(id => data.find(d => d.id === id)).filter(Boolean);
+
+        // 2. 핵심 해결 부분: 검색어(searchQuery)가 존재하면 실시간으로 필터링 적용
+        if (searchQuery !== '') {
+            filteredData = filteredData.filter(item => 
+                (item.title && item.title.toLowerCase().includes(searchQuery)) ||
+                (item.subject && item.subject.toLowerCase().includes(searchQuery))
+            );
+        }
+
+        // 3. 필터링된 데이터를 바탕으로 화면에 카드 리스트 그리기
+        const board = document.getElementById('board');
+        board.innerHTML = '';
+        
+        filteredData.forEach(item => {
+            // ... 카드 HTML 생성 및 board.innerHTML += 추가 코드 ...
+        });
+    }
       const dashView = document.getElementById('mainDashboardContent'); 
       const commView = document.getElementById('mainCommunityContent');       
       const hSearch = document.getElementById('headerSearchWrapper'); 
@@ -1908,9 +1958,9 @@ body {
             return idxA - idxB;
         });
 
-        localEtc.forEach(item => {
-          // 북마크 상태 매핑용 가짜 오브젝트 (실제 data 배열엔 없으므로)
-          const dummyItem = { ...item, bookmark: false };
+       localEtc.forEach(item => {
+          // 북마크 상태 매핑용 가짜 오브젝트 (저장된 즐겨찾기 배열을 확인하도록 수정)
+          const dummyItem = { ...item, bookmark: bookmarkOrder.includes(item.id) };
           html += createCardHtml(dummyItem, true);
         });
         html += `</div>`;
@@ -1935,7 +1985,21 @@ body {
 
         boardTitle.innerText = "⭐ 즐겨찾기 보관함 (좌측 ≡ 핸들을 드래그하여 이동)";
         
-        const bookmarkedOnly = filtered.filter(item => item.bookmark);
+        // 1. data와 globalEtcData 양쪽에서 즐겨찾기 된 항목 모두 불러오기
+        let bookmarkedOnly = bookmarkOrder.map(id => {
+          let found = data.find(x => x.id == id) || globalEtcData.find(x => x.id == id);
+          return found ? { ...found, bookmark: true } : null;
+        }).filter(Boolean);
+
+        // 2. 검색창에 검색어가 있다면 실시간 필터링 적용
+        if (searchQuery) {
+          bookmarkedOnly = bookmarkedOnly.filter(item => 
+            (item.title && item.title.toLowerCase().includes(searchQuery)) ||
+            (item.subject && item.subject.toLowerCase().includes(searchQuery)) ||
+            (item.week && item.week.toLowerCase().includes(searchQuery)) ||
+            (item.desc && item.desc.toLowerCase().includes(searchQuery))
+          );
+        }
 
         if (window.currentBookmarkSubject !== 'all' && !bookmarkedOnly.some(item => item.subject === window.currentBookmarkSubject)) {
             window.currentBookmarkSubject = 'all';
